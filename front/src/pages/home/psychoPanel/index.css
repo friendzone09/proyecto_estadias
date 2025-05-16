@@ -1,0 +1,27 @@
+.appointments_section{
+    margin-inline: auto;
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.calendar{
+    padding: 2rem;
+    background-color: #FFF;
+    width: min-content;
+    border-radius: 10px;
+    max-height: min-content;
+}
+
+.appointments{
+    width: 70%;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.appointments h1{
+    font-size: 3rem;
+}

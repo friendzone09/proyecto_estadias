@@ -1,0 +1,56 @@
+.psycho_card{
+    width: 80%;
+    margin-inline: auto;
+    padding: 2rem;
+    display: flex;
+    gap: 5rem;
+}
+
+.psycho_image{
+    padding: 2rem;
+    background-color: #fff;
+    width: max-content;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    font-size: 1.5rem;
+    color: #4267B3;
+}
+
+.card_description{
+    display:flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 70%;
+    align-items: center;
+}
+
+.psycho_decription{
+    width: 100%;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.psycho_decription h1{
+    font-size: 3rem;
+    color: #4267B3;
+}
+
+.psycho_decription p{
+    font-size: 1.5rem;
+}
+
+.psycho_button{
+    padding: 2rem;
+}
+
+.psycho_button a, .psycho_button p{
+    font-size: 1.5rem;
+    color:#4267B3;
+
+}
