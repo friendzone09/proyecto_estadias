@@ -5,9 +5,11 @@ from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
-import os
-import psycopg2
-
+from app.db import get_db_connection
+from app.functions.get_schedule import get_schedule
+from app.functions.get_appoints import get_appoint
+from app.functions.sort_appoints import sort_appoints
+from app.functions.insert_appoint import insert_appoint
 
 app = Flask(__name__)
 
@@ -23,19 +25,6 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-def get_db_connection():
-    try:
-        conn=psycopg2.connect(host='localhost',
-                              dbname='agend_test1',
-                              port='5432',
-                              user = os.getenv('DB_USER'),
-                              password =os.getenv('DB_PASSWORD'),
-                              )
-        return conn
-    except psycopg2.Error as error:
-        print(f"Base de datos no encontrada {error}")
-        return None
 
 @app.route("/")
 def hello_world():
@@ -102,7 +91,8 @@ def login():
             'name' : row[1],
             'last_name' : row[2],
             'email' : row[3],
-            'type' : type
+            'type' : type,
+            'psycho' : row[6]
         }
 
         return jsonify({'message' : 'El usuario es un paciente', 'user' : user})
@@ -127,6 +117,32 @@ def login():
     }
 
     return jsonify({'message' : 'El usuario es un psicologo', 'user' : user})
+
+@app.route('/re_login', methods = ['POST'])
+def re_login():
+    user_id = request.form.get('id')
+
+    type = False
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM public.patient WHERE id_patient = %s',(user_id,))
+
+    row = cur.fetchone()
+
+    if not row:
+        return jsonify({'message' : 'El usuario no existe'}), 401
+        
+    user = {
+            'user_id' : row[0],
+            'name' : row[1],
+            'last_name' : row[2],
+            'email' : row[3],
+            'type' : type,
+            'psycho' : row[6]
+        }
+
+    return jsonify({'message' : 'El usuario es un paciente', 'user' : user})
+
     
 @app.route('/register', methods = ['POST'])
 def register():
@@ -161,46 +177,35 @@ def register():
 
     return jsonify({'message' : 'Usuario registrado correctamente'})
 
-@app.route('/get_schedule', methods = ['POST'])
-def obtain_schedule():
+@app.route('/get_appoint_for_patient', methods = ['POST'])
+def obtain_appoint_for_patient():
 
     psycho_id = request.form.get('id')
     date_str = request.form.get('date')
 
-    conn = get_db_connection()
-    cur = conn.cursor()
+    if not psycho_id or not date_str:
+        return jsonify({'message': 'Error'}), 401
 
-    try:
+    date = datetime.strptime(date_str, "%Y-%m-%d").date()
 
-        date = datetime.strptime(date_str, "%Y-%m-%d").date()
-        day_week = date.weekday() + 1
-
-    except ValueError:
-        return jsonify({'message' : 'Error'}), 400
-    
-    query = '''
-        SELECT id_hour, hour, psycho_name, psycho_last_name
-        FROM schedule s
-        JOIN hour h ON s.fk_hour = h.id_hour
-        JOIN psycho p ON s.fk_psycho = p.id_psychologist
-        WHERE s.fk_psycho = %s
-        AND s.fk_day = %s
-        AND s.hour_status = true
-        ORDER BY h.hour;
-    '''
-
-    cur.execute(query, (psycho_id, day_week,))
-    result = cur.fetchall()
+    result = get_schedule(psycho_id, date)   
 
     if not result:
         return jsonify({'message' : 'No disponible'})
 
-    data = [{'id': h[0], 'hour': h[1].strftime('%H:%M')} for h in result]
+    schedule = [{'id': h[0], 'hour': h[1].strftime('%H:%M')} for h in result]
 
-    cur.close()
-    conn.close()
+    result = get_appoint(psycho_id, date)
 
-    return jsonify({'schedule': data}), 200
+    appoints = []
+
+    if result:
+        appoints = [{'hour': h[4]} for h in result]  
+    
+    new_schedule = sort_appoints(schedule, appoints)
+
+    return jsonify({'schedule': new_schedule}), 200
+
 
 @app.route('/get_psycho', methods = ['POST'])
 def get_psycho():
@@ -218,6 +223,21 @@ def get_psycho():
     }
 
     return jsonify(psycho)
+
+@app.route('/insert_appoint', methods = ['POST'])
+def call_insert_appoint():
+
+    id_psycho = request.form.get('psycho_id')
+    date_str = request.form.get('date')
+    patient_id = request.form.get('patient_id')
+    hour_id = request.form.get('hour_id')
+
+    date = datetime.strptime(date_str, "%Y-%m-%d").date()
+
+    insert_appoint(id_psycho, patient_id, date, hour_id)
+
+    return jsonify({'message' : 'Cita agendada'}), 200
+
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):

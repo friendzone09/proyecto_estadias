@@ -1,17 +1,61 @@
 import { data } from "react-router-dom";
 import { getSchedule } from "../../utils/getSchedule";
-import { useEffect, useState } from "react"
+import { insertAppoint } from "../../utils/insertAppoint";
+import { useEffect, useState, useRef } from "react"
+
+import FreeHour from "./ListHours/FreeHour";
+import AppointHour from "./ListHours/AppointHour";
+
+import { getPatienId } from "../../utils/get_user";
+import { reLoginUser } from "../../utils/loginUser";
 
 function Appointments ({ date, id_psycho }){
 
+    const [selectedAppoint, setSelectedAppoint] = useState(null);
+    const dialogRef = useRef(null);
+
     const [psycho, setPsycho] = useState({name: '' , last_name : ''})
     const [schedule, setSchedule] = useState([])
+
+    const openModal = (appoint) => {
+        console.log(appoint);
+        setSelectedAppoint(appoint);
+        if (dialogRef.current) dialogRef.current.showModal();
+    };
+
+    const closeModal = () => {
+        if (dialogRef.current) dialogRef.current.close();
+        setSelectedAppoint(null);
+    };
 
     const selectedDate = new Date(
             parseInt(date.year),
             parseInt(date.monthNum) - 1,
             parseInt(date.day)
     );
+
+    async function callGetSchedule() {
+
+            const newDate = `${date.year}-${date.monthNum}-${date.day}`;
+            
+            const formData = new FormData()
+            formData.append('id', id_psycho);
+            formData.append('date', newDate);
+
+            const data = await getSchedule(formData)
+
+            if(selectedDate < today){
+                console.log('No disponible')
+                setSchedule([]);
+                return null
+            }
+
+            if(data.schedule){
+                setSchedule(data.schedule)
+            } else{
+                setSchedule([]);
+            }
+        }
 
     const today = new Date();
     selectedDate.setHours(0, 0, 0, 0);
@@ -25,34 +69,9 @@ function Appointments ({ date, id_psycho }){
 
     useEffect(()=>{
 
-        async function callGetSchedule() {
-
-            const newDate = `${date.year}-${date.monthNum}-${date.day}`;
-            
-            const formData = new FormData()
-            formData.append('id', id_psycho);
-            formData.append('date', newDate);
-
-            const data = await getSchedule(formData)
-
-            if(selectedDate < today){
-                console.log('Ese dia no carnal')
-                setSchedule([]);
-                return null
-            }
-
-            if(data.schedule){
-                setSchedule(data.schedule)
-            } else{
-                setSchedule([]);
-            }
-        }
-
         if(date.day != ''){
-            console.log('Cambio de dia')
+            callGetSchedule();
         }
-
-        callGetSchedule();
 
     }, [date])
 
@@ -68,7 +87,7 @@ function Appointments ({ date, id_psycho }){
             });
 
             if(!response.ok){
-                console.log('Salio mal w')
+                console.log('Salio mal')
             } 
 
             const data = await response.json()
@@ -81,6 +100,26 @@ function Appointments ({ date, id_psycho }){
         getPsycho()
     }, [])
 
+    async function agendAppoint(id_hour){ 
+
+        const newDate = `${date.year}-${date.monthNum}-${date.day}`;
+        const userId = getPatienId()
+
+        console.log(userId)
+            
+        const formData = new FormData()
+        formData.append('psycho_id', id_psycho);
+        formData.append('date', newDate);
+        formData.append('patient_id', userId);
+        formData.append('hour_id', id_hour);
+
+        await insertAppoint(formData);
+        await reLoginUser(userId)
+        closeModal();
+        callGetSchedule();
+
+    }
+
     return (
         <div className="appointments">
 
@@ -90,12 +129,31 @@ function Appointments ({ date, id_psycho }){
             isPastDate() ? (<h1>Día ya no disponible</h1>):
             (<h1>{date.month} {date.day} - {date.year}</h1>)}
 
+            {schedule.length === 0 && <p>Seleccione otra fecha</p>}
+
             <div className="schedule">
 
-                {schedule.length==0?  (<p>nel</p>) : (<p>simon</p>) }
+                
+
+                {schedule.map(a =>( 
+                    !a.status? ( <FreeHour appointObject={a} key={a.id}  onClick={() => openModal(a)} /> ): ( <AppointHour key={a.key} appointObject = {a} /> )
+                 ))}
 
             </div>
 
+            <dialog ref={dialogRef} className="modal">
+                {selectedAppoint && (
+                <>
+                    <h2>Agendar una cita para: {date.month} {date.day} - {date.year} </h2>
+                    <h2>Hora:{selectedAppoint.hour}</h2>
+                    <div className="dialog_options">
+                        <span onClick={closeModal} className="close_button" >Cerrar</span>
+                        <button className="acept_button" onClick={() => agendAppoint(selectedAppoint.id)} >Agendar</button>
+                    </div>
+                    
+                </>
+                )}
+            </dialog>
 
         </div>
     )

@@ -1,9 +1,30 @@
 import Calendar from "./Calendar"
 import Appointments from "./Appointments"
 import { useState, useEffect } from "react"
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+
+import './ListHours/index.css'
+import { getUserPsycho, getUserType } from "../../utils/get_user";
 
 function AppointAgend (){
+    const navigate = useNavigate();
+
+    useEffect(()=>{
+
+        function canPass(){
+
+            const userPsycho = getUserPsycho()
+            const userType = getUserType()
+
+            if(userType == null || userPsycho!= null){
+                navigate('/')
+            }
+
+        }
+
+        canPass();
+
+    }, [])
 
     const { id_psycho } = useParams();
 

@@ -1,4 +1,8 @@
+import { getUserPsycho } from "../../../utils/get_user";
+
 function CardDescription({description, userType, psychoId}){
+
+    const userPsycho = getUserPsycho();
 
     const psychoLink = `/appointAgend/${psychoId}`;
 
@@ -14,13 +18,10 @@ function CardDescription({description, userType, psychoId}){
             </div>
 
             <div className="psycho_button">
-
+                {userPsycho != null && ( <a href="#"> Ya no puedes agendar mas citas </a> )}
                 {userType == null &&( <a href="/login">Si quieres agendar una cita primero inicia sesión</a> )}
-                {userType == false &&( <a href={psychoLink} >Agendar una cita</a> )}
-
+                {userType == false && userPsycho == null &&( <a href={psychoLink} >Agendar una cita</a> )}
             </div>
-
-
         </section>
     )
 }

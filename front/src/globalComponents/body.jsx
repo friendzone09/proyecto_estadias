@@ -2,14 +2,12 @@ import Header from "./header";
 import Main from "./main";
 import Footer from "./footer";
 import '../static/styles/global.css'
-import { getUser } from "../utils/get_user";
+import { getUserType } from "../utils/get_user";
 import React from "react";
 
 function Body({ children }){
 
-    const userType = getUser();
-
-    console.log(userType)
+    const userType = getUserType();
 
     return(
         <>

@@ -1,5 +1,5 @@
-export async function getSchedule(formData) {
-    const response = await fetch('http://127.0.0.1:5000/get_appoint_for_patient',{
+export async function insertAppoint(formData){
+    const response = await fetch('http://127.0.0.1:5000/insert_appoint',{
         method : 'POST',
         body: formData
     });

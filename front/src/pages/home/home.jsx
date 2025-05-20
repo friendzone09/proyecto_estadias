@@ -16,6 +16,8 @@ function Home({ userType }){
       .catch(error => {
         console.error('Error al cargar psicólogos:', error);
       });
+
+      
     }, [])
 
     return(
@@ -25,7 +27,7 @@ function Home({ userType }){
 
               {userType != true && (
                 psychos.map(p => (
-                  <CardBack psycho = {p} key = {p.id} userType = {userType}/>
+                  <CardBack psycho = {p} key = {p.id} userType = {userType}  />
                 ))
               )}
       
