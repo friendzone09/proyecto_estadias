@@ -1,0 +1,154 @@
+.description_secction{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.pyscho_profile_section{
+    padding: 2rem;
+    display: flex;
+    gap: 5rem;
+    width: 100%;
+    justify-content:center;
+}
+
+.profile_psycho_image{
+    padding: 2rem;
+    background-color: #fff;
+    max-width: min-content;
+    max-height: min-content;
+    border-radius: 10px;
+    color: #4267B3;
+    font-size: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.profile_psycho_image img{
+    height: 300px;
+    width: 300px;
+}
+
+.profile_description{
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 65dvw;
+    max-height: 500PX;
+    overflow-y: scroll;
+}
+
+.profile_description h1{
+    font-size: 3rem;
+    color: #4267B3;
+}
+
+.profile_description p{
+    font-size: 1.5rem;
+    white-space: pre-line;
+}
+
+.profile_edit_buttons{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem;
+    font-size: 1.3rem;
+}
+
+.go_to_change_password{
+    color: #4267B3;
+}
+
+.go_to_edit_profile{
+    padding: 1rem;
+    background-color: rgb(0, 174, 255);
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+}
+
+.go_to_edit_profile:hover{
+    background-color: rgb(2, 139, 202);
+}
+
+.form_edit_psycho{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    min-width: 70dvw;
+}
+ 
+.edit_inputs{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.edit_inputs label{
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.edit_inputs input{
+    padding: 0.5rem;
+    border: 1px solid black;
+    border-radius: 5px;
+    font-size: 1.2rem;
+}
+
+.edit_inputs textarea{
+    padding: 0.5rem;
+    border: 1px solid black;
+    width: 80%;
+    height: 500px;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    resize: none;
+    box-sizing: border-box;
+}
+
+.button_info_submit{
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.button_info_submit button{
+    padding: 1rem;
+    font-size: 1rem;
+    background-color: rgb(0, 174, 255);
+    border: 1px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button_info_submit button:hover{
+    background-color: rgb(2, 139, 202);;
+}
+
+.section_psycho_image{
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    gap: 2rem;
+}
+
+.section_psycho_image a{
+    color: #fff;
+    background-color: rgb(0, 174, 255);
+    text-decoration: none;
+    border-radius: 5px;
+    padding: 1rem;
+}
+
+.section_psycho_image a:hover{
+    background-color: rgb(2, 139, 202);
+}

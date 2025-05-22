@@ -59,7 +59,7 @@ dialog::backdrop {
     align-items: center;
 }
 
-.dialog_options button{
+.dialog_options .acept_button{
     padding: 1rem;
     font-size: 1rem;
     border-radius: 5px;
@@ -68,8 +68,22 @@ dialog::backdrop {
     cursor: pointer;
 }
 
-.dialog_options button:hover{
+.dialog_options .acept_button:hover{
     background-color: rgb(2, 139, 202);
+}
+
+.cancel_button{
+    padding: 1rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    background-color: rgb(230, 31, 31);
+    border: none;
+    cursor: pointer;
+    color:  white;
+}
+
+.cancel_button:hover{
+    background-color: rgb(197, 29, 29);
 }
 
 .close_button{
@@ -80,4 +94,24 @@ dialog::backdrop {
 
 .close_button:hover{
     color: rgb(59, 59, 59);
+}
+
+.appoint_hour_for_psycho{
+    cursor: pointer;
+}
+
+.appoint_hour_for_psycho:hover{
+    background-color: #486cb4;
+}
+
+.cancel_hour{
+    background-color: rgb(245, 69, 69);
+}
+
+.cancel_hour_psycho{
+    cursor: pointer;
+}
+
+.cancel_hour_psycho:hover{
+    background-color: rgb(187, 48, 48);
 }

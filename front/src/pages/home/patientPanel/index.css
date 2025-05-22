@@ -16,6 +16,13 @@
     gap: 2rem;
     font-size: 1.5rem;
     color: #4267B3;
+    max-width: min-content;
+    max-height: min-content;
+}
+
+.psycho_image img{
+    height: 250px;
+    width: 250px;
 }
 
 .card_description{
@@ -43,6 +50,7 @@
 
 .psycho_decription p{
     font-size: 1.5rem;
+    white-space: pre-line;
 }
 
 .psycho_button{

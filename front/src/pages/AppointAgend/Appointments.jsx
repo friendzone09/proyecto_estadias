@@ -5,6 +5,7 @@ import { useEffect, useState, useRef } from "react"
 
 import FreeHour from "./ListHours/FreeHour";
 import AppointHour from "./ListHours/AppointHour";
+import CancelHour from "./ListHours/CancelHour";
 
 import { getPatienId } from "../../utils/get_user";
 import { reLoginUser } from "../../utils/loginUser";
@@ -18,7 +19,6 @@ function Appointments ({ date, id_psycho }){
     const [schedule, setSchedule] = useState([])
 
     const openModal = (appoint) => {
-        console.log(appoint);
         setSelectedAppoint(appoint);
         if (dialogRef.current) dialogRef.current.showModal();
     };
@@ -42,10 +42,9 @@ function Appointments ({ date, id_psycho }){
             formData.append('id', id_psycho);
             formData.append('date', newDate);
 
-            const data = await getSchedule(formData)
+            const data = await getSchedule(formData);
 
             if(selectedDate < today){
-                console.log('No disponible')
                 setSchedule([]);
                 return null
             }
@@ -94,7 +93,6 @@ function Appointments ({ date, id_psycho }){
 
             setPsycho(data)
 
-            console.log(data)
         }
 
         getPsycho()
@@ -104,8 +102,6 @@ function Appointments ({ date, id_psycho }){
 
         const newDate = `${date.year}-${date.monthNum}-${date.day}`;
         const userId = getPatienId()
-
-        console.log(userId)
             
         const formData = new FormData()
         formData.append('psycho_id', id_psycho);
@@ -136,7 +132,9 @@ function Appointments ({ date, id_psycho }){
                 
 
                 {schedule.map(a =>( 
-                    !a.status? ( <FreeHour appointObject={a} key={a.id}  onClick={() => openModal(a)} /> ): ( <AppointHour key={a.key} appointObject = {a} /> )
+                    a.status == null ? ( <FreeHour appointObject={a} key={a.id}  onClick={() => openModal(a)} /> ): 
+                    a.status == true? (<AppointHour key={a.id} appointObject = {a} />):
+                    ( <CancelHour key = {a.id} appointObject = {a} /> )
                  ))}
 
             </div>

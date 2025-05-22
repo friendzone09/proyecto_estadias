@@ -9,6 +9,13 @@ def get_schedule(psycho_id, date):
     cur = conn.cursor()
 
     day_week = date.weekday() + 1
+
+    cur.execute('SELECT * FROM  public.laboral_days WHERE fk_psycho = %s AND fk_day = %s', (psycho_id, day_week,))
+
+    result = cur.fetchone()
+
+    if result[2] == False:
+        return []
     
     query = '''
         SELECT id_hour, hour, psycho_name, psycho_last_name

@@ -15,7 +15,6 @@ export async function login(formData) {
                 console.error('Error ', data.message);
                 succes = false;
             } else{
-                alert('ve la consola')
                 console.log(data.message)
                 console.log(data.user)
             }   
