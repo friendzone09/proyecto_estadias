@@ -119,7 +119,9 @@ function ShowHours({ selectedDay }){
                     </div>): 
                     ( <p>Dia no laborable</p> ) }
 
-                    <button onClick={changeHour} >Guardar</button>
+                    <div className="acept_hour_changes">
+                        <button onClick={changeHour} >Guardar</button>
+                    </div>
 
                 </div>
             ) : (
