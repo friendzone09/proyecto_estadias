@@ -57,3 +57,7 @@ canvas{
     height: 100vh;
     z-index: -1;
 }
+
+.login_squere small{
+    color: red;
+}

@@ -2,11 +2,13 @@ import { useState, useEffect } from "react"
 import { getPsychoId } from "../../../utils/get_user"
 import { getHours } from "../../../utils/getSchedule"
 import { updateHours } from "../../../utils/updateHours"
+import { useToast } from "../../../components/alert/ToastContext"
 
 import HoursInDay from "./HoursInDay"
 import DayInSchedule from "./DayInSchedule"
 
 function ShowHours({ selectedDay }){
+    const { addAlert } = useToast();
 
     const [hours, setHours] = useState([])
     const [day, setDay] = useState({})
@@ -63,8 +65,7 @@ function ShowHours({ selectedDay }){
 
             const data = await updateHours(formData);
 
-            console.log(data.message)
-
+            addAlert(data.message, data.type)
             setModifiedHours([]);
         } else{
             console.log('Sin modificaciones')

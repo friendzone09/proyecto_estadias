@@ -1,20 +1,31 @@
 import { getPsycho } from "../../utils/get_user"
-import { getUserType } from "../../utils/get_user"
 import './index.css'
 
-import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useEffect, useState, useRef } from "react"
+import { useNavigate, useLocation } from "react-router-dom"
+import { useToast } from "../../components/alert/ToastContext"
 
 import PsychoImage from "./PsychoImage"
 import PsychoDescription from "./PsychoDescription"
 
 function Profile(){
-
+    const location = useLocation();
+    const { addAlert } = useToast();
     const navigate = useNavigate()
     const [psycho, setPsycho] = useState(null);
 
-    console.log(psycho)
+    const toastShown = useRef(false);
 
+     useEffect(() => {
+        if (location.state?.toast && !toastShown.current) {
+            const { type, message } = location.state.toast;
+            addAlert(message, type);
+            toastShown.current = true;
+            navigate(location.pathname, { replace: true });
+        }
+    }, [location, addAlert, navigate]);
+
+    
     useEffect(()=>{
         
         const data = getPsycho();

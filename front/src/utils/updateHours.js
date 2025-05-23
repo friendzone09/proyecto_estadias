@@ -6,11 +6,6 @@ export async function updateHours(formdata){
     });
 
     const data = await response.json()
-
-    if(!response.ok){
-        return {'message' : 'Error'}, 401
-    }
-
     return data;
 
 }

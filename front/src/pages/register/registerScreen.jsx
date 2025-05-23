@@ -9,6 +9,10 @@ function RegisterScreen(){
     const[email, setEmail] = useState('');
     const[password, setPassword] = useState('');
 
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const navigate = useNavigate()
+
     useEffect(()=>{
         import('./ballsAnimation.js').then((module) => {
             module.default();
@@ -24,27 +28,20 @@ function RegisterScreen(){
         formData.append('last_name', lastName) 
         formData.append('email', email) 
         formData.append('password', password)
-        
-        try{
-            
-            const response = await fetch('http://127.0.0.1:5000/register',{
-                method : 'POST',
-                body : formData
-            });
+    
+        const response = await fetch('http://127.0.0.1:5000/register',{
+            method : 'POST',
+            body : formData
+        });
 
-            if (!response){
-                const errorData= await response.json();
-                console.error('Error ', errorData.message);
-                return
-            }
+        const data = await response.json();
 
-            const data = await response.json();
-            console.log(data.message)
+        if(data.type == 'success') navigate('/login');
 
-        }catch(e){
-            console.error('ERROR AL INICIAR SESION: ', e)
+        else{
+            setErrorMessage(data.message);
         }
-        
+
     }
 
 
@@ -67,6 +64,10 @@ function RegisterScreen(){
 
                 <label>Contraseña</label>
                 <input placeholder="Escribe tu contraseña..." value={password} onChange={(e) => setPassword(e.target.value)} type="password" required/>
+
+                {errorMessage && (
+                    <small>{errorMessage}</small>
+                )}
 
                 <button>Registrate</button>
 

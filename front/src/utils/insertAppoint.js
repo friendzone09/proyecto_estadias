@@ -6,10 +6,5 @@ export async function insertAppoint(formData){
 
     const data = await response.json()
 
-    if(!response.ok){
-        console.error( 'ERROR: ', data.message)
-        return {'message' : data.message}, 401
-    }
-
     return data
 }

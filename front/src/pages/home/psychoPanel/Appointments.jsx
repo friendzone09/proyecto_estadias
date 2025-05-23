@@ -1,5 +1,6 @@
 import { getSchedule } from "../../../utils/getSchedule";
 import { useEffect, useState, useRef } from "react"
+import { useToast } from "../../../components/alert/ToastContext";
 
 import FreeHour from "./ListHours/FreeHour";
 import AppointHour from "./ListHours/AppointHour";
@@ -12,6 +13,8 @@ import { cancellAppoint } from "../../../utils/cancelAppoints";
 import { activateAppoint } from "../../../utils/acivateAppoint";
 
 function Appointments ({ date }){
+
+    const { addAlert } = useToast();
 
     const id_psycho = getPsychoId()
 
@@ -47,9 +50,10 @@ function Appointments ({ date }){
         formData.append('date', newDate);
         formData.append('hour_id', hour_id);
 
-        await cancellAppoint(formData)
+        const data = await cancellAppoint(formData)
 
         closeModal();
+        addAlert(data.message, data.type)
         callGetSchedule();
 
     }
@@ -62,9 +66,10 @@ function Appointments ({ date }){
         formData.append('date', newDate);
         formData.append('hour_id', hour_id);
 
-        await activateAppoint(formData)
+        const data = await activateAppoint(formData)
 
         closeModal();
+        addAlert(data.message, data.type)
         callGetSchedule();
     }
 

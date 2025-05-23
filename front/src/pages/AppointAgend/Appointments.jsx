@@ -1,4 +1,4 @@
-import { data } from "react-router-dom";
+import { useToast } from "../../components/alert/ToastContext";
 import { getSchedule } from "../../utils/getSchedule";
 import { insertAppoint } from "../../utils/insertAppoint";
 import { useEffect, useState, useRef } from "react"
@@ -11,6 +11,8 @@ import { getPatienId } from "../../utils/get_user";
 import { reLoginUser } from "../../utils/loginUser";
 
 function Appointments ({ date, id_psycho }){
+
+    const { addAlert } = useToast();
 
     const [selectedAppoint, setSelectedAppoint] = useState(null);
     const dialogRef = useRef(null);
@@ -109,8 +111,11 @@ function Appointments ({ date, id_psycho }){
         formData.append('patient_id', userId);
         formData.append('hour_id', id_hour);
 
-        await insertAppoint(formData);
+        const data = await insertAppoint(formData);
         await reLoginUser(userId)
+
+        addAlert(data.message, data.type)
+
         closeModal();
         callGetSchedule();
 

@@ -8,4 +8,5 @@ def set_false_hours(cur, id_day, id_psycho):
 
     cur.execute("SELECT public.deactivate_hours_day(%s, %s);", (id_psycho, id_day,))
 
-    return {'message' : 'todo bien'}
+    return {'message' : 'Horario cambiado con exito',
+            'type' : 'success'}

@@ -6,11 +6,6 @@ export async function updatePsycho(formData, id) {
 
     const data = await response.json()
 
-    if(!response.ok){
-        console.error( 'ERROR: ', data.message)
-        return {'message' : data.message}, 401
-    }
-
     await reLoginPsycho(id);
 
     return data

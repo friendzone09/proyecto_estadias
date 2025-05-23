@@ -1,0 +1,49 @@
+.panel_edit_password{
+    padding: 2rem;
+}
+
+.insert_password{
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: #fff;
+    width: 40%;
+    border-radius: 10px;
+}
+
+.insert_password form{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.check_password{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.check_password input{
+    padding: 0.3rem;
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
+.check_password_button{
+    display: flex;
+    justify-content: end;
+}
+
+.check_password_button button{
+    background-color: rgb(0, 174, 255);
+    padding: 0.5rem;
+    width: 20%;
+    min-width: min-content;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.chek_password_button button:hover{
+    background-color: rgb(2, 139, 202);
+}

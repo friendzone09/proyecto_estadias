@@ -5,7 +5,11 @@ import PsychoImage from './PsychoImage'
 import { getPsychoInfo, getPsychoId } from "../../../utils/get_user"
 import { updatePsycho } from "../../../utils/updatePsycho"
 
+import { useToast } from "../../../components/alert/ToastContext"
+
 function EditProfile(){
+
+    const { addAlert } = useToast();
 
      const [info, setInfo] = useState({
         name: "",
@@ -55,9 +59,17 @@ function EditProfile(){
             formData.append("image", selectedImage)
         }
 
-        const response = await updatePsycho(formData, id)
-        navigate('/profile')
+        const data = await updatePsycho(formData, id)
 
+        if(data.type == 'success'){
+            navigate('/profile', {
+            state: { toast: { type: data.type, message: data.message } }
+            })
+            return
+        }
+
+        addAlert(data.message, data.type)
+        return     
     }
 
     return(

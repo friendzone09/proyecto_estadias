@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { login } from "../../utils/loginUser.js";
 import './index.css'
 
@@ -7,6 +7,7 @@ function LoginScreen(){
 
     const[email, setEmail] = useState('');
     const[password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
 
     useEffect(()=>{
@@ -22,10 +23,18 @@ function LoginScreen(){
         e.preventDefault();
         
         const formData = new FormData();
-        formData.append('email', email) 
-        formData.append('password', password)
+        formData.append('email', email);
+        formData.append('password', password);
 
-        login(formData)
+        const data = await login(formData);
+
+        if(data.type == 'success'){
+            navigate('/');
+            return
+        } else{
+            setErrorMessage(data.message);
+        }
+        
              
     }
 
@@ -41,6 +50,10 @@ function LoginScreen(){
 
                 <label>Contraseña</label>
                 <input placeholder="Escribe tu contraseña..." value={password} onChange={(e) => setPassword(e.target.value)} type="password" required />
+
+                {errorMessage && (
+                    <small>{errorMessage}</small>
+                )}
 
                 <button>Iniciar sesión</button>
 

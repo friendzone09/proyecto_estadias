@@ -75,7 +75,7 @@ def login():
     password = request.form.get('password')
 
     if not email or not password:
-        return jsonify({'message' : 'Faltan credenciales'}), 401
+        return jsonify({'message' : 'Faltan credenciales', 'type' : 'error'}), 401
 
     if not get_user(email):
         type = False
@@ -86,10 +86,12 @@ def login():
         row = cur.fetchone()
 
         if not row:
-            return jsonify({'message' : 'El usuario no existe'}), 401
+            return jsonify({'message' : 'El usuario no existe',
+                            'type' : 'error'}), 401
         
         if not check_password_hash(row[4], password):
-            return jsonify({'message': 'La contraseña es incorrecta'}), 401
+            return jsonify({'message': 'La contraseña es incorrecta',
+                            'type' : 'error'}), 401
         
         user = {
             'user_id' : row[0],
@@ -100,7 +102,10 @@ def login():
             'psycho' : row[6]
         }
 
-        return jsonify({'message' : 'El usuario es un paciente', 'user' : user})
+        return jsonify({'message' : 'El usuario es un paciente', 
+                        'user' : user,
+                        'type' : 'success'
+                        })
     
     type = True
     conn = get_db_connection()
@@ -110,7 +115,8 @@ def login():
     row = cur.fetchone()
 
     if not check_password_hash(row[4], password):
-            return jsonify({'message': 'La contraseña es incorrecta'})
+            return jsonify({'message': 'La contraseña es incorrecta',
+                            'type' : 'error'})
   
     user = {
         'user_id' : row[0],
@@ -121,7 +127,9 @@ def login():
         'image' : row[6]
     }
 
-    return jsonify({'message' : 'El usuario es un psicologo', 'user' : user})
+    return jsonify({'message' : 'El usuario es un psicologo',
+                    'user' : user,
+                    'type' : 'success'})
 
 @app.route('/re_login', methods = ['POST'])
 def re_login():
@@ -158,7 +166,8 @@ def register():
     password = request.form.get('password')
 
     if not name or not last_name or not email or not password:
-        return jsonify({'message' : 'Faltan credenciales'}), 401
+        return jsonify({'message' : 'Faltan credenciales',
+                        'type' : 'error'}), 401
     
     conn = get_db_connection()
     cur = conn.cursor()
@@ -171,7 +180,8 @@ def register():
     row2 = cur.fetchone()
 
     if row1 or row2:
-        return jsonify({'message': 'El usuario ya existe'}), 401
+        return jsonify({'message': 'El usuario ya existe',
+                        'type' : 'error'}), 401
     
     password = generate_password_hash(password)
 
@@ -179,8 +189,12 @@ def register():
 	 'patient_name, patien_last_name, patient_email, patient_password) '
 	'VALUES (%s, %s, %s, %s)', (name, last_name, email, password))
 
+    conn.commit()
+    cur.close()
+    conn.close()
 
-    return jsonify({'message' : 'Usuario registrado correctamente'})
+    return jsonify({'message' : 'Usuario registrado correctamente',
+                    'type' : 'success'})
 
 @app.route('/get_appoint_for_patient', methods = ['POST'])
 def obtain_appoint():
@@ -189,7 +203,8 @@ def obtain_appoint():
     date_str = request.form.get('date')
 
     if not psycho_id or not date_str:
-        return jsonify({'message': 'Error'}), 401
+        return jsonify({'message': 'Error',
+                        'type': 'errpr'}), 401
 
     date = datetime.strptime(date_str, "%Y-%m-%d").date()
 
@@ -243,10 +258,12 @@ def call_insert_appoint():
 
     if result == False :
         print('El usuario no puede registrar mas citas.')
-        return jsonify({'message' : 'Error, no puedes hacer mas registros'}), 400 
+        return jsonify({'message' : 'Error, no puedes hacer mas registros',
+                        'type' : 'error'}), 400 
         
 
-    return jsonify({'message' : 'Cita agendada'}), 200
+    return jsonify({'message' : 'Cita agendada',
+                    'type' : 'success'}), 200
 
 @app.route('/cancel_appoint', methods = ['POST'])
 def call_cancel_appoint():
@@ -279,7 +296,8 @@ def activate_appoint():
     cur.close()
     conn.close()
 
-    return jsonify({'message' : 'Todo bien'})
+    return jsonify({'message' : 'Hora reactivada correctamente',
+                    'type' : 'success'})
 
 @app.route('/get_psychgo_info', methods= ['POST'])
 def get_psychgo_info():
@@ -311,7 +329,12 @@ def update_psycho_profile():
     image_file = request.files.get('image')
 
     if not psycho_id:
-        return jsonify({'message': 'ID requerido'}), 400
+        return jsonify({'message': 'ID requerido',
+                        'type' : 'error'}), 400
+    
+    if not name or not last_name:
+        return jsonify({'message': 'No llenaste todas las credenciales',
+                        'type' : 'error'}), 400
     
     if not description:
         description = 'Sin descripción'
@@ -335,7 +358,8 @@ def update_psycho_profile():
     cur.close()
     conn.close()
 
-    return jsonify({'message': 'Perfil actualizado correctamente'})
+    return jsonify({'message': 'Perfil actualizado correctamente',
+                    'type': 'success'})
 
 @app.route('/relogin_psycho', methods = ['POST'])
 def re_login_psycho():
@@ -426,11 +450,33 @@ def update_hours():
     cur.close()
     conn.close()
 
-    return jsonify ({'message' : 'Todo bien'}), 200
+    return jsonify ({'message' : 'Horario cambiado con exito',
+                     'type' : 'success'}), 200
 
-    
+@app.route('/check_password', methods = ['POST'])
+def check_password():
 
-    
+    data = request.get_json()
+
+    send_password = data.get('password')
+    psycho_id = data.get('id')
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute('SELECT psycho_password FROM public.psycho WHERE id_psychologist = %s' , (psycho_id,))
+
+    hashed_pass = cur.fetchone()[0]
+
+    if check_password_hash(hashed_pass, send_password):
+        print('Es la misma')
+        return jsonify({'message' : 'Correcto',
+                        'type' : 'success'})
+    else:
+        print('No es la misma')
+        return jsonify ({'message' : 'Incorrecto',
+                        'type' : 'error'})
+
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)

@@ -18,7 +18,8 @@ def cancel_appoint(id_psycho, date, hour_id):
         conn.close()
         cur.close()
         
-        return {'message': 'Cambio exitoso'}
+        return {'message': 'Hora cancelada correctamente',
+                'type' : 'success'}
 
     cur.execute('INSERT INTO public.appointments( '
         'fk_psycho, appoint_date, fk_hour, appoint_status) '
@@ -28,4 +29,5 @@ def cancel_appoint(id_psycho, date, hour_id):
     conn.close()
     cur.close()
 
-    return {'message': 'Cambio exitoso'}
+    return {'message': 'Hora cancelada correctamente',
+            'type' : 'success'}
