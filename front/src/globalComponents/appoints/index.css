@@ -1,0 +1,117 @@
+.schedule{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow-y: scroll;
+    max-height: 45dvh;
+    align-items: start;
+}
+
+.show_hour{
+    padding: 1.5rem;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    width: 95%;
+}
+
+.free_hour{
+    background-color: #F3F3F3;
+    cursor: pointer;
+}
+
+.free_hour:hover{
+    background-color: #c7c7c7;
+}
+
+.appoint_hour{
+    background-color: #5983d6;
+}
+
+dialog.modal[open] {
+position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+
+  border: none;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  width: 40%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.dialog_options{
+    display: flex;
+    justify-content: end;
+    gap: 1rem;
+    align-items: center;
+}
+
+.dialog_options .acept_button{
+    padding: 1rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    background-color: rgb(0, 174, 255);
+    border: none;
+    cursor: pointer;
+}
+
+.dialog_options .acept_button:hover{
+    background-color: rgb(2, 139, 202);
+}
+
+.cancel_button{
+    padding: 1rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    background-color: rgb(230, 31, 31);
+    border: none;
+    cursor: pointer;
+    color:  white;
+}
+
+.cancel_button:hover{
+    background-color: rgb(197, 29, 29);
+}
+
+.close_button{
+    border: none;
+    background-color: none;
+    cursor: pointer;
+}
+
+.close_button:hover{
+    color: rgb(59, 59, 59);
+}
+
+.appoint_hour_for_psycho{
+    cursor: pointer;
+}
+
+.appoint_hour_for_psycho:hover{
+    background-color: #486cb4;
+}
+
+.cancel_hour{
+    background-color: rgb(245, 69, 69);
+}
+
+.cancel_hour_psycho{
+    cursor: pointer;
+}
+
+.cancel_hour_psycho:hover{
+    background-color: rgb(187, 48, 48);
+}

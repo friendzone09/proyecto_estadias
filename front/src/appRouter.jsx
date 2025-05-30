@@ -6,12 +6,12 @@ import LoginScreen from './pages/login/loginScreen';
 import RegisterScreen from './pages/register/registerScreen';
 import Profile from './pages/profile/Profile';
 import Body from './globalComponents/body';
-import AppointAgend from './pages/AppointAgend/AppointAgend';
+import AppointAgend from './pages/AppointAgend/AppointAgend'
 import EditProfile from './pages/profile/edit/EditProfile';
 import Schedule from './pages/profile/schedules/Schedules';
 import EditPassword from './pages/profile/editPassword/EditPassword';
 
-import Test from './test';
+import TestAgend from './TEST/AppointAgend/TestAgend';
 
 function AppRoutes() {
   const location = useLocation();
@@ -27,7 +27,7 @@ function AppRoutes() {
       <Route path="/profile/schedules" element={isLayoutVisible ? <Body><Schedule /></Body> : <Profile />} />
       <Route path="/profile/edit/password" element={isLayoutVisible ? <Body><EditPassword /></Body> : <Profile />} />
 
-      <Route path='/test' element={<Test/>} />
+      <Route path='/test' element={<TestAgend/>} />
 
       <Route path="/appointAgend/:id_psycho" element={isLayoutVisible ? <Body><AppointAgend /></Body> : <AppointAgend />} />
       <Route path="/login" element={<LoginScreen />} />

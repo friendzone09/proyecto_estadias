@@ -14,14 +14,17 @@ def get_schedule(psycho_id, date):
 
     result = cur.fetchone()
 
+    if not result:
+        return False
+
     if result[2] == False:
         return []
     
     query = '''
-        SELECT id_hour, hour, psycho_name, psycho_last_name
+        SELECT id_hour, hour, user_name, user_last_name
         FROM schedule s
         JOIN hour h ON s.fk_hour = h.id_hour
-        JOIN psycho p ON s.fk_psycho = p.id_psychologist
+        JOIN users p ON s.fk_psycho = p.id_user
         WHERE s.fk_psycho = %s
         AND s.fk_day = %s
         AND s.hour_status = true

@@ -1,4 +1,4 @@
-import { getPsycho } from "../../utils/get_user"
+import { getUser } from "../../utils/get_user"
 import './index.css'
 
 import { useEffect, useState, useRef } from "react"
@@ -25,10 +25,9 @@ function Profile(){
         }
     }, [location, addAlert, navigate]);
 
-    
     useEffect(()=>{
         
-        const data = getPsycho();
+        const data = getUser();
 
         if (!data || data.type === false) {
             navigate('/');

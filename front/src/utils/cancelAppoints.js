@@ -1,5 +1,5 @@
 export async function cancellAppoint(formData){
-    const response = await fetch('http://127.0.0.1:5000/cancel_appoint',{
+    const response = await fetch('http://127.0.0.1:5000/api/cancel_appoint',{
         method : 'POST',
         body: formData
     });

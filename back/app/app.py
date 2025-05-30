@@ -4,6 +4,8 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+
+import uuid
 import os
 import json
 
@@ -15,6 +17,8 @@ from app.functions.insert_appoint import insert_appoint
 from app.functions.cancel_appoint import cancel_appoint
 from app.functions.set_all_false_hours import set_false_hours
 from app.functions.update_hour import update_hour
+
+password = generate_password_hash('12345')
 
 app = Flask(__name__)
 
@@ -31,16 +35,16 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route("/")
+@app.route("/api/")
 def hello_world():
     return "<p>Hello world</p>"
 
-@app.route('/psychos')
+@app.route('/api/psychos')
 def get_psychos():
 
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute('SELECT * FROM public.psycho ORDER BY id_psychologist ASC ')
+    cur.execute('SELECT * FROM public.psychos_info ORDER BY fk_user ASC')
     rows = cur.fetchall()
 
     psychos = []
@@ -51,113 +55,67 @@ def get_psychos():
             'name': row[1],
             'last_name' : row[2],
             'email' : row[3],
-            'image' : row[6],
-            'description' : row[7]
+            'image' : row[4],
+            'description' : row[5]
         })
 
     return jsonify(psychos)
 
-def get_user(email):
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute('SELECT * FROM public.psycho WHERE psycho_email = %s', (email,))  
-
-    user = cur.fetchone()
-
-    if not user:
-        return False
-    
-    return True
-
-@app.route('/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def login():
     email = request.form.get('email')
     password = request.form.get('password')
 
+    user = {}
+
     if not email or not password:
         return jsonify({'message' : 'Faltan credenciales', 'type' : 'error'}), 401
-
-    if not get_user(email):
-        type = False
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute('SELECT * FROM public.patient WHERE patient_email = %s',(email,))
-
-        row = cur.fetchone()
-
-        if not row:
-            return jsonify({'message' : 'El usuario no existe',
-                            'type' : 'error'}), 401
-        
-        if not check_password_hash(row[4], password):
-            return jsonify({'message': 'La contraseña es incorrecta',
-                            'type' : 'error'}), 401
-        
-        user = {
-            'user_id' : row[0],
-            'name' : row[1],
-            'last_name' : row[2],
-            'email' : row[3],
-            'type' : type,
-            'psycho' : row[6]
-        }
-
-        return jsonify({'message' : 'El usuario es un paciente', 
-                        'user' : user,
-                        'type' : 'success'
-                        })
     
-    type = True
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute('SELECT * FROM public.psycho WHERE psycho_email = %s',(email,))
-   
-    row = cur.fetchone()
 
-    if not check_password_hash(row[4], password):
-            return jsonify({'message': 'La contraseña es incorrecta',
-                            'type' : 'error'})
-  
-    user = {
-        'user_id' : row[0],
-        'name' : row[1],
-        'last_name' : row[2],
-        'email' : row[3],
-        'type' : type,
-        'image' : row[6]
-    }
+    cur.execute('SELECT * FROM public.users WHERE user_email = %s', (email,))
 
-    return jsonify({'message' : 'El usuario es un psicologo',
-                    'user' : user,
-                    'type' : 'success'})
+    user_info = cur.fetchone()
 
-@app.route('/re_login', methods = ['POST'])
-def re_login():
-    user_id = request.form.get('id')
+    if not user_info:
+        cur.close()
+        conn.close()
+        return jsonify({'message': 'Usuario no encontrado', 'type': 'error'}), 404
 
-    type = False
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute('SELECT * FROM public.patient WHERE id_patient = %s',(user_id,))
-
-    row = cur.fetchone()
-
-    if not row:
-        return jsonify({'message' : 'El usuario no existe'}), 401
-        
-    user = {
-            'user_id' : row[0],
-            'name' : row[1],
-            'last_name' : row[2],
-            'email' : row[3],
-            'type' : type,
-            'psycho' : row[6]
-        }
-
-    return jsonify({'message' : 'El usuario es un paciente', 'user' : user})
-
+    if not check_password_hash(user_info[4], password):
+        cur.close()
+        conn.close()
+        return jsonify({'message' : 'Error: contraseña incorrecta', 'type' : 'error'})
     
-@app.route('/register', methods = ['POST'])
+    if user_info[5] == 'psycho':
+        cur.execute('SELECT * FROM public.psychos_info WHERE fk_user=%s', (user_info[0],))
+        user_info = cur.fetchone()
+
+        user = {'user_id' : user_info[0],
+        'name' : user_info[1],
+        'last_name' : user_info[2],
+        'email' : user_info[3],
+        'type' : user_info[6],
+        'image' : user_info[4]}
+        
+    elif user_info[5] == 'patient':
+        cur.execute('SELECT * FROM public.patients_info WHERE fk_user =%s' ,(user_info[0],))
+        user_info = cur.fetchone()
+
+        user = {'user_id' : user_info[0], 'name' : user_info[1], 'last_name' : user_info[2], 'email' : user_info[3],
+                'fk_psycho' : user_info[4], 'type' : user_info[5]}
+        
+    else:
+        user = {'user_id' : user_info[0], 'name' : user_info[1], 'last_name' : user_info[2], 'email' : user_info[3],
+                'type' : user_info[5]}
+        
+    cur.close()
+    conn.close()
+
+    return jsonify({'user' : user, 'type' : 'success'})
+    
+@app.route('/api/register', methods = ['POST'])
 def register():
 
     name = request.form.get('name')
@@ -171,23 +129,24 @@ def register():
     
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute('SELECT * FROM public.psycho WHERE psycho_email = %s',(email,))
+    cur.execute('SELECT user_email FROM public.users WHERE user_email = %s',(email,))
    
-    row1 = cur.fetchone()
+    row = cur.fetchone()
 
-    cur.execute('SELECT * FROM public.patient WHERE patient_email = %s',(email,))
-
-    row2 = cur.fetchone()
-
-    if row1 or row2:
+    if row:
         return jsonify({'message': 'El usuario ya existe',
                         'type' : 'error'}), 401
     
     password = generate_password_hash(password)
 
+    cur.execute('INSERT INTO public.users( '
+	 'user_name, user_last_name, user_email, user_password) '
+	'VALUES (%s, %s, %s, %s) RETURNING id_user ', (name, last_name, email, password))
+
+    id_user = cur.fetchone()[0]
+
     cur.execute('INSERT INTO public.patient( '
-	 'patient_name, patien_last_name, patient_email, patient_password) '
-	'VALUES (%s, %s, %s, %s)', (name, last_name, email, password))
+    'fk_user) VALUES (%s)', (id_user,))
 
     conn.commit()
     cur.close()
@@ -196,11 +155,8 @@ def register():
     return jsonify({'message' : 'Usuario registrado correctamente',
                     'type' : 'success'})
 
-@app.route('/get_appoint_for_patient', methods = ['POST'])
-def obtain_appoint():
-
-    psycho_id = request.form.get('id')
-    date_str = request.form.get('date')
+@app.route('/api/get_appoint_for_patient/<int:psycho_id>/<string:date_str>', methods = ['GET'])
+def obtain_appoint(psycho_id, date_str):
 
     if not psycho_id or not date_str:
         return jsonify({'message': 'Error',
@@ -210,10 +166,13 @@ def obtain_appoint():
 
     result = get_schedule(psycho_id, date)   
 
+    if result == False:
+        return jsonify({'message' : 'El usuario no es un psicologo o no existe', 'type':'error'})
+
     if not result:
         return jsonify({'schedule' : []})
 
-    schedule = [{'id': h[0], 'hour': h[1].strftime('%H:%M')} for h in result]
+    schedule = [{'id': r[0], 'hour': r[1].strftime('%H:%M')} for r in result]
 
     result = get_appoint(psycho_id, date)
 
@@ -227,13 +186,12 @@ def obtain_appoint():
     return jsonify({'schedule': new_schedule}), 200
 
 
-@app.route('/get_psycho', methods = ['POST'])
-def get_psycho():
+@app.route('/api/get_psycho/<int:id_psycho>', methods = ['GET'])
+def get_psycho(id_psycho):
 
-    id_psycho = request.form.get('id')
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute('SELECT psycho_name, psycho_last_name FROM public.psycho WHERE id_psychologist = %s',(id_psycho,))
+    cur.execute('SELECT user_name, user_last_name FROM public.psychos_info WHERE fk_user = %s',(id_psycho,))
 
     row = cur.fetchone()
 
@@ -244,8 +202,8 @@ def get_psycho():
 
     return jsonify(psycho)
 
-@app.route('/insert_appoint', methods = ['POST'])
-def call_insert_appoint():
+@app.route('/api/insert_appoint', methods = ['POST'])
+def insert_appoint_for_patient():
 
     id_psycho = request.form.get('psycho_id')
     date_str = request.form.get('date')
@@ -257,15 +215,16 @@ def call_insert_appoint():
     result = insert_appoint(id_psycho, patient_id, date, hour_id)
 
     if result == False :
-        print('El usuario no puede registrar mas citas.')
         return jsonify({'message' : 'Error, no puedes hacer mas registros',
                         'type' : 'error'}), 400 
+    
         
 
     return jsonify({'message' : 'Cita agendada',
-                    'type' : 'success'}), 200
+                    'type' : 'success',
+                    'user'  : result}), 200
 
-@app.route('/cancel_appoint', methods = ['POST'])
+@app.route('/api/cancel_appoint', methods = ['POST'])
 def call_cancel_appoint():
 
     id_psycho = request.form.get('psycho_id')
@@ -278,7 +237,7 @@ def call_cancel_appoint():
 
     return response
 
-@app.route('/activate_appoint', methods = ['POST'])
+@app.route('/api/activate_appoint', methods = ['POST'])
 def activate_appoint():
 
     id_psycho = request.form.get('psycho_id')
@@ -299,20 +258,19 @@ def activate_appoint():
     return jsonify({'message' : 'Hora reactivada correctamente',
                     'type' : 'success'})
 
-@app.route('/get_psychgo_info', methods= ['POST'])
-def get_psychgo_info():
-    id_psycho = request.form.get('id')
+@app.route('/api/get_psycho_info/<int:id_psycho>', methods= ['GET'])
+def get_psychgo_info(id_psycho):
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute('SELECT * FROM public.psycho '
-	    'WHERE id_psychologist = %s' , (id_psycho,))
+    cur.execute('SELECT * FROM public.psychos_info '
+	    'WHERE fk_user = %s' , (id_psycho,))
     
     response = cur.fetchone()
 
     body = {'name' : response[1],
             'last_name': response[2],
-            'image' : response[6],
-            'description' : response[7] 
+            'image' : response[4],
+            'description' : response[5] 
             }
 
     cur.close()
@@ -320,7 +278,7 @@ def get_psychgo_info():
 
     return jsonify(body)
 
-@app.route('/update_psycho_profile', methods=['POST'])
+@app.route('/api/update_psycho_profile', methods=['PUT'])
 def update_psycho_profile():
     psycho_id = request.form.get('id')
     name = request.form.get('name')
@@ -342,51 +300,44 @@ def update_psycho_profile():
     conn = get_db_connection()
     cur = conn.cursor()
 
-    cur.execute('UPDATE public.psycho SET psycho_name = %s, psycho_last_name = %s, psycho_description = %s WHERE id_psychologist = %s',
-                (name, last_name, description, psycho_id))
+    cur.execute('UPDATE public.users SET user_name = %s, user_last_name = %s WHERE id_user = %s',
+                (name, last_name, psycho_id,))
+    
+    cur.execute('UPDATE public.psycho SET psycho_description = %s WHERE fk_user = %s', (description, psycho_id,))
 
     if image_file and allowed_file(image_file.filename):
-        filename = secure_filename(image_file.filename)
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        random_prefix = str(uuid.uuid4())
+        filename = f"{random_prefix}_{secure_filename(image_file.filename)}"
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)\
+        
+        image_file.save(filepath)
 
-        if not os.path.exists(filepath):
-            image_file.save(filepath)
-
-        cur.execute('UPDATE public.psycho SET psycho_image = %s WHERE id_psychologist = %s', (filename, psycho_id))
+        cur.execute('UPDATE public.psycho SET psycho_image = %s WHERE fk_user = %s', (filename, psycho_id,))
 
     conn.commit()
+
+    cur.execute('SELECT * FROM public.psychos_info WHERE fk_user=%s', (psycho_id,))
+
+    row = cur.fetchone()
+
+    user = {
+        'user_id' : row[0],
+        'name' : row[1],
+        'last_name' : row[2],
+        'email' : row[3],
+        'type' : row[6],
+        'image' : row[4]
+    }
+
     cur.close()
     conn.close()
 
     return jsonify({'message': 'Perfil actualizado correctamente',
-                    'type': 'success'})
+                    'type': 'success',
+                    'user' : user})
 
-@app.route('/relogin_psycho', methods = ['POST'])
-def re_login_psycho():
-    psycho_id = request.form.get('id')
-
-    conn = get_db_connection()
-    cur = conn.cursor()
-
-    cur.execute('SELECT * FROM public.psycho WHERE id_psychologist = %s',(psycho_id,))
-   
-    row = cur.fetchone()
-
-    user = {
-            'user_id' : row[0],
-        'name' : row[1],
-        'last_name' : row[2],
-        'email' : row[3],
-        'type' : True,
-        'image' : row[6]
-        }
-
-    return jsonify({'message' : 'El usuario es un paciente', 'user' : user})
-
-@app.route('/get_laboral_day', methods = ['POST'])
-def get_laboral_day():
-    id_day = request.form.get('id_day')
-    id_psycho = request.form.get('id_psycho')
+@app.route('/api/get_laboral_day/<int:id_psycho>/<int:id_day>', methods = ['GET'])
+def get_laboral_day(id_psycho,id_day):
 
     conn = get_db_connection()
     cur = conn.cursor()
@@ -395,6 +346,9 @@ def get_laboral_day():
     'JOIN day ON fk_day = id_day WHERE fk_psycho=%s AND fk_day=%s',(id_psycho, id_day,))
 
     response = cur.fetchone()
+
+    if not response:
+        return {'meessage' : 'El usuario no es un psicologo ó no existe', 'type' :'error'}
 
     day = {
         'id_day' : response[0],
@@ -413,8 +367,7 @@ def get_laboral_day():
 
     return jsonify({'day' : day, 'hours' : hours})
 
-
-@app.route('/update_hours', methods = ['PUT'])
+@app.route('/api/update_hours', methods = ['PUT'])
 def update_hours():
     conn = get_db_connection()
     cur = conn.cursor()
@@ -453,7 +406,7 @@ def update_hours():
     return jsonify ({'message' : 'Horario cambiado con exito',
                      'type' : 'success'}), 200
 
-@app.route('/check_password', methods = ['POST'])
+@app.route('/api/check_password', methods = ['POST'])
 def check_password():
 
     data = request.get_json()
@@ -464,7 +417,7 @@ def check_password():
     conn = get_db_connection()
     cur = conn.cursor()
 
-    cur.execute('SELECT psycho_password FROM public.psycho WHERE id_psychologist = %s' , (psycho_id,))
+    cur.execute('SELECT user_password FROM public.users WHERE id_user = %s' , (psycho_id,))
 
     hashed_pass = cur.fetchone()[0]
 

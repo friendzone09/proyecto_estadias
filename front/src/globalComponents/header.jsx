@@ -11,7 +11,7 @@ function Header({ userType }){
                 <p>LOGO</p>
             </div>
        
-            {userType? <HeaderPsycho/> : <HeaderPatient userType = {userType} /> }
+            {userType === 'psycho' ? <HeaderPsycho/> : <HeaderPatient userType = {userType} /> }
            
         </header>
     )

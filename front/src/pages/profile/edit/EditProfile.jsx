@@ -2,14 +2,17 @@ import PsychoDescription from "./PsychoDescription"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import PsychoImage from './PsychoImage'
-import { getPsychoInfo, getPsychoId } from "../../../utils/get_user"
+
+import { getPsychoInfo, getUser } from "../../../utils/get_user"
 import { updatePsycho } from "../../../utils/updatePsycho"
+import { reLoginUser } from "../../../utils/loginUser"
 
 import { useToast } from "../../../components/alert/ToastContext"
 
 function EditProfile(){
 
     const { addAlert } = useToast();
+    const psycho = getUser();
 
      const [info, setInfo] = useState({
         name: "",
@@ -23,7 +26,10 @@ function EditProfile(){
     const navigate = useNavigate();
 
     async function callInfo() {
-        const data = await getPsychoInfo()
+        
+        const psychoId = psycho.user_id;
+
+        const data = await getPsychoInfo(psychoId)
         setInfo(data)
     }
 
@@ -47,7 +53,7 @@ function EditProfile(){
     async function handleSubmit(e) {
         e.preventDefault()
 
-        const id = getPsychoId()
+        const id = psycho.user_id;
 
         const formData = new FormData()
         formData.append("id", id)
@@ -60,6 +66,8 @@ function EditProfile(){
         }
 
         const data = await updatePsycho(formData, id)
+
+        reLoginUser(data.user);
 
         if(data.type == 'success'){
             navigate('/profile', {

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { getPsychoId } from "../../../utils/get_user"
+import { getUser } from "../../../utils/get_user"
 import CheckPassword from "./forms/CheckPassword";
 import CheckCode from "./forms/CheckCode";
 
@@ -14,9 +14,10 @@ function InputPassword(){
 
         e.preventDefault()
 
-        const id = getPsychoId()
+        const psycho = getUser();
+        const id = psycho.user_id;
 
-        const response = await fetch('http://127.0.0.1:5000/check_password',{
+        const response = await fetch('http://127.0.0.1:5000/api/check_password',{
             method : 'POST',
             headers: {'Content-Type': 'application/json'}, 
             body: JSON.stringify({

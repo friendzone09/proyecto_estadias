@@ -12,7 +12,7 @@ function SelectDay({ onDayChange }) {
     return (
         <div className="select_day">
             <select value={selectedDay ?? ''} onChange={handleChange}>
-                <option value={0}>Selecciona una opción</option>
+                <option value={0}>Selecciona un día</option>
                 <option value={1} >Lunes</option>
                 <option value={2}>Martes</option>
                 <option value={3} >Miércoles</option>

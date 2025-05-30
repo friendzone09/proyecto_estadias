@@ -1,6 +1,6 @@
-function CancelHour({ appointObject, onClick }){
+function CancelHour({ appointObject, onClick, className }){
     return(
-        <div className="cancel_hour show_hour cancel_hour_psycho" onClick={onClick}>
+        <div className={`show_hour cancel_hour ${className}`} onClick={onClick}>
             <span> {appointObject.hour}</span>
             <span> No disponible </span>
         </div>

@@ -1,5 +1,5 @@
-import { useToast } from "../../components/alert/ToastContext";
-import { getSchedule } from "../../utils/getSchedule";
+import { useToast } from '../../components/alert/ToastContext'
+import { getSchedule } from '../../utils/getSchedule'
 import { insertAppoint } from "../../utils/insertAppoint";
 import { useEffect, useState, useRef } from "react"
 
@@ -7,8 +7,9 @@ import FreeHour from "./ListHours/FreeHour";
 import AppointHour from "./ListHours/AppointHour";
 import CancelHour from "./ListHours/CancelHour";
 
-import { getPatienId } from "../../utils/get_user";
+import { getUser } from "../../utils/get_user";
 import { reLoginUser } from "../../utils/loginUser";
+import { getPsychoInfo } from "../../utils/get_user";
 
 function Appointments ({ date, id_psycho }){
 
@@ -44,7 +45,7 @@ function Appointments ({ date, id_psycho }){
             formData.append('id', id_psycho);
             formData.append('date', newDate);
 
-            const data = await getSchedule(formData);
+            const data = await getSchedule(id_psycho, newDate);
 
             if(selectedDate < today){
                 setSchedule([]);
@@ -79,21 +80,8 @@ function Appointments ({ date, id_psycho }){
     useEffect(()=>{
         async function getPsycho() {
 
-            const formData = new FormData();
-            formData.append('id',id_psycho)
-
-            const response = await fetch('http://127.0.0.1:5000/get_psycho',{
-                method : 'POST',
-                body : formData
-            });
-
-            if(!response.ok){
-                console.log('Salio mal')
-            } 
-
-            const data = await response.json()
-
-            setPsycho(data)
+        const data = await getPsychoInfo(id_psycho)
+        setPsycho(data);
 
         }
 
@@ -103,7 +91,8 @@ function Appointments ({ date, id_psycho }){
     async function agendAppoint(id_hour){ 
 
         const newDate = `${date.year}-${date.monthNum}-${date.day}`;
-        const userId = getPatienId()
+        const user = getUser()
+        const userId = user.user_id;
             
         const formData = new FormData()
         formData.append('psycho_id', id_psycho);
@@ -112,12 +101,15 @@ function Appointments ({ date, id_psycho }){
         formData.append('hour_id', id_hour);
 
         const data = await insertAppoint(formData);
-        await reLoginUser(userId)
 
+        if(data.type == 'success') await reLoginUser(data.user)
+
+        console.log(data)
+
+        await callGetSchedule();
         addAlert(data.message, data.type)
 
         closeModal();
-        callGetSchedule();
 
     }
 
@@ -132,9 +124,7 @@ function Appointments ({ date, id_psycho }){
 
             {schedule.length === 0 && <p>Seleccione otra fecha</p>}
 
-            <div className="schedule">
-
-                
+            <div className="schedule">   
 
                 {schedule.map(a =>( 
                     a.status == null ? ( <FreeHour appointObject={a} key={a.id}  onClick={() => openModal(a)} /> ): 

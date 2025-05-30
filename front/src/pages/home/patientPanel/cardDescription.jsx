@@ -1,8 +1,9 @@
-import { getUserPsycho } from "../../../utils/get_user";
+import { getUser } from "../../../utils/get_user";
 
 function CardDescription({description, userType, psychoId}){
 
-    const userPsycho = getUserPsycho();
+    const user = getUser();
+    let userPsycho = user == null? null : user.fk_psycho
 
     const psychoLink = `/appointAgend/${psychoId}`;
 
@@ -19,8 +20,8 @@ function CardDescription({description, userType, psychoId}){
 
             <div className="psycho_button">
                 {userPsycho != null && ( <a href="#"> Ya no puedes agendar mas citas </a> )}
-                {userType == null &&( <a href="/login">Si quieres agendar una cita primero inicia sesión</a> )}
-                {userType == false && userPsycho == null &&( <a href={psychoLink} >Agendar una cita</a> )}
+                {userType == null &&( <a href="/login">Si quieres agendar una cita primero inicia sesión</a>)}
+                {userType == 'patient' && userPsycho == null &&( <a href={psychoLink} >Agendar una cita</a> )}
             </div>
         </section>
     )

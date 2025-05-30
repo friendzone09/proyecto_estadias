@@ -1,6 +1,6 @@
-function AppointHour({ appointObject, onClick }){
+function AppointHour({ appointObject, onClick, className}){
     return(
-        <div className="appoint_hour show_hour appoint_hour_for_psycho" onClick={onClick}>
+        <div className={`appoint_hour show_hour ${className}`} onClick={onClick}>
             <span> {appointObject.hour}</span>
             <span> Apartada </span>
         </div>

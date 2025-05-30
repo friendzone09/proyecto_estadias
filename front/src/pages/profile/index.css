@@ -39,7 +39,6 @@
     border-radius: 10px;
     width: 65dvw;
     max-height: 500PX;
-    overflow-y: scroll;
 }
 
 .profile_description h1{
@@ -50,6 +49,7 @@
 .profile_description p{
     font-size: 1.5rem;
     white-space: pre-line;
+    overflow-y: scroll;
 }
 
 .profile_edit_buttons{

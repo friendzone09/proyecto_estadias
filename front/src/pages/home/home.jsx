@@ -1,36 +1,36 @@
 import React, { useEffect, useState } from 'react';
+import { getAllPsychos } from '../../utils/get_user';
+
 import CardBack from './patientPanel/cardBack';
 import Appointments from './psychoPanel/Dates';
+import AdminHouse from './adminPanel/AdminHome';
+
 import './index.css'
 
 function Home({ userType }){
 
-    const [psychos, setPshychos] = useState([]);
+  const [psychos, setPshychos] = useState([]);
 
-    useEffect(()=>{
-        fetch('http://localhost:5000/psychos')
-      .then(response => response.json())
-      .then(data => {
-        setPshychos(data);
-      })
-      .catch(error => {
-        console.error('Error al cargar psicólogos:', error);
-      });
+  async function callPsychos() {
+    const data = await getAllPsychos();
+    setPshychos(data);
+  }
 
-      
-    }, [])
+  useEffect(()=>{
+    callPsychos()
+  }, [])
 
     return(
             <section className="main_section">
+              {userType === 'psycho' && ( <Appointments/> ) }
 
-              {userType == true && ( <Appointments/> ) }
-
-              {userType != true && (
+              {(userType === 'patient' || userType === null) && (
                 psychos.map(p => (
                   <CardBack psycho = {p} key = {p.id} userType = {userType}  />
                 ))
               )}
-      
+
+              {userType === 'admin' && (<AdminHouse/>)}
             </section>         
     )
 }

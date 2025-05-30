@@ -1,5 +1,5 @@
 export async function activateAppoint(formData){
-    const response = await fetch('http://127.0.0.1:5000/activate_appoint',{
+    const response = await fetch('http://127.0.0.1:5000/api/activate_appoint',{
         method : 'POST',
         body: formData
     });

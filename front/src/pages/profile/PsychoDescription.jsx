@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { getPsychoInfo } from "../../utils/get_user"
+import { getUser } from "../../utils/get_user"
 
 function PsychoDescription(){
 
@@ -7,7 +8,9 @@ function PsychoDescription(){
 
     useEffect(()=>{
         async function callDescription() {
-            const data = await getPsychoInfo()
+            const psycho = getUser()
+            const psychoId = psycho.user_id;
+            const data = await getPsychoInfo(psychoId)
             setDescription(data.description)
         }
 

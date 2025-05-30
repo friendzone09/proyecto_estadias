@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { getPsychoId } from "../../../utils/get_user"
+import { getUser } from "../../../utils/get_user"
 import { getHours } from "../../../utils/getSchedule"
 import { updateHours } from "../../../utils/updateHours"
 import { useToast } from "../../../components/alert/ToastContext"
@@ -15,7 +15,8 @@ function ShowHours({ selectedDay }){
     const [modifiedHours, setModifiedHours] = useState([])
     const [originalLaboralDay, setOriginalLaboralDay] = useState(null);
 
-    const psychoId = getPsychoId()
+    const psycho = getUser();
+    const psychoId = psycho.user_id;
 
     function handleToggleHour(id_hour){
         const updatedHours = hours.map(h =>
@@ -78,12 +79,7 @@ function ShowHours({ selectedDay }){
         if (selectedDay !== null && selectedDay !== 0) {
             async function fetchHours(){
 
-                const formData = new FormData()
-
-                formData.append('id_day', selectedDay)
-                formData.append('id_psycho', psychoId)
-
-                const schedule = await getHours(formData)
+                const schedule = await getHours(psychoId, selectedDay)
 
                 setHours(schedule.hours);
                 setDay(schedule.day);

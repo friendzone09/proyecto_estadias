@@ -1,29 +1,24 @@
 import Calendar from "./Calendar"
-import Appointments from "./Appointments"
+import GlobalAppoints from '../../globalComponents/appoints/GlobalAppoints'
 import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom";
 
-import './ListHours/index.css'
-import { getUserPsycho, getUserType } from "../../utils/get_user";
+import { getUser } from "../../utils/get_user";
 
 function AppointAgend (){
     const navigate = useNavigate();
 
+    const user = getUser();
+
     useEffect(()=>{
-
         function canPass(){
+            const userPsycho = user == null? null : user.psycho;
 
-            const userPsycho = getUserPsycho()
-            const userType = getUserType()
-
-            if(userType == null || userPsycho!= null){
+            if(user == null || userPsycho!= null){
                 navigate('/')
             }
-
         }
-
         canPass();
-
     }, [])
 
     const { id_psycho } = useParams();
@@ -33,8 +28,17 @@ function AppointAgend (){
     return (
         <section className="appointments_section">
             <Calendar onDateChange = {setDateParse} />
-            <Appointments date = {dateParse} id_psycho={id_psycho} />
+            <GlobalAppoints date = {dateParse} id_psycho={id_psycho} userType={user.type} />
         </section>
     )
 }
 export default AppointAgend
+
+//ESTRUCTURA DE UN USUARIO PACIENTE
+
+// user = {'user_id' : user_info[0], 
+// 'name' : user_info[1], 
+// 'last_name' : user_info[2], 
+// 'email' : user_info[3],
+// 'fk_psycho' : user_info[4], 
+// 'type' : user_info[5]}
