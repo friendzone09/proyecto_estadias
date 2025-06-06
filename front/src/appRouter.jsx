@@ -11,7 +11,7 @@ import EditProfile from './pages/profile/edit/EditProfile';
 import Schedule from './pages/profile/schedules/Schedules';
 import EditPassword from './pages/profile/editPassword/EditPassword';
 
-import TestAgend from './TEST/AppointAgend/TestAgend';
+import Screen from './TEST/Screen';
 
 function AppRoutes() {
   const location = useLocation();
@@ -22,12 +22,12 @@ function AppRoutes() {
     <Routes>
       <Route path="/" element={isLayoutVisible ? <Body><Home /></Body> : <Home />} />
 
-      <Route path="/profile" element={isLayoutVisible ? <Body><Profile /></Body> : <Profile />} />
-      <Route path="/profile/edit" element={isLayoutVisible ? <Body><EditProfile /></Body> : <Profile />} />
-      <Route path="/profile/schedules" element={isLayoutVisible ? <Body><Schedule /></Body> : <Profile />} />
-      <Route path="/profile/edit/password" element={isLayoutVisible ? <Body><EditPassword /></Body> : <Profile />} />
+      <Route path="/profile" element={isLayoutVisible ? <Body><Profile /></Body> : <Home />} />
+      <Route path="/profile/edit" element={isLayoutVisible ? <Body><EditProfile /></Body> : <Home />} />
+      <Route path="/profile/schedules" element={isLayoutVisible ? <Body><Schedule /></Body> : <Home />} />
+      <Route path="/profile/edit/password" element={isLayoutVisible ? <Body><EditPassword /></Body> : <Home />} />
 
-      <Route path='/test' element={<TestAgend/>} />
+      <Route path='/test' element={isLayoutVisible ? <Body><Screen /></Body> : <Home />} />
 
       <Route path="/appointAgend/:id_psycho" element={isLayoutVisible ? <Body><AppointAgend /></Body> : <AppointAgend />} />
       <Route path="/login" element={<LoginScreen />} />

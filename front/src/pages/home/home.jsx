@@ -5,34 +5,45 @@ import CardBack from './patientPanel/cardBack';
 import Appointments from './psychoPanel/Dates';
 import AdminHouse from './adminPanel/AdminHome';
 
+import { useLoading } from '../../components/loading/LoadingContext';
+
 import './index.css'
 
-function Home({ userType }){
-
+function Home({ userType }) {
+  const { setLoading } = useLoading();
   const [psychos, setPshychos] = useState([]);
 
-  async function callPsychos() {
-    const data = await getAllPsychos();
-    setPshychos(data);
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const data = await getAllPsychos();
+        setPshychos(data);
+      } catch (err) {
+        console.error("Error al obtener psicólogos", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  useEffect(()=>{
-    callPsychos()
-  }, [])
+    fetchData();
+  }, [setLoading]);
 
-    return(
-            <section className="main_section">
-              {userType === 'psycho' && ( <Appointments/> ) }
+  if (!psychos) return null;
 
-              {(userType === 'patient' || userType === null) && (
-                psychos.map(p => (
-                  <CardBack psycho = {p} key = {p.id} userType = {userType}  />
-                ))
-              )}
+  return (
+    <section className="main_section">
+      {userType === 'psycho' && <Appointments />}
 
-              {userType === 'admin' && (<AdminHouse/>)}
-            </section>         
-    )
+      {(userType === 'patient' || userType === null) && (
+        psychos.map(p => (
+          <CardBack psycho={p} key={p.id} userType={userType} />
+        ))
+      )}
+
+      {userType === 'admin' && <AdminHouse />}
+    </section>
+  );
 }
 
-export default Home
+export default Home;

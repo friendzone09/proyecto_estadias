@@ -21,10 +21,9 @@ def get_schedule(psycho_id, date):
         return []
     
     query = '''
-        SELECT id_hour, hour, user_name, user_last_name
+        SELECT id_hour, hour
         FROM schedule s
         JOIN hour h ON s.fk_hour = h.id_hour
-        JOIN users p ON s.fk_psycho = p.id_user
         WHERE s.fk_psycho = %s
         AND s.fk_day = %s
         AND s.hour_status = true

@@ -13,10 +13,10 @@
 }
 
 .auth-root {
-  display: flex;
-  min-height: 100dvh;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    min-height: 100dvh;
+    justify-content: center;
+    align-items: center;
 }
 
 main{
@@ -27,7 +27,7 @@ header{
     display: flex;
     padding: 2rem;
     background-color: #FFF;
-    height: 150px;
+    height: 100px;
     align-items: center;
     justify-content: space-between;
 }
@@ -41,7 +41,7 @@ header{
 }
 
 .logo_container img{
-    height: 100px;
+    height: 70px;
 }
 
 .header_sections{
@@ -59,7 +59,7 @@ header{
 
 .header_pages a{
     text-decoration: none;
-    color: #4267B3;
+    color: #0a40db;
     position: relative;
     padding: 0 10px;
 }
@@ -67,7 +67,7 @@ header{
  .header_pages a::after{
     content: '';
     position: absolute;
-    background-color: #4267B3;
+    background-color: #0a40db;
     height: 3px;
     width: 0;
     left: 0;
@@ -80,7 +80,7 @@ header{
 }
 
 .pyscho_profile a img{
-    height: 100px;
+    height: 70px;
     border-radius: 50%;
 }
 

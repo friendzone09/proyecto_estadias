@@ -29,7 +29,7 @@ function RegisterScreen(){
         formData.append('email', email) 
         formData.append('password', password)
     
-        const response = await fetch('http://127.0.0.1:5000/register',{
+        const response = await fetch('http://127.0.0.1:5000/api/register',{
             method : 'POST',
             body : formData
         });

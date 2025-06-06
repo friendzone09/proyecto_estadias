@@ -6,8 +6,8 @@ function CardBack({psycho, userType}){
 
     return(
         <section className="psycho_card">
-            <CardImage image = {psycho.image} name= {psycho.name} lastName={psycho.last_name}/>
-            <CardDescription description = {psycho.description} userType = {userType} psychoId = {psycho.id} />
+            <CardImage image = {psycho.image} psychoId={psycho.id} userType={userType} />
+            <CardDescription description = {psycho.description} name={psycho.name} lastName={psycho.last_name} />
         </section>
     )
 }

@@ -1,5 +1,5 @@
 from app.db import get_db_connection
-def insert_appoint(id_psycho, patient_id, date, hour_id):
+def insert_appoint(id_psycho, patient_id, date, hour_id, type):
 
     conn = get_db_connection()
     cur = conn.cursor()
@@ -10,7 +10,10 @@ def insert_appoint(id_psycho, patient_id, date, hour_id):
 
     result = cur.fetchone()
 
-    if result[1]:
+    print("Tipo:", type)
+    print("Resultado de paciente:", result)
+
+    if type == 'patient' and result[1]:
         return False
     
     cur.execute('INSERT INTO public.appointments( '
@@ -25,7 +28,7 @@ def insert_appoint(id_psycho, patient_id, date, hour_id):
 
     query = 'SELECT * FROM public.patients_info WHERE fk_user = %s'
 
-    cur.execute(query, (patient_id))
+    cur.execute(query, (patient_id,))
 
     result = cur.fetchone()
 
@@ -35,7 +38,7 @@ def insert_appoint(id_psycho, patient_id, date, hour_id):
         'last_name' : result[2],
         'email' : result[3],
         'type' : result[5],
-        'psycho' : result[4]
+        'fk_psycho' : result[4]
     }
 
     cur.close()

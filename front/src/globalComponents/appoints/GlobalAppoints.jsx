@@ -2,10 +2,12 @@ import { useToast } from "../../components/alert/ToastContext";
 import { getSchedule } from "../../utils/getSchedule";
 import { insertAppoint } from "../../utils/insertAppoint";
 import { useEffect, useState, useRef } from "react"
+import { useNavigate } from "react-router-dom";
 
 import CancelModal from "./modals/CancelModal";
 import ActivateModal from "./modals/ActivateModal";
 import AppointModal from "./modals/AppointModal";
+import NewAppointModal from "./modals/NewAppointModal";
 
 import { cancellAppoint } from "../../utils/cancelAppoints";
 import { activateAppoint } from "../../utils/acivateAppoint";
@@ -22,10 +24,12 @@ import './index.css'
 function GlobalAppoints({ date, id_psycho, userType }) {
 
     const { addAlert } = useToast();
+    const navigate = useNavigate();
 
     const [psycho, setPsycho] = useState({ name: '', last_name: '' })
     const [schedule, setSchedule] = useState([])
     const [selectedAppoint, setSelectedAppoint] = useState(null);
+    const [showAppointModal, setShowAppointModal] = useState(false);
 
     const dialogRef = useRef(null);
 
@@ -39,6 +43,7 @@ function GlobalAppoints({ date, id_psycho, userType }) {
     const closeModal = () => {
         if (dialogRef.current) dialogRef.current.close();
         setSelectedAppoint(null);
+        setShowAppointModal(false)
     };
 
     async function callGetSchedule() {
@@ -48,6 +53,8 @@ function GlobalAppoints({ date, id_psycho, userType }) {
         formData.append('date', newDate);
 
         const data = await getSchedule(id_psycho, newDate);
+
+        console.log(data);
 
         if (selectedDate < today) {
             setSchedule([]);
@@ -93,15 +100,19 @@ function GlobalAppoints({ date, id_psycho, userType }) {
         addAlert(data.message, data.type);
     }
 
-    //FUNCIONES DE PACIENTE Y ADMIN
+     const openAppointFromCancel = () => {
+        setShowAppointModal(true);
+    };
 
-    async function agendAppoint(id_hour) {
+
+    //FUNCIONES AGEBDAR CITA
+
+    async function agendAppoint(id_hour, userId = getUser().user_id ) {
 
         const newDate = `${date.year}-${date.monthNum}-${date.day}`;
-        const user = getUser()
-        const userId = user.user_id;
 
         const formData = new FormData()
+        formData.append('user_type', getUser().type )
         formData.append('psycho_id', id_psycho);
         formData.append('date', newDate);
         formData.append('patient_id', userId);
@@ -109,7 +120,7 @@ function GlobalAppoints({ date, id_psycho, userType }) {
 
         const data = await insertAppoint(formData);
 
-        if (data.type == 'success') await reLoginUser(data.user)
+        if (data.type == 'success' && getUser().type =='patient' ) await reLoginUser(data.user)
 
         console.log(data)
 
@@ -138,14 +149,16 @@ function GlobalAppoints({ date, id_psycho, userType }) {
         } else{
             setSchedule([]);
         }
-    }, [date])
+    }, [date, id_psycho])
 
     useEffect(() => {
         async function getPsycho() {
             const data = await getPsychoInfo(id_psycho)
-            setPsycho(data);
-        }
 
+            if (data.type == 'error') {navigate('/')}
+
+            setPsycho(data.psycho);
+        }
         if (id_psycho > 0){
             getPsycho()
         } else{
@@ -157,7 +170,10 @@ function GlobalAppoints({ date, id_psycho, userType }) {
     return (
         <div className="appointments">
 
-            <small>Lic. {psycho.name} {psycho.last_name} </small>
+            {psycho.name == ''? 
+            (<small>Seleccione un psicólogo</small>): 
+            (<small>Lic. {psycho.name} {psycho.last_name}</small>)
+            }
 
             {date.day === "" ? (<h1>Seleccione una fecha</h1>) :
                 isPastDate() ? (<h1>Día ya no disponible</h1>) :
@@ -168,36 +184,49 @@ function GlobalAppoints({ date, id_psycho, userType }) {
             <div className="schedule">
                 {userType == 'patient' ? (<PatientSchedule schedule={schedule} openModal={openModal}/>) :
                 userType == 'psycho' ? (<PsychoSchedule schedule={schedule} openModal={openModal}/>) :
-                userType == 'admin' ? (<PatientSchedule schedule={schedule} openModal={openModal}/>) : (<p>No login</p>)}
+                userType == 'admin' ? (<PsychoSchedule schedule={schedule} openModal={openModal}/>) : (<p>No login</p>)}
             </div>
 
             <dialog ref={dialogRef} className="modal">
                 {selectedAppoint && (
-
-                    userType === 'patient' ? (
-                        <AppointModal
+                showAppointModal ? (
+                    <NewAppointModal
+                        date={date}
+                        onClick={(hourId, patientId) => agendAppoint(hourId, patientId)}
+                        selectedAppoint={selectedAppoint}
+                        PsychoId = {id_psycho}
+                        closeModal={() => {
+                            closeModal();
+                            setShowAppointModal(false);
+                        }}
+                    />
+                ) :  
+                userType === 'patient' ? (
+                    <AppointModal
+                        date={date}
+                        onClick={() => agendAppoint(selectedAppoint.id)}
+                        selectedAppoint={selectedAppoint}
+                        closeModal={closeModal}
+                    />
+                ) : userType !== 'patient' ? (
+                    selectedAppoint.status == null || selectedAppoint.status === true ? (
+                        <CancelModal
                             date={date}
-                            onClick={() => agendAppoint(selectedAppoint.id)}
+                            onClick={() => callCancelAppoint(selectedAppoint.id)}
+                            selectedAppoint={selectedAppoint}
+                            closeModal={closeModal}
+                            openAppointFromCancel={openAppointFromCancel}
+                        />
+                    ) : (
+                        <ActivateModal
+                            date={date}
+                            onClick={() => callActivateAppoint(selectedAppoint.id)}
                             selectedAppoint={selectedAppoint}
                             closeModal={closeModal}
                         />
-                    ) : userType === 'psycho' ? (
-                        selectedAppoint.status == null || selectedAppoint.status === true ? (
-                            <CancelModal date={date}
-                                onClick={() => callCancelAppoint(selectedAppoint.id)}
-                                selectedAppoint={selectedAppoint}
-                                closeModal={closeModal} />
-                        ) : (
-                            <ActivateModal date={date}
-                                onClick={() => callActivateAppoint(selectedAppoint.id)}
-                                selectedAppoint={selectedAppoint}
-                                closeModal={closeModal} />
-                        )
-                    ) : userType === 'admin' ? (
-                        <p>Modal para administrador</p>
-                    ) : null
-
-                )}
+                    )
+                ): null
+            )}
             </dialog>
 
         </div>

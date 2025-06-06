@@ -23,7 +23,7 @@ export async function getPsychoInfo(psychoId) {
         method: 'GET',
     });
 
-    const data = await response.json();;
+    const data = await response.json();
 
     return data
 }

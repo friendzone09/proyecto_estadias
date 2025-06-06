@@ -1,7 +1,7 @@
 function PsychoDescription({ name, lastName, description, onChange, onSubmit }){
 
     return (
-        <div className="description_secction">
+        <div className="profile_form">
 
             <form className="form_edit_psycho" onSubmit={onSubmit}>
 

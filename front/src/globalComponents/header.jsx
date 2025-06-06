@@ -1,6 +1,7 @@
-import logo from '../static/images/LOGO QR.jpeg';
+import logo from '../static/images/LOGO GHAMARIS.png';
 import HeaderPsycho from './headers/headerPsycho';
 import HeaderPatient from './headers/headerPatient';
+import HeaderAdmin from './headers/HeaderAdmin';
 
 function Header({ userType }){
     return(
@@ -8,10 +9,10 @@ function Header({ userType }){
             
             <div className="logo_container">
                 <img src={logo} alt="" />
-                <p>LOGO</p>
+                <p>Ghamaris psicología</p>
             </div>
        
-            {userType === 'psycho' ? <HeaderPsycho/> : <HeaderPatient userType = {userType} /> }
+            {userType === 'psycho' ? (<HeaderPsycho/>) : userType == 'admin' ? ( <HeaderAdmin/> ) : (<HeaderPatient userType = {userType} />) }
            
         </header>
     )

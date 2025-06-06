@@ -143,10 +143,6 @@ def register():
 	 'user_name, user_last_name, user_email, user_password) '
 	'VALUES (%s, %s, %s, %s) RETURNING id_user ', (name, last_name, email, password))
 
-    id_user = cur.fetchone()[0]
-
-    cur.execute('INSERT INTO public.patient( '
-    'fk_user) VALUES (%s)', (id_user,))
 
     conn.commit()
     cur.close()
@@ -160,7 +156,7 @@ def obtain_appoint(psycho_id, date_str):
 
     if not psycho_id or not date_str:
         return jsonify({'message': 'Error',
-                        'type': 'errpr'}), 401
+                        'type': 'error'}), 401
 
     date = datetime.strptime(date_str, "%Y-%m-%d").date()
 
@@ -179,7 +175,7 @@ def obtain_appoint(psycho_id, date_str):
     appoints = []
 
     if result:
-        appoints = [{'hour': h[4], 'status' : h[5]} for h in result]  
+        appoints = [{'hour': h[0], 'status' : h[1], 'date': h[2], 'name' : h[3], 'last_name' : h[4]} for h in result]  
     
     new_schedule = sort_appoints(schedule, appoints)
 
@@ -203,7 +199,9 @@ def get_psycho(id_psycho):
     return jsonify(psycho)
 
 @app.route('/api/insert_appoint', methods = ['POST'])
-def insert_appoint_for_patient():
+def post_appoint():
+
+    type = request.form.get('user_type')
 
     id_psycho = request.form.get('psycho_id')
     date_str = request.form.get('date')
@@ -212,13 +210,11 @@ def insert_appoint_for_patient():
 
     date = datetime.strptime(date_str, "%Y-%m-%d").date()
 
-    result = insert_appoint(id_psycho, patient_id, date, hour_id)
+    result = insert_appoint(id_psycho, patient_id, date, hour_id, type)
 
     if result == False :
         return jsonify({'message' : 'Error, no puedes hacer mas registros',
                         'type' : 'error'}), 400 
-    
-        
 
     return jsonify({'message' : 'Cita agendada',
                     'type' : 'success',
@@ -267,6 +263,9 @@ def get_psychgo_info(id_psycho):
     
     response = cur.fetchone()
 
+    if not response:
+        return jsonify({'type' : 'error', 'message' : 'Error, el usuario no es un psicólogo o no existe'})
+
     body = {'name' : response[1],
             'last_name': response[2],
             'image' : response[4],
@@ -276,7 +275,7 @@ def get_psychgo_info(id_psycho):
     cur.close()
     conn.close()
 
-    return jsonify(body)
+    return jsonify({ 'psycho' : body, 'type' : 'success', 'message' : 'Exito'})
 
 @app.route('/api/update_psycho_profile', methods=['PUT'])
 def update_psycho_profile():
@@ -422,13 +421,25 @@ def check_password():
     hashed_pass = cur.fetchone()[0]
 
     if check_password_hash(hashed_pass, send_password):
-        print('Es la misma')
         return jsonify({'message' : 'Correcto',
                         'type' : 'success'})
     else:
-        print('No es la misma')
         return jsonify ({'message' : 'Incorrecto',
                         'type' : 'error'})
+    
+@app.route('/api/get_patients/<int:id_psycho>')
+def get_patients(id_psycho):
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT fk_user, user_name, user_last_name FROM public.patient JOIN users ON fk_user = id_user WHERE fk_psycho = %s '
+    'ORDER BY user_name, user_last_name' , (id_psycho,))
+    row = cur.fetchall()
+
+    patients = [{'id_patient': r[0], 'name': r[1], 'last_name' : r[2]} for r in row]
+
+    return jsonify(patients)
+    
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):

@@ -11,7 +11,6 @@ function Calendar({ onDateChange, onSelectPsycho }){
 
     const[selectedDate, setSelectedDate] = useState(null);
 
-
     function handleChange(date){
         setSelectedDate(date);
         const day = String(date.getDate()).padStart(2, '0');
@@ -19,8 +18,7 @@ function Calendar({ onDateChange, onSelectPsycho }){
          const monthNum = String(date.getMonth() + 1).padStart(2, '0'); 
         const year = date.getFullYear();
 
-        onDateChange({day, month: monthName, year, monthNum})
-
+        onDateChange({day, month: monthName, year, monthNum});
     }
 
     return(
@@ -33,6 +31,7 @@ function Calendar({ onDateChange, onSelectPsycho }){
                 selected={selectedDate}
                 onChange={handleChange}
                 inline 
+                locale={'es'}
             />
         </div>
     )

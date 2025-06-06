@@ -28,6 +28,7 @@ function Calendar({ onDateChange }){
                 selected={selectedDate}
                 onChange={handleChange}
                 inline 
+                locale={'es'}
             />
         </div>
     )

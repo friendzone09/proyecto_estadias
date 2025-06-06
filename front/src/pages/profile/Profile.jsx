@@ -1,4 +1,4 @@
-import { getUser } from "../../utils/get_user"
+import { getUser, getPsychoInfo } from '../../utils/get_user'
 import './index.css'
 
 import { useEffect, useState, useRef } from "react"
@@ -26,16 +26,20 @@ function Profile(){
     }, [location, addAlert, navigate]);
 
     useEffect(()=>{
-        
-        const data = getUser();
 
-        if (!data || data.type === false) {
+        let dataId =  getUser();
+
+        async function getPsycho() {
+            const data = await getPsychoInfo(dataId.user_id);
+            setPsycho(data.psycho);
+        }
+
+        if (!dataId || dataId.type === false) {
             navigate('/');
         } else {
-            setPsycho(data);
+            getPsycho();
         }
         
-
     }, [])
 
     if (!psycho) return null;
@@ -44,7 +48,7 @@ function Profile(){
 
         <section className="pyscho_profile_section">
             <PsychoImage imageName = {psycho.image } name={psycho.name} lastName={psycho.last_name}/>
-            <PsychoDescription  />
+            <PsychoDescription PsychoDescription={psycho.description} />
         </section>
 
     )

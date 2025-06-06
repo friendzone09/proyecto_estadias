@@ -2,7 +2,7 @@ export default function startAnimation() {
   const canvas = document.querySelector('canvas');
   const ctx = canvas.getContext('2d');
 
-  const colors = ['#EA5B09', '#4267B3'];
+  const colors = ['#f31010', '#0a40db'];
 
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
@@ -22,7 +22,7 @@ export default function startAnimation() {
 
     draw() {
       ctx.beginPath();
-      ctx.fillStyle = this.color; // Usar color propio
+      ctx.fillStyle = this.color;
       ctx.arc(this.x, this.y, this.radio, 0, Math.PI * 2);
       ctx.fill();
       ctx.closePath();

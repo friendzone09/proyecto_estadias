@@ -35,18 +35,18 @@
     padding: 10px;
     border-radius: 10px;
     border: none;
-    background-color: #4267B3;
+    background-color: #0a40db;
     font-size: 1.5rem;
     color:  white;
     cursor: pointer;
 }
 
 .login_squere button:hover{
-    background-color: #5d89df;
+    background-color: #0938b8;
 }
 
 .login_squere a{
-    color: #4267B3;
+    color: #0a40db;
     font-size: 1.3rem;
 }
 

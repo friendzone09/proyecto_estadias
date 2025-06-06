@@ -6,29 +6,29 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getUser } from "../../utils/get_user";
 
 function AppointAgend (){
-    const navigate = useNavigate();
 
+    const navigate = useNavigate();
     const user = getUser();
+    const userPsycho = user == null ? null : user.fk_psycho
+    const { id_psycho } = useParams();
+    const [dateParse, setDateParse] = useState({ day: '', month: '', year: '', monthNum: '' });
+
+    console.log(user);
 
     useEffect(()=>{
-        function canPass(){
-            const userPsycho = user == null? null : user.psycho;
-
-            if(user == null || userPsycho!= null){
-                navigate('/')
-            }
+        if(user == null || userPsycho != null){
+            navigate('/')
         }
-        canPass();
     }, [])
 
-    const { id_psycho } = useParams();
-
-    const [dateParse, setDateParse] = useState({ day: '', month: '', year: '', monthNum: '' });
+    if (user == null) {
+        return null;
+    }
 
     return (
         <section className="appointments_section">
             <Calendar onDateChange = {setDateParse} />
-            <GlobalAppoints date = {dateParse} id_psycho={id_psycho} userType={user.type} />
+            <GlobalAppoints date = {dateParse} id_psycho={id_psycho} userType={user.type || null} />
         </section>
     )
 }

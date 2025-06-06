@@ -2,7 +2,7 @@ export default function startAnimation() {
   const canvas = document.querySelector('canvas');
   const ctx = canvas.getContext('2d');
 
-  const colors = ['#EA5B09', '#4267B3'];
+  const colors = ['#f31010', '#0a40db'];
 
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
@@ -15,8 +15,7 @@ export default function startAnimation() {
       this.dirX = Math.random() * 2 - 1;
       this.dirY = Math.random() * 2 - 1;
       this.speed = Math.random() * (3 - 1 + 1) + 1;
-
-      // 🔵 Color aleatorio fijo para esta bola
+      
       this.color = colors[Math.floor(Math.random() * colors.length)];
     }
 

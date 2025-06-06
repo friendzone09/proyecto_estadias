@@ -30,7 +30,7 @@ function EditProfile(){
         const psychoId = psycho.user_id;
 
         const data = await getPsychoInfo(psychoId)
-        setInfo(data)
+        setInfo(data.psycho)
     }
 
     useEffect(()=>{   

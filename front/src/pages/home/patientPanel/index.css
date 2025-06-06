@@ -4,16 +4,15 @@
     padding: 2rem;
     display: flex;
     gap: 5rem;
+    border-radius: 10px;
+    background-color: #fff;
 }
 
 .psycho_image{
-    padding: 2rem;
-    background-color: #fff;
     width: max-content;
-    border-radius: 10px;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    align-items: center;
     font-size: 1.5rem;
     color: #4267B3;
     max-width: min-content;
@@ -23,6 +22,7 @@
 .psycho_image img{
     height: 250px;
     width: 250px;
+    border-radius: 50%;
 }
 
 .card_description{
@@ -35,9 +35,6 @@
 
 .psycho_decription{
     width: 100%;
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 10px;
     display: flex;
     flex-direction: column;
     gap: 2rem;

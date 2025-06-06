@@ -1,17 +1,26 @@
 def sort_appoints(schedule, appoints):
-
     new_schedule = []
 
-    if not appoints:
-        for i in schedule:
-            new_schedule.append({ 'id' : i['id'] , 'hour' : i['hour'], 'status' : None})
+    appoint_map = {a['hour']: a for a in appoints}
 
-        return new_schedule
-    
-    appoint_dict = {j['hour']: j['status'] for j in appoints}
+    for sch in schedule:
+        match = appoint_map.get(sch['id'])
 
-    for i in schedule:
-        status = appoint_dict.get(i['id'], None)
-        new_schedule.append({'id': i['id'], 'hour': i['hour'], 'status': status})
+        if match:
+            new_schedule.append({
+                'id': sch['id'],
+                'hour': sch['hour'],
+                'status': match['status'],
+                'name': match['name'],
+                'last_name': match['last_name']
+            })
+        else:
+            new_schedule.append({
+                'id': sch['id'],
+                'hour': sch['hour'],
+                'status': None
+            })
 
     return new_schedule
+
+

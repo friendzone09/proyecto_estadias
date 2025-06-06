@@ -1,21 +1,4 @@
-import { useEffect, useState } from "react"
-import { getPsychoInfo } from "../../utils/get_user"
-import { getUser } from "../../utils/get_user"
-
-function PsychoDescription(){
-
-    const [description, setDescription] = useState('')
-
-    useEffect(()=>{
-        async function callDescription() {
-            const psycho = getUser()
-            const psychoId = psycho.user_id;
-            const data = await getPsychoInfo(psychoId)
-            setDescription(data.description)
-        }
-
-        callDescription()
-    }, [])
+function PsychoDescription( {PsychoDescription} ){
 
 
     return (
@@ -23,7 +6,9 @@ function PsychoDescription(){
 
             <div className="profile_description">
                 <h1>Descripción</h1>
-                <p> {description} </p>
+                <section className="description">
+                    <p> {PsychoDescription} </p>
+                </section>
             </div>
 
             <div className="profile_edit_buttons">

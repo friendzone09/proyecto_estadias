@@ -115,3 +115,17 @@ dialog::backdrop {
 .cancel_hour_psycho:hover{
     background-color: rgb(187, 48, 48);
 }
+
+.new_appoint_modal_psycho{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.new_appoint_modal_psycho select{
+    padding: 0.5rem;
+}
+
+.appoint_date{
+    font-size: 1.5rem;
+}
