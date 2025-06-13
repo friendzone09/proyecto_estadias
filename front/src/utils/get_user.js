@@ -1,11 +1,13 @@
-export function getUser() {
-    const userData = localStorage.getItem('psycho_user')
+export async function getUser() {
+    const response = await fetch('http://localhost:5000/api/get_all_user_info',{
+        credentials : 'include'
+    });
 
-    if (!userData) return null;
+    const data = await response.json();
 
-    const user = JSON.parse(userData)
+    console.log(data)
 
-    return user
+    return data.user;
 }
 
 export async function getAllPsychos() {
@@ -19,11 +21,21 @@ export async function getAllPsychos() {
 }
 
 export async function getPsychoInfo(psychoId) {
-    const response = await fetch(`http://127.0.0.1:5000/api/get_psycho_info/${psychoId}`, {
+    const response = await fetch(`http://localhost:5000/api/get_psycho_info/${psychoId}`, {
         method: 'GET',
     });
 
     const data = await response.json();
 
-    return data
+    return data;
+}
+
+export async function getMyPsychoInfo() {
+    const response = await fetch('http://localhost:5000/api/get_all_user_info',{
+        credentials : 'include'
+    });
+
+    const data = await response.json();
+
+    return data.user;
 }

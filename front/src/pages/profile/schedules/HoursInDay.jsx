@@ -1,4 +1,3 @@
-
 function HoursInDay({hour, status, onToggle}){
 
     return(

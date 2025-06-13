@@ -4,8 +4,8 @@ import { BrowserRouter } from 'react-router-dom';
 
 import AppRoutes from './appRouter';
 import AppWrapper from './utils/AppWrapper';
-import { ToastProvider } from './components/alert/ToastContext';
-import { LoadingProvider } from './components/loading/LoadingContext';
+import { ToastProvider } from './contexts/alert/ToastContext';
+import { LoadingProvider } from './contexts/loading/LoadingContext';
 
 import './static/styles/global.css';
 

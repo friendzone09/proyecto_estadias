@@ -14,7 +14,6 @@
     flex-direction: column;
     align-items: center;
     font-size: 1.5rem;
-    color: #4267B3;
     max-width: min-content;
     max-height: min-content;
 }
@@ -42,7 +41,7 @@
 
 .psycho_decription h1{
     font-size: 3rem;
-    color: #4267B3;
+    color: #A6464E;
 }
 
 .psycho_decription p{
@@ -56,6 +55,5 @@
 
 .psycho_button a, .psycho_button p{
     font-size: 1.5rem;
-    color:#4267B3;
-
+    color:#D9AA1E;
 }

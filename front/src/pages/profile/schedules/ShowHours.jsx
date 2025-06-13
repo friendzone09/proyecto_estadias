@@ -1,24 +1,24 @@
 import { useState, useEffect } from "react"
-import { getUser } from "../../../utils/get_user"
 import { getHours } from "../../../utils/getSchedule"
 import { updateHours } from "../../../utils/updateHours"
-import { useToast } from "../../../components/alert/ToastContext"
+import { useToast } from "../../../contexts/alert/ToastContext"
+
+import { useUser } from "../../../contexts/userContext/UserContext"
 
 import HoursInDay from "./HoursInDay"
 import DayInSchedule from "./DayInSchedule"
 
-function ShowHours({ selectedDay }){
+function ShowHours({ selectedDay }) {
+
+    const { user } = useUser();
     const { addAlert } = useToast();
 
-    const [hours, setHours] = useState([])
-    const [day, setDay] = useState({})
-    const [modifiedHours, setModifiedHours] = useState([])
+    const [hours, setHours] = useState([]);
+    const [day, setDay] = useState({});
+    const [modifiedHours, setModifiedHours] = useState([]);
     const [originalLaboralDay, setOriginalLaboralDay] = useState(null);
 
-    const psycho = getUser();
-    const psychoId = psycho.user_id;
-
-    function handleToggleHour(id_hour){
+    function handleToggleHour(id_hour) {
         const updatedHours = hours.map(h =>
             h.id_hour === id_hour ? { ...h, hour_status: !h.hour_status } : h
         );
@@ -43,43 +43,42 @@ function ShowHours({ selectedDay }){
 
     };
 
-    function handleToggleDay(){
+    function handleToggleDay() {
         setDay(prevDay => ({
             ...prevDay,
             laboral_day: !prevDay.laboral_day
         }));
     };
 
-    async function changeHour(){
+    async function changeHour() {
 
         const dayChanged = day.laboral_day !== originalLaboralDay;
         const hoursChanged = modifiedHours.length > 0;
 
-        if(dayChanged || hoursChanged){
+        if (dayChanged || hoursChanged) {
             const formData = new FormData()
 
             formData.append('id_day', day.id_day);
             formData.append('laboral_day', day.laboral_day);
             console.log(day.laboral_day)
-            formData.append('psycho_id', psychoId);
+            formData.append('psycho_id', user.id);
             formData.append('modified_hours', JSON.stringify(modifiedHours));
 
             const data = await updateHours(formData);
 
             addAlert(data.message, data.type)
             setModifiedHours([]);
-        } else{
+        } else {
             console.log('Sin modificaciones')
         }
-    
+
     };
 
-    useEffect(()=>{
+    useEffect(() => {
 
         if (selectedDay !== null && selectedDay !== 0) {
-            async function fetchHours(){
-
-                const schedule = await getHours(psychoId, selectedDay)
+            async function fetchHours() {
+                const schedule = await getHours(user.id, selectedDay)
 
                 setHours(schedule.hours);
                 setDay(schedule.day);
@@ -88,33 +87,33 @@ function ShowHours({ selectedDay }){
 
             };
             fetchHours();
-        } else{
+        } else {
             setHours([]);
         }
 
     }, [selectedDay])
 
-    return(
+    return (
         <div className="show_hours">
             {selectedDay ? (
                 <div className="day_and_hours">
                     <div className="day">
-                        <DayInSchedule 
-                        dayName={day.day_name} 
-                        dayStatus={day.laboral_day ?? false}
-                        onToggleDay={handleToggleDay}
+                        <DayInSchedule
+                            dayName={day.day_name}
+                            dayStatus={day.laboral_day ?? false}
+                            onToggleDay={handleToggleDay}
                         />
                     </div>
 
-                    {day.laboral_day? (
-                    <div className="hours_in_day">
-                        {hours.map(h =>(<HoursInDay 
-                        key={h.id_hour} 
-                        hour={h.hour} 
-                        status={h.hour_status ?? false } 
-                        onToggle={() => handleToggleHour(h.id_hour)} />))}
-                    </div>): 
-                    ( <p>Dia no laborable</p> ) }
+                    {day.laboral_day ? (
+                        <div className="hours_in_day">
+                            {hours.map(h => (<HoursInDay
+                                key={h.id_hour}
+                                hour={h.hour}
+                                status={h.hour_status ?? false}
+                                onToggle={() => handleToggleHour(h.id_hour)} />))}
+                        </div>) :
+                        (<p>Dia no laborable</p>)}
 
                     <div className="acept_hour_changes">
                         <button onClick={changeHour} >Guardar</button>

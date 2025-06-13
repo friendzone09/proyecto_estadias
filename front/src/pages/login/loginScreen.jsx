@@ -18,25 +18,17 @@ function LoginScreen(){
     });
     }, [])
 
-    async function loginUser(e){
+async function loginUser(e) {
+    e.preventDefault();
 
-        e.preventDefault();
-        
-        const formData = new FormData();
-        formData.append('email', email);
-        formData.append('password', password);
+    const data = await login({ email, password });
 
-        const data = await login(formData);
-
-        if(data.type == 'success'){
-            navigate('/');
-            return
-        } else{
-            setErrorMessage(data.message);
-        }
-        
-             
+    if (data.type === 'success') {
+        navigate('/');
+    } else {
+        setErrorMessage(data.message);
     }
+}
 
     return(
         <>

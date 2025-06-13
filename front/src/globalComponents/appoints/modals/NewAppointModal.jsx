@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 
 function NewAppointModal({ date, onClick, selectedAppoint, closeModal, PsychoId }){
-
     const [patients, setPatienst] = useState([]);
     const [selectedPatientId, setSelectedPatientId] = useState(null);
 
@@ -52,7 +51,6 @@ function NewAppointModal({ date, onClick, selectedAppoint, closeModal, PsychoId 
     )
 
 }
-
 export default NewAppointModal
 //PARA AGENDAR UNA CITA NECESITO:
 //id_hora, fecha, id_patien, id_psycho

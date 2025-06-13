@@ -1,24 +1,15 @@
-export async function login(formData) {
-
-    let succes = true;
-            
-    const response = await fetch('http://127.0.0.1:5000/api/login',{
-        method : 'POST',
-        body : formData
+export async function login({ email, password }) {
+    const response = await fetch('http://localhost:5000/api/login', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
     });
 
-    const data = await response.json();
-
-    if (!response.ok){
-        succes = false;
-    } 
-            
-    if(succes){
-        localStorage.setItem('psycho_user', JSON.stringify(data.user))
-    } 
-
-    return data
-
+    const resData = await response.json();
+    return resData;
 }
 
 export async function reLoginUser(user) {

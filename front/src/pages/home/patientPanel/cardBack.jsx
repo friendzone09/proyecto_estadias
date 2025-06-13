@@ -1,14 +1,39 @@
+import { useState, useEffect } from 'react';
+import { getAllPsychos } from '../../../utils/get_user';
+
 import CardImage from './cardImage';
 import CardDescription from './cardDescription';
+
+import { useLoading } from '../../../contexts/loading/LoadingContext';
 import './index.css'
 
-function CardBack({psycho, userType}){
+function CardBack({ user }) {
+    const [psychos, setPshychos] = useState([]);
 
-    return(
-        <section className="psycho_card">
-            <CardImage image = {psycho.image} psychoId={psycho.id} userType={userType} />
-            <CardDescription description = {psycho.description} name={psycho.name} lastName={psycho.last_name} />
-        </section>
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await getAllPsychos();
+                setPshychos(data);
+            } catch (err) {
+                console.error("Error al obtener psicólogos", err);
+            } 
+        };
+        fetchData();
+    }, []);
+
+
+    if (!psychos) return null;
+
+    return (
+
+        psychos.map(p => (
+            <section className="psycho_card" key={p.id}>
+                <CardImage image={p.image} psychoId={p.id} user={user} />
+                <CardDescription description={p.description} name={p.name} lastName={p.last_name} />
+            </section>
+        ))
+
     )
 }
 

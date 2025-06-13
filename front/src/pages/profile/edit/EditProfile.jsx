@@ -2,45 +2,38 @@ import PsychoDescription from "./PsychoDescription"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import PsychoImage from './PsychoImage'
-
-import { getPsychoInfo, getUser } from "../../../utils/get_user"
 import { updatePsycho } from "../../../utils/updatePsycho"
-import { reLoginUser } from "../../../utils/loginUser"
 
-import { useToast } from "../../../components/alert/ToastContext"
+import { useToast } from "../../../contexts/alert/ToastContext"
+import { useUser } from "../../../contexts/userContext/UserContext"
 
-function EditProfile(){
+function EditProfile() {
+
+    const { user, setUser } = useUser();
 
     const { addAlert } = useToast();
-    const psycho = getUser();
-
-     const [info, setInfo] = useState({
-        name: "",
-        last_name: "",
-        description: "",
-        image: ""
-    });
 
     const [selectedImage, setSelectedImage] = useState(null)
+    const [info, setInfo] = useState(null)
 
     const navigate = useNavigate();
 
-    async function callInfo() {
-        
-        const psychoId = psycho.user_id;
-
-        const data = await getPsychoInfo(psychoId)
-        setInfo(data.psycho)
-    }
-
-    useEffect(()=>{   
-        callInfo()
-    }, [])
-
+    useEffect(() => {
+        if (user && user.role === 'psycho') {
+            setInfo({
+                id: user.id,
+                name: user.name,
+                last_name: user.last_name,
+                description: user.description,
+            });
+        } else if (user) {
+            navigate('/');
+        }
+    }, [user, navigate]);
 
     function handleChange(e) {
-    const { name, value } = e.target
-    setInfo(prev => ({ ...prev, [name]: value }))
+        const { name, value } = e.target
+        setInfo(prev => ({ ...prev, [name]: value }))
     }
 
     function handleImageChange(e) {
@@ -53,7 +46,7 @@ function EditProfile(){
     async function handleSubmit(e) {
         e.preventDefault()
 
-        const id = psycho.user_id;
+        const id = user.id;
 
         const formData = new FormData()
         formData.append("id", id)
@@ -67,24 +60,29 @@ function EditProfile(){
 
         const data = await updatePsycho(formData, id)
 
-        reLoginUser(data.user);
+        if (data.type == 'success') {
 
-        if(data.type == 'success'){
+            if (data.user) {
+                setUser(data.user); // <-- actualizar el usuario global
+            }
+
             navigate('/profile', {
-            state: { toast: { type: data.type, message: data.message } }
+                state: { toast: { type: data.type, message: data.message } }
             })
             return
         }
 
         addAlert(data.message, data.type)
-        return     
+        return
     }
 
-    return(
-       <div className="pyscho_profile_section">
-            <PsychoImage imageName = {info.image} onImageChange={handleImageChange}/>
-            <PsychoDescription name={info.name} lastName={info.last_name} description={info.description} onChange={handleChange} onSubmit={handleSubmit}/>
-       </div> 
+    if(!user || !info) return null
+
+    return (
+        <div className="pyscho_profile_section">
+            <PsychoImage imageName={user.image} onImageChange={handleImageChange} />
+            <PsychoDescription user={info} onChange={handleChange} onSubmit={handleSubmit} />
+        </div>
     )
 
 }

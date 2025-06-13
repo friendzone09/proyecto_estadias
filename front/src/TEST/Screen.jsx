@@ -1,35 +1,61 @@
 import { useEffect, useState } from "react";
-import { useLoading } from "../components/loading/LoadingContext";
 
 function Screen() {
-  const { setLoading } = useLoading();
-  const [data, setData] = useState(null);
+
+  const [user, setUser] = useState(null);
+
+  async function loguear() {
+    const respose = await fetch('http://localhost:5000/api/second_login', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ id_user: 1 })
+    })
+
+    const data = await respose.json();
+    console.log(data);
+    await getInfo();
+
+  }
+
+  async function logout() {
+    await fetch('http://localhost:5000/api/logout', {
+      method: 'POST',
+      credentials: 'include'
+    });
+    console.log('Usuario deslogueado');
+    setUser(null);
+  }
+
+  async function getInfo() {
+    const response = await fetch('http://localhost:5000/api/general_info',{
+      method: 'POST',
+      credentials: 'include'
+    });
+
+    const data = await response.json()
+    console.log(data);
+    setUser(data.user);
+  }
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch('https://httpstat.us/200?sleep=5000');
-        const json = await res.json();
-        setData(json);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+     getInfo()
+  }, []);
 
-    fetchData();
-  }, [setLoading]);
-
-  if (!data) return null;
-
-  return (
-    <div className="app">
-      <h1>Datos:</h1>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-    </div>
-  );
-}
+  if(!user){
+    return(
+      <div>
+        <span>Inicia sesion</span>
+        <button onClick={loguear}>Inicia sesion</button>
+      </div>
+    )
+  } else {
+    if(user.role == 'patient')return( <> <p>Panel de pacientes</p> <button onClick={logout}>LogOut</button> </>)
+    else if(user.role == 'psycho') return(<> <p>Panel de psicologo</p> <button onClick={logout}>LogOut</button> </>)
+    else if(user.role == 'admin') return(<> <p>Panel de administracion</p> <button onClick={logout}>LogOut</button> </>)
+  }
+};
 
 export default Screen;

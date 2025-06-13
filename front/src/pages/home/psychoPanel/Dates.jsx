@@ -2,20 +2,16 @@ import Calendar from "./Calendar"
 import GlobalApppoints from '../../../globalComponents/appoints/GlobalAppoints'
 import { useState } from "react"
 
-import { getUser } from "../../../utils/get_user"
-
 import './index.css'
 
-function Dates (){
-
-    let user = getUser()
+function Dates ({ user }){
 
     const [dateParse, setDateParse] = useState({ day: '', month: '', year: '', monthNum: '' });
 
     return (
         <section className="appointments_section">
             <Calendar onDateChange = {setDateParse} />
-            <GlobalApppoints date = {dateParse} id_psycho={user.user_id} userType={user.type}/>
+            <GlobalApppoints date = {dateParse} user={user} id_psycho={user.id}/>
         </section>
     )
 }

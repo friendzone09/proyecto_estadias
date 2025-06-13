@@ -1,22 +1,24 @@
 import { useState } from 'react';
 import Calendar from './Calendar';
 import GlobalAppoints from '../../../globalComponents/appoints/GlobalAppoints';
-import { getUser } from '../../../utils/get_user';
+import { useUser } from '../../../contexts/userContext/UserContext';
 
 import './index.css'
 
 function AdminHouse( ){
 
-    const user = getUser();
+    const {user} = useUser()
     const [dateParse, setDateParse] = useState({ day: '', month: '', year: '', monthNum: '' });
     const [selectedPsychoId, setSelectedPsychoId] = useState(0);
+
+    if (!user) return null
 
     return (
         <>
 
             <section className="appointments_section">
                 <Calendar onDateChange = {setDateParse} onSelectPsycho={setSelectedPsychoId}/>
-                <GlobalAppoints date = {dateParse} id_psycho={selectedPsychoId} userType={user.type}/>
+                <GlobalAppoints date = {dateParse} id_psycho={selectedPsychoId} user={user}/>
             </section>
 
         </>

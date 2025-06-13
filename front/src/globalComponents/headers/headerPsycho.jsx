@@ -1,19 +1,22 @@
 import LogOutButton from "../components/LogOutButton"
+import { useUser } from "../../contexts/userContext/UserContext";
+import { Link } from "react-router-dom";
+
 function HeaderPsycho(){
 
-    const psychoData = localStorage.getItem('psycho_user')
-    const psycho = JSON.parse(psychoData)
-    const psychoImage = `http://127.0.0.1:5000/uploads/${psycho.image}`
+    const {user} = useUser();
+
+    const psychoImage = `http://127.0.0.1:5000/uploads/${user.image}`
 
     return(
         <>
             <div className="header_pages">
-                <a href="/">Citas</a>
+                <Link to={'/'}>Citas</Link>
                 <LogOutButton/>
             </div>
 
             <div className="pyscho_profile">
-                <a href="/profile"><img src={psychoImage} alt="" /></a>
+               <Link to={'/profile'}><img src={psychoImage} alt="" /> </Link>
             </div>
         </>
     )

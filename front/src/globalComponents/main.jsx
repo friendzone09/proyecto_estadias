@@ -1,4 +1,4 @@
-function Main({ children, userType }){
+function Main({ children, user }){
     return(
         <main>
             {children}

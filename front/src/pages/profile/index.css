@@ -6,7 +6,6 @@
 }
 
 .pyscho_profile_section{
-    padding: 2rem;
     display: flex;
     gap: 2rem;
     width: 100%;
@@ -20,7 +19,7 @@
     max-width: 300px;
     max-height: 100%;
     border-radius: 10px;
-    color: #4267B3;
+    color: #D9AA1E;
     font-size: 1.5rem;
     display: flex;
     flex-direction: column;
@@ -45,13 +44,13 @@
 }
 
 .description{
-    max-height: 40dvh;
+    max-height: 37dvh;
     overflow-y: scroll;
 }
 
 .profile_description h1{
     font-size: 3rem;
-    color: #4267B3;
+    color: #A6464E;
 }
 
 .profile_description p{
@@ -73,14 +72,14 @@
 
 .go_to_edit_profile{
     padding: 1rem;
-    background-color: rgb(0, 174, 255);
+    background-color: #A6464E;
     border-radius: 5px;
     color: white;
     text-decoration: none;
 }
 
 .go_to_edit_profile:hover{
-    background-color: rgb(2, 139, 202);
+    background-color: #9e2e37;
 }
 
 .form_edit_psycho{
@@ -134,7 +133,7 @@
 .button_info_submit button{
     padding: 1rem;
     font-size: 1rem;
-    background-color: rgb(0, 174, 255);
+    background-color: #A6464E;
     border: 1px solid black;
     border-radius: 5px;
     cursor: pointer;
@@ -142,7 +141,7 @@
 }
 
 .button_info_submit button:hover{
-    background-color: rgb(2, 139, 202);;
+    background-color: #9e2e37;
 }
 
 .section_psycho_image{
@@ -154,14 +153,14 @@
 
 .section_psycho_image a{
     color: #fff;
-    background-color: rgb(0, 174, 255);
+    background-color: #A6464E;
     text-decoration: none;
     border-radius: 5px;
     padding: 1rem;
 }
 
 .section_psycho_image a:hover{
-    background-color: rgb(2, 139, 202);
+    background-color: #9e2e37;
 }
 
 .section_psycho_image input[type='file']{
@@ -172,12 +171,12 @@
     display: inline-block;
     padding: 1rem;
     font-size: 1rem;
-    background-color: rgb(0, 174, 255);
+    background-color: #A6464E;
     color: white;
     border-radius: 5px;
     cursor: pointer;
 }
 
 .section_psycho_image label:hover{
-    background-color: rgb(2, 139, 202);
+    background-color: #9e2e37;
 }

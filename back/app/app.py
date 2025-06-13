@@ -1,9 +1,10 @@
-from flask import Flask, jsonify, send_from_directory, request
+from flask import Flask, jsonify, send_from_directory, request, make_response
 from dotenv import load_dotenv
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
+from datetime import datetime, timedelta
+import jwt
 
 import uuid
 import os
@@ -18,11 +19,12 @@ from app.functions.cancel_appoint import cancel_appoint
 from app.functions.set_all_false_hours import set_false_hours
 from app.functions.update_hour import update_hour
 
-password = generate_password_hash('12345')
+# password = generate_password_hash('12345')
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'super_secret_password'
 
-CORS(app)
+CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 
 load_dotenv()
 
@@ -63,10 +65,9 @@ def get_psychos():
 
 @app.route('/api/login', methods=['POST'])
 def login():
-    email = request.form.get('email')
-    password = request.form.get('password')
-
-    user = {}
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
 
     if not email or not password:
         return jsonify({'message' : 'Faltan credenciales', 'type' : 'error'}), 401
@@ -88,32 +89,27 @@ def login():
         conn.close()
         return jsonify({'message' : 'Error: contraseña incorrecta', 'type' : 'error'})
     
-    if user_info[5] == 'psycho':
-        cur.execute('SELECT * FROM public.psychos_info WHERE fk_user=%s', (user_info[0],))
-        user_info = cur.fetchone()
+    token = jwt.encode({
+        'id': user_info[0],
+        'exp': datetime.utcnow() + timedelta(hours=1)
+    }, app.config['SECRET_KEY'], algorithm='HS256')
 
-        user = {'user_id' : user_info[0],
-        'name' : user_info[1],
-        'last_name' : user_info[2],
-        'email' : user_info[3],
-        'type' : user_info[6],
-        'image' : user_info[4]}
-        
-    elif user_info[5] == 'patient':
-        cur.execute('SELECT * FROM public.patients_info WHERE fk_user =%s' ,(user_info[0],))
-        user_info = cur.fetchone()
-
-        user = {'user_id' : user_info[0], 'name' : user_info[1], 'last_name' : user_info[2], 'email' : user_info[3],
-                'fk_psycho' : user_info[4], 'type' : user_info[5]}
-        
-    else:
-        user = {'user_id' : user_info[0], 'name' : user_info[1], 'last_name' : user_info[2], 'email' : user_info[3],
-                'type' : user_info[5]}
+    print(token)
+    
+    response = make_response(jsonify({'message': 'Login exitoso', 'type' : 'success'}))
+    response.set_cookie(
+        'ghamaris_token',
+        token,
+        httponly=True,
+        secure=False,  # True en producción (HTTPS)
+        samesite='Lax',
+        max_age=3600
+    )
         
     cur.close()
     conn.close()
 
-    return jsonify({'user' : user, 'type' : 'success'})
+    return response
     
 @app.route('/api/register', methods = ['POST'])
 def register():
@@ -254,6 +250,50 @@ def activate_appoint():
     return jsonify({'message' : 'Hora reactivada correctamente',
                     'type' : 'success'})
 
+@app.route('/api/get_all_user_info')
+def get_all_user_info():
+    token = request.cookies.get('ghamaris_token')
+
+    if not token:
+        return jsonify({'message': 'Token no encontrado', 'type': 'success', 'user' : {'role' : None}})
+    try:
+        decoded = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        id_user = decoded['id']
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('SELECT * FROM public.users_show_all_info WHERE id_user = %s', (id_user,))
+        row = cur.fetchone()
+
+        user = {
+            'id' : row[0],
+            'name' : row[1],
+            'last_name' : row[2],
+            'email' : row[3],
+            'role' : row[4],
+            'asig_psycho' : row[5],
+            'description' : row[6],
+            'image' : row[7],
+        }
+
+        cur.close()
+        conn.close()
+
+        return jsonify({'user' : user, 'message' : 'Exito', 'type' : 'success'})
+
+    except jwt.ExpiredSignatureError:
+        response = make_response(jsonify({'message': 'Token exipirado', 'user' : {'role' : None}, 'type' : 'success' }))
+        response.set_cookie(
+            'ghamaris_token',
+            '',                # Borra el valor
+            max_age=0,         # Expira inmediatamente
+            expires=0,         # También establece la fecha de expiración en 0
+            httponly=True,     # Seguridad: no accesible desde JS
+            secure=False,      # Pon True en producción (HTTPS)
+            samesite='Lax'
+        )  # Borra la cookie
+        return response
+
 @app.route('/api/get_psycho_info/<int:id_psycho>', methods= ['GET'])
 def get_psychgo_info(id_psycho):
     conn = get_db_connection()
@@ -315,17 +355,19 @@ def update_psycho_profile():
 
     conn.commit()
 
-    cur.execute('SELECT * FROM public.psychos_info WHERE fk_user=%s', (psycho_id,))
+    cur.execute('SELECT * FROM public.users_show_all_info WHERE id_user=%s', (psycho_id,))
 
     row = cur.fetchone()
 
     user = {
-        'user_id' : row[0],
+        'id' : row[0],
         'name' : row[1],
         'last_name' : row[2],
         'email' : row[3],
-        'type' : row[6],
-        'image' : row[4]
+        'role' : row[4],
+        'asig_psycho' : row[5],
+        'description' : row[6],
+        'image' : row[7],
     }
 
     cur.close()
@@ -439,7 +481,56 @@ def get_patients(id_psycho):
     patients = [{'id_patient': r[0], 'name': r[1], 'last_name' : r[2]} for r in row]
 
     return jsonify(patients)
+
+@app.route('/api/check_token')
+def check_token():
+    print('Cookies:', request.cookies)
+    token = request.cookies.get('ghamaris_token')
+    if not token:
+        return jsonify({'ok': False, 'msg': 'No token'})
+    try:
+        decoded = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        return jsonify({'ok': True, 'user_id': decoded['id']})
+    except jwt.ExpiredSignatureError:
+        return jsonify({'ok': False, 'msg': 'Token expirado'})
     
+@app.route('/api/logout', methods=['POST'])
+def logout():
+    response = make_response(jsonify({'mensaje': 'Logout exitoso'}))
+    response.set_cookie('ghamaris_token', '', expires=0)  # Borra la cookie
+    return response
+
+@app.route('/api/user_info')
+def get_user_info():
+    token = request.cookies.get('ghamaris_token')
+
+    if not token:
+        return jsonify({'message': 'Token no encontrado', 'type': 'success', 'user' : None})
+    try:
+        decoded = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        id_user = decoded['id']
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('SELECT * FROM public.users WHERE id_user = %s', (id_user,))
+        row = cur.fetchone()
+        user = {
+            'id' : row[0],
+            'name' : row[1],
+            'last_name' : row[2],
+            'email' : row[3],
+            'role' : row[5]
+
+        }
+
+        return jsonify({'user' : user, 'message' : 'Exito', 'type' : 'success'})
+
+    except jwt.ExpiredSignatureError:
+        return jsonify({'ok': False, 'msg': 'Token expirado'})
+    
+    finally:
+        cur.close()
+        conn.close()
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
@@ -447,4 +538,4 @@ def uploaded_file(filename):
 
 
 if __name__ =='__main__':
-    app.run(debug=True, port = 5000)
+    app.run(host="localhost", port=5000, debug=True)

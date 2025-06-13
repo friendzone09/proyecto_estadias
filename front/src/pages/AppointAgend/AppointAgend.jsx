@@ -3,32 +3,25 @@ import GlobalAppoints from '../../globalComponents/appoints/GlobalAppoints'
 import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom";
 
-import { getUser } from "../../utils/get_user";
-
-function AppointAgend (){
+function AppointAgend ({ user }){
 
     const navigate = useNavigate();
-    const user = getUser();
-    const userPsycho = user == null ? null : user.fk_psycho
     const { id_psycho } = useParams();
     const [dateParse, setDateParse] = useState({ day: '', month: '', year: '', monthNum: '' });
 
-    console.log(user);
 
     useEffect(()=>{
-        if(user == null || userPsycho != null){
+         if (user && (user.role == null || user.asig_psycho != null)){
             navigate('/')
         }
-    }, [])
+    }, [user, navigate])
 
-    if (user == null) {
-        return null;
-    }
+    if (!user) return null;
 
     return (
         <section className="appointments_section">
             <Calendar onDateChange = {setDateParse} />
-            <GlobalAppoints date = {dateParse} id_psycho={id_psycho} userType={user.type || null} />
+            <GlobalAppoints date = {dateParse} id_psycho={id_psycho} user={user} />
         </section>
     )
 }

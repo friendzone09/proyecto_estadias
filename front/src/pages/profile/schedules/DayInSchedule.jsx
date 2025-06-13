@@ -1,5 +1,3 @@
-
-
 function DayInSchedule({ dayName, dayStatus, onToggleDay   }){
 
     return(

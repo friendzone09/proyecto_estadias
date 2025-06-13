@@ -1,4 +1,4 @@
-function PsychoDescription({ name, lastName, description, onChange, onSubmit }){
+function PsychoDescription({ user, onChange, onSubmit }){
 
     return (
         <div className="profile_form">
@@ -7,13 +7,13 @@ function PsychoDescription({ name, lastName, description, onChange, onSubmit }){
 
                 <div className="edit_inputs">
                     <label>Nombre(s)</label>
-                    <input type="text"  name="name" value={name} onChange={onChange} />
+                    <input type="text"  name="name" value={user.name || ''} onChange={onChange} />
 
                     <label>Apellidos</label>
-                    <input type="text"  name='last_name' value={lastName} onChange={onChange}/>
+                    <input type="text"  name='last_name' value={user.last_name || ''} onChange={onChange}/>
 
                     <label>Descripción</label>
-                    <textarea type="text" name="description" value={description} onChange={onChange} required />
+                    <textarea type="text" name="description" value={user.description || ''} onChange={onChange} required />
                 </div>
 
                 <div className="button_info_submit">

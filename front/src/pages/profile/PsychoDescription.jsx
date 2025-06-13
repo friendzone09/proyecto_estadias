@@ -1,6 +1,6 @@
+import { Link } from 'react-router-dom'
+
 function PsychoDescription( {PsychoDescription} ){
-
-
     return (
         <div className="description_secction">
 
@@ -12,8 +12,8 @@ function PsychoDescription( {PsychoDescription} ){
             </div>
 
             <div className="profile_edit_buttons">
-                <a href="/profile/edit/password" className="go_to_change_password">Cambiar contraseña</a>
-                <a href="/profile/edit" className="go_to_edit_profile">Editar información</a>
+                <Link to={'/profile/edit/password'} className="go_to_change_password">Cambiar contraseña</Link>
+                <Link to={'/profile/edit'} className='go_to_edit_profile'>Editar información</Link>
             </div>
 
         </div>

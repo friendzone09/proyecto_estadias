@@ -1,6 +1,7 @@
-function PsychoImage({imageName, name, lastName}){
+import { Link } from "react-router-dom"
 
-    const imgurl = `http://127.0.0.1:5000/uploads/${imageName}`
+function PsychoImage({user}){
+    const imgurl = `http://127.0.0.1:5000/uploads/${user.image}`
 
     return(
 
@@ -8,11 +9,11 @@ function PsychoImage({imageName, name, lastName}){
             <div className="profile_psycho_image">
                 <img src={imgurl} alt="" />
 
-                <span> Lic. {name} {lastName} </span>
+                <span> Lic. {user.name} {user.last_name} </span>
             </div>
 
             <div className="button_edit_schedule">
-                <a href="/profile/schedules">Editar horarios</a>
+                <Link to={"/profile/schedules"}>Editar horarios</Link>
             </div>
         </section>
 

@@ -10,6 +10,7 @@ import AppointAgend from './pages/AppointAgend/AppointAgend'
 import EditProfile from './pages/profile/edit/EditProfile';
 import Schedule from './pages/profile/schedules/Schedules';
 import EditPassword from './pages/profile/editPassword/EditPassword';
+import NotFound from './pages/Errors/NotFound/NotFound';
 
 import Screen from './TEST/Screen';
 
@@ -32,6 +33,8 @@ function AppRoutes() {
       <Route path="/appointAgend/:id_psycho" element={isLayoutVisible ? <Body><AppointAgend /></Body> : <AppointAgend />} />
       <Route path="/login" element={<LoginScreen />} />
       <Route path="/register" element={<RegisterScreen />} />
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

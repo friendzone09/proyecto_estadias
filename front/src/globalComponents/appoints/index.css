@@ -27,7 +27,15 @@
 }
 
 .appoint_hour{
-    background-color: #5983d6;
+    background-color: #fac629;
+}
+
+.appoint_hour_for_psycho{
+    cursor: pointer;
+}
+
+.appoint_hour_for_psycho:hover{
+    background-color: #f5b908;
 }
 
 dialog.modal[open] {
@@ -94,14 +102,6 @@ dialog::backdrop {
 
 .close_button:hover{
     color: rgb(59, 59, 59);
-}
-
-.appoint_hour_for_psycho{
-    cursor: pointer;
-}
-
-.appoint_hour_for_psycho:hover{
-    background-color: #486cb4;
 }
 
 .cancel_hour{
