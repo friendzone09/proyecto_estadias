@@ -27,6 +27,9 @@ function UsersList({ user }) {
 
         const res = await fetchWithAuth(`http://localhost:5000/api/get_all_users?page=${currentPage}&per_page=${perPage}`);
         const data = await res.json();
+
+        console.log(data);
+
         setUsers(data.users);
         setTotalPages(Math.ceil(data.total / perPage));
 
@@ -161,6 +164,11 @@ function UsersList({ user }) {
                         <label>Correo</label>
                         <input type="email" value={selectedUser ? selectedUser.user_email : ''}
                             onInput={e => { selectedUser ? setSelectedUser({ ...selectedUser, user_email: e.target.value }) : null }}
+                        />
+
+                        <label>Numero</label>
+                        <input type="text" value={selectedUser ? selectedUser.user_phone : ''}
+                            onInput={e => { selectedUser ? setSelectedUser({ ...selectedUser, user_phone: e.target.value }) : null }}
                         />
 
                         <label>Tipo</label>
