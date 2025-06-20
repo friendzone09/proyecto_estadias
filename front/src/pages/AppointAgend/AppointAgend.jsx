@@ -9,7 +9,6 @@ function AppointAgend ({ user }){
     const { id_psycho } = useParams();
     const [dateParse, setDateParse] = useState({ day: '', month: '', year: '', monthNum: '' });
 
-
     useEffect(()=>{
          if (user && (user.role == null || user.asig_psycho != null)){
             navigate('/')
@@ -28,7 +27,6 @@ function AppointAgend ({ user }){
 export default AppointAgend
 
 //ESTRUCTURA DE UN USUARIO PACIENTE
-
 // user = {'user_id' : user_info[0], 
 // 'name' : user_info[1], 
 // 'last_name' : user_info[2], 

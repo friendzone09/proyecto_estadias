@@ -1,0 +1,36 @@
+#circle_box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    color: #000;
+    width: 100%;
+}
+
+.loading {
+    position: relative;
+    color: #000000;
+    margin-top: 2em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase
+}
+
+.circle {
+    border: 10px solid #A6464E;
+    border-radius: 50%;
+    border-left-color: transparent;
+    width: 80px;
+    height: 80px;
+    animation: giro 1s linear infinite;
+}
+
+@keyframes giro {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

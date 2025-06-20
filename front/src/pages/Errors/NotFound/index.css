@@ -1,22 +1,28 @@
-.error{
+.error {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 1rem;
+    margin: auto;
+    height: 100dvh;
 }
 
-.error-404 > img{
+.error-404>img {
     width: 300px;
     height: 300px;
 }
 
-.error-404 > h1{
+.error-404>h1 {
     font-size: 5rem;
     color: #A6464E;
 }
 
-.error-404 > span{
+.error-404>span {
     color: #D0A81C;
     font-size: 2rem;
+}
+
+.error-404 > .icon{
+    color: #D0A81C;
 }

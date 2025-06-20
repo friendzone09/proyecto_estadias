@@ -43,6 +43,10 @@
     color: red;
 }
 
+.icon-info{
+    color: #0958e9;
+}
+
 .loading-success{
     background-color: green;
 }
@@ -53,6 +57,10 @@
 
 .loading-error{
     background-color: red;
+}
+
+.loading-info{
+    background-color: #0958e9;
 }
 
 @keyframes shrinkBar {

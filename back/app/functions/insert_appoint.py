@@ -10,8 +10,10 @@ def insert_appoint(id_psycho, patient_id, date, hour_id, type):
 
     result = cur.fetchone()
 
-    print("Tipo:", type)
-    print("Resultado de paciente:", result)
+    cur.execute('SELECT * FROM public.appointments '
+    'WHERE appoint_date=%s AND fk_hour=%s', (date, hour_id))
+
+    appoint = cur.fetchone()
 
     if type == 'patient' and result[1]:
         return False
@@ -20,28 +22,14 @@ def insert_appoint(id_psycho, patient_id, date, hour_id, type):
 	'fk_psycho, fk_patient, appoint_date, fk_hour, appoint_status) '
 	'VALUES (%s, %s, %s, %s, %s);',(id_psycho, patient_id, date, hour_id, True,))
 
-    cur.execute('UPDATE public.patient '
-	'SET fk_psycho=%s '
-	'WHERE fk_user=%s;' , (id_psycho, patient_id,))
+    if result[1] == None:
+        cur.execute('UPDATE public.patient '
+        'SET fk_psycho=%s '
+        'WHERE fk_user=%s;' , (id_psycho, patient_id,))
 
     conn.commit()
-
-    query = 'SELECT * FROM public.patients_info WHERE fk_user = %s'
-
-    cur.execute(query, (patient_id,))
-
-    result = cur.fetchone()
-
-    user = {
-        'user_id' : result[0],
-        'name' : result[1],
-        'last_name' : result[2],
-        'email' : result[3],
-        'type' : result[5],
-        'fk_psycho' : result[4]
-    }
 
     cur.close()
     conn.close()
 
-    return user
+    return True

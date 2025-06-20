@@ -1,4 +1,4 @@
-import { CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
+import { CheckCircle, AlertTriangle, XCircle, Info } from 'lucide-react';
 
 import './index.css'
 
@@ -9,6 +9,7 @@ function Alert( {type = 'succes', children} ){
     if (type === 'success') Icon = CheckCircle; 
     else if (type === 'warning') Icon = AlertTriangle;    
     else if (type === 'error') Icon = XCircle;
+    else if (type === 'info') Icon = Info
     
     return (
         <div className={`alert color-${type} toast-${type}`}>

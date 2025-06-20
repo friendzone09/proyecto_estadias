@@ -1,0 +1,26 @@
+.conecction-error > h1{
+    font-size: 3rem;
+    color: #A6464E;
+}
+
+.conecction-error .icon{
+    color: #D0A81C;
+}
+
+.reset_button{
+    padding: 1rem;
+    background-color: aqua;
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    border: 1px solid black;
+    text-decoration: none;
+    background-color: #A6464E;
+    color: black;
+    font-size: 1.4rem;
+}
+
+.reset_button:hover{
+    background-color: #7a3036;
+}
+

@@ -11,6 +11,7 @@ import EditProfile from './pages/profile/edit/EditProfile';
 import Schedule from './pages/profile/schedules/Schedules';
 import EditPassword from './pages/profile/editPassword/EditPassword';
 import NotFound from './pages/Errors/NotFound/NotFound';
+import UsersList from './pages/users/UsersList';
 
 import Screen from './TEST/Screen';
 
@@ -30,7 +31,10 @@ function AppRoutes() {
 
       <Route path='/test' element={isLayoutVisible ? <Body><Screen /></Body> : <Home />} />
 
-      <Route path="/appointAgend/:id_psycho" element={isLayoutVisible ? <Body><AppointAgend /></Body> : <AppointAgend />} />
+      <Route path="/appointAgend/:id_psycho" element={isLayoutVisible ? <Body><AppointAgend /></Body> : <Home />} />
+
+      <Route path="/admin/users" element={isLayoutVisible ? <Body><UsersList /></Body> : <Home />}/>
+
       <Route path="/login" element={<LoginScreen />} />
       <Route path="/register" element={<RegisterScreen />} />
 

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 function CardImage({ image, psychoId, user }) {
 
     const imageUrl = `http://127.0.0.1:5000/uploads/${image}`
@@ -8,8 +9,8 @@ function CardImage({ image, psychoId, user }) {
             <img src={imageUrl} alt="psycho_image" />
 
             <div className="psycho_button">
-                {user.role == null && (<a href="/login">Inicia sesión</a>)}
-                {user.role == 'patient' && user.asig_psycho == null && (<a href={psychoLink} >Agendar una cita</a>)}
+                {user.role == null && (<Link to={'/login'}>Inicia sesión</Link>)}
+                {user.role == 'patient' && user.asig_psycho == null && (<Link to={psychoLink}>Agendar una cita</Link>)}
             </div>
         </section>
     )

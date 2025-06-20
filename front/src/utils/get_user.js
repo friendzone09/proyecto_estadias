@@ -5,8 +5,6 @@ export async function getUser() {
 
     const data = await response.json();
 
-    console.log(data)
-
     return data.user;
 }
 

@@ -5,7 +5,7 @@ function HeaderAdmin(){
     return(
         <div className="header_pages">
             <Link to={'/'}>Inicio</Link>
-            <Link to={'/newUser'}>Nuevo usuario</Link>
+            <Link to={'/admin/users'}>Usuarios</Link>
             <LogOutButton/>
         </div>
     )

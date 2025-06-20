@@ -18,6 +18,8 @@ from app.functions.insert_appoint import insert_appoint
 from app.functions.cancel_appoint import cancel_appoint
 from app.functions.set_all_false_hours import set_false_hours
 from app.functions.update_hour import update_hour
+from app.decorators.auth import token_required
+from app.functions.user_role import user_role
 
 # password = generate_password_hash('12345')
 
@@ -89,21 +91,36 @@ def login():
         conn.close()
         return jsonify({'message' : 'Error: contraseña incorrecta', 'type' : 'error'})
     
-    token = jwt.encode({
+    # access token
+    access_token = jwt.encode({
         'id': user_info[0],
         'exp': datetime.utcnow() + timedelta(hours=1)
     }, app.config['SECRET_KEY'], algorithm='HS256')
 
-    print(token)
+    # refresh token (dura más)
+    refresh_token = jwt.encode({
+        'id': user_info[0],
+        'exp': datetime.utcnow() + timedelta(days=14)
+    }, app.config['SECRET_KEY'], algorithm='HS256')
     
     response = make_response(jsonify({'message': 'Login exitoso', 'type' : 'success'}))
+
     response.set_cookie(
         'ghamaris_token',
-        token,
+        access_token,
         httponly=True,
         secure=False,  # True en producción (HTTPS)
         samesite='Lax',
         max_age=3600
+    )
+
+    response.set_cookie(
+        'ghamaris_refresh', 
+        refresh_token, 
+        httponly=True, 
+        secure=False, 
+        samesite='Lax', 
+        max_age=14*24*3600
     )
         
     cur.close()
@@ -147,7 +164,7 @@ def register():
     return jsonify({'message' : 'Usuario registrado correctamente',
                     'type' : 'success'})
 
-@app.route('/api/get_appoint_for_patient/<int:psycho_id>/<string:date_str>', methods = ['GET'])
+@app.route('/api/get_appoint_for_patient/<int:psycho_id>/<string:date_str>')
 def obtain_appoint(psycho_id, date_str):
 
     if not psycho_id or not date_str:
@@ -195,7 +212,8 @@ def get_psycho(id_psycho):
     return jsonify(psycho)
 
 @app.route('/api/insert_appoint', methods = ['POST'])
-def post_appoint():
+@token_required
+def post_appoint(user_info):
 
     type = request.form.get('user_type')
 
@@ -209,15 +227,15 @@ def post_appoint():
     result = insert_appoint(id_psycho, patient_id, date, hour_id, type)
 
     if result == False :
-        return jsonify({'message' : 'Error, no puedes hacer mas registros',
+        return jsonify({'message' : 'Error al registrar la cita',
                         'type' : 'error'}), 400 
 
     return jsonify({'message' : 'Cita agendada',
-                    'type' : 'success',
-                    'user'  : result}), 200
+                    'type' : 'success'}), 200
 
 @app.route('/api/cancel_appoint', methods = ['POST'])
-def call_cancel_appoint():
+@token_required
+def call_cancel_appoint(user_info):
 
     id_psycho = request.form.get('psycho_id')
     date_str = request.form.get('date')
@@ -230,7 +248,8 @@ def call_cancel_appoint():
     return response
 
 @app.route('/api/activate_appoint', methods = ['POST'])
-def activate_appoint():
+@token_required
+def activate_appoint(user_info):
 
     id_psycho = request.form.get('psycho_id')
     date_str = request.form.get('date')
@@ -251,14 +270,10 @@ def activate_appoint():
                     'type' : 'success'})
 
 @app.route('/api/get_all_user_info')
-def get_all_user_info():
-    token = request.cookies.get('ghamaris_token')
-
-    if not token:
-        return jsonify({'message': 'Token no encontrado', 'type': 'success', 'user' : {'role' : None}})
+@token_required
+def get_all_user_info(user_data):
     try:
-        decoded = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
-        id_user = decoded['id']
+        id_user = user_data['id']
 
         conn = get_db_connection()
         cur = conn.cursor()
@@ -318,7 +333,8 @@ def get_psychgo_info(id_psycho):
     return jsonify({ 'psycho' : body, 'type' : 'success', 'message' : 'Exito'})
 
 @app.route('/api/update_psycho_profile', methods=['PUT'])
-def update_psycho_profile():
+@token_required
+def update_psycho_profile(user_info):
     psycho_id = request.form.get('id')
     name = request.form.get('name')
     last_name = request.form.get('last_name')
@@ -409,7 +425,8 @@ def get_laboral_day(id_psycho,id_day):
     return jsonify({'day' : day, 'hours' : hours})
 
 @app.route('/api/update_hours', methods = ['PUT'])
-def update_hours():
+@token_required
+def update_hours(user_info):
     conn = get_db_connection()
     cur = conn.cursor()
 
@@ -496,42 +513,163 @@ def check_token():
     
 @app.route('/api/logout', methods=['POST'])
 def logout():
-    response = make_response(jsonify({'mensaje': 'Logout exitoso'}))
-    response.set_cookie('ghamaris_token', '', expires=0)  # Borra la cookie
+    response = make_response(jsonify({'message': 'Logout exitoso', 'type': 'success'}))
+
+    # Borrar el access token
+    response.set_cookie('ghamaris_token', '', expires=0, httponly=True, secure=False, samesite='Lax')
+
+    # Borrar también el refresh token
+    response.set_cookie('ghamaris_refresh', '', expires=0, httponly=True, secure=False, samesite='Lax')
+
     return response
 
 @app.route('/api/user_info')
-def get_user_info():
-    token = request.cookies.get('ghamaris_token')
+@token_required
+def get_user_info(user_data):
 
-    if not token:
-        return jsonify({'message': 'Token no encontrado', 'type': 'success', 'user' : None})
+    id_user= int(request.args.get('user_id'))  # id del usuario
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT id_user, user_name, user_last_name, user_role, user_email FROM public.users_show_all_info WHERE id_user = %s', (id_user,))
+    row = cur.fetchone()
+    user = {
+        'id_user' : row[0],
+        'user_name' : row[1],
+        'user_last_name' : row[2],
+        'user_role' : row[3],
+        'user_email' : row[4]
+    }
+
+    return jsonify({'user' : user, 'message' : 'Exito', 'type' : 'success'})
+    
+
+@app.route('/api/test')
+@token_required
+def test_api(user_data):
+    return jsonify({'msg': f'Hola usuario {user_data["id"]}'})
+
+@app.route('/api/refresh_token')
+def refresh_token():
+    refresh_token = request.cookies.get('ghamaris_refresh')
+    
+    if not refresh_token:
+        return jsonify({'message': 'Inicia sesión para tener acceso a más opciones', 'type': 'info', 'user' : {'role' : None}}), 401
     try:
-        decoded = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
-        id_user = decoded['id']
+        payload = jwt.decode(refresh_token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        new_access_token = jwt.encode({
+            'id': payload['id'],
+            'exp': datetime.utcnow() + timedelta(hours=1)
+        }, app.config['SECRET_KEY'], algorithm='HS256')
 
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute('SELECT * FROM public.users WHERE id_user = %s', (id_user,))
-        row = cur.fetchone()
-        user = {
-            'id' : row[0],
-            'name' : row[1],
-            'last_name' : row[2],
-            'email' : row[3],
-            'role' : row[5]
-
-        }
-
-        return jsonify({'user' : user, 'message' : 'Exito', 'type' : 'success'})
+        response = make_response(jsonify({'message': 'Token renovado', 'type': 'success'}))
+        response.set_cookie('ghamaris_token', new_access_token, httponly=True, secure=False, samesite='Lax', max_age=3600)
+        return response
 
     except jwt.ExpiredSignatureError:
-        return jsonify({'ok': False, 'msg': 'Token expirado'})
+        return jsonify({'message': 'Sesión expirada. Por favor inicia sesión de nuevo', 'type': 'warning', 'user' : {'role' : None}}), 401
+    except jwt.InvalidTokenError:
+        return jsonify({'message': 'Token invalido. Por favor inicia sesión', 'type': 'warning', 'user' : {'role' : None}}), 401
     
-    finally:
+@app.route('/api/get_all_users')
+@token_required
+def get_all_users(user_info):
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    role = user_role(cur=cur, id_user=user_info['id'])
+
+    if role != 'admin':
         cur.close()
         conn.close()
+        return jsonify({'message' : 'Acceso denegado', 'type' : 'error'})
 
+    # Obtener parámetros de paginación
+    page = int(request.args.get('page', 1))  # Página actual (default 1)
+    per_page = int(request.args.get('per_page', 5))  # Elementos por página (default 10)
+    offset = (page - 1) * per_page
+
+    # Contar total de usuarios (para frontend si quieres mostrar número total de páginas)
+    cur.execute("SELECT COUNT(*) FROM public.users_show_all_info WHERE user_role != %s", ('admin',))
+    total_users = cur.fetchone()[0]
+
+    # Consulta paginada
+    cur.execute('''
+        SELECT * FROM public.users_show_all_info
+        WHERE user_role != %s
+        ORDER BY user_name
+        LIMIT %s OFFSET %s
+    ''', ('admin', per_page, offset))
+
+    rows = cur.fetchall()
+    users = [{'user_id': r[0], 'user_name': r[1], 'user_last_name': r[2], 'user_email': r[3], 'user_role': r[4]} for r in rows]
+
+    return jsonify({
+        'users': users,
+        'total': total_users,
+        'page': page,
+        'per_page': per_page
+    })
+
+@app.route('/api/edit_user', methods = ['PUT'])
+@token_required
+def edit_user(user_data):
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    role = user_role(id_user=user_data['id'], cur=cur)
+
+    if role != 'admin':
+        cur.close()
+        conn.close()
+        return jsonify({'message' : 'Acceso denegado', 'type': 'error'})
+
+    raw_user = request.form.get('user')
+    user = json.loads(raw_user)
+
+    print(user['user_id'])
+
+    cur.execute('UPDATE public.users '
+	'SET user_name=%s, user_last_name=%s, user_email=%s, user_role=%s '
+	'WHERE id_user=%s;', (user['user_name'], user['user_last_name'], user['user_email'], user['user_role'], user['user_id'],))
+
+    conn.commit()
+
+    cur.close()
+    conn.close()
+
+    return jsonify({'message' : 'todo bien', 'type' : 'success'})
+
+@app.route('/api/search_user')
+@token_required
+def search_user(user_data):
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    role = user_role(id_user=user_data['id'], cur=cur)
+
+    if role == 'patient':
+        cur.close()
+        conn.close()
+        return jsonify({'message' : 'Acceso denegado', 'type': 'error'})
+    
+    search = request.args.get('search', '')
+
+    cur.execute(
+        '''SELECT * FROM public.users_show_all_info
+        WHERE user_role !=%s AND (user_name ILIKE %s
+        OR user_last_name ILIKE %s OR user_email ILIKE %s)
+        ORDER BY user_name''',
+        ('admin', f'{search}%', f'{search}%', f'{search}%')
+    )
+
+    rows = cur.fetchall()
+
+    users = [{'user_id': r[0], 'user_name': r[1], 'user_last_name': r[2], 'user_email': r[3], 'user_role': r[4]} for r in rows]
+
+    return jsonify({'users': users})
+    
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)

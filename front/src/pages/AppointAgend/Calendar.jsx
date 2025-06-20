@@ -10,7 +10,6 @@ function Calendar({ onDateChange }){
 
     const[selectedDate, setSelectedDate] = useState(null);
 
-
     function handleChange(date){
         setSelectedDate(date);
         const day = String(date.getDate()).padStart(2, '0');
