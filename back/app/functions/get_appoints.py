@@ -1,4 +1,4 @@
-from app.db import get_db_connection
+from app.models.db import get_db_connection
 
 def get_appoint(psycho_id, date):
     conn = get_db_connection()

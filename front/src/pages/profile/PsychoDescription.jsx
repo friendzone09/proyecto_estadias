@@ -12,7 +12,6 @@ function PsychoDescription( {PsychoDescription} ){
             </div>
 
             <div className="profile_edit_buttons">
-                <Link to={'/profile/edit/password'} className="go_to_change_password">Cambiar contraseña</Link>
                 <Link to={'/profile/edit'} className='go_to_edit_profile'>Editar información</Link>
             </div>
 

@@ -4,7 +4,10 @@ import { fetchWithAuth } from '../../utils/fetchWithAuth'
 import { Pencil, Search, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useRef } from "react";
 import { useToast } from "../../contexts/alert/ToastContext";
+
 import LoadingCircle from "../../components/LoadingCircle/LoadingCircle";
+import NotResult from "../../components/NotResult/NotResul";
+
 import './index.css'
 
 function UsersList({ user }) {
@@ -15,44 +18,22 @@ function UsersList({ user }) {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [selectedUser, setSelectedUser] = useState(null);
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
     const perPage = 5;
 
-    const [searchTerm, setSearchTerm] = useState('');
-    const [searchPage, setSearchPage] = useState(1);
-    const [isSearching, setIsSearching] = useState(false);
-
-    async function callUsers(currentPage = 1) {
+    async function callUsers(currentPage = 1, text) {
         setLoading(true)
 
-        const res = await fetchWithAuth(`http://localhost:5000/api/get_all_users?page=${currentPage}&per_page=${perPage}`);
-        const data = await res.json();
+        if (text == undefined || text == '') text = 'none'
 
-        console.log(data);
+        const res = await fetchWithAuth(`http://localhost:5000/api/get_all_users?page=${currentPage}&per_page=${perPage}&search=${text}`);
+        const data = await res.json();
 
         setUsers(data.users);
         setTotalPages(Math.ceil(data.total / perPage));
 
         setLoading(false)
     }
-
-    async function searchName(text) {
-
-        if (text != '') {
-            setLoading(true);
-
-            const res = await fetchWithAuth(`http://localhost:5000/api/search_user?search=${text}`);
-            const data = await res.json();
-
-            setUsers(data.users);
-
-            setLoading(false);
-        } else{
-            callUsers();
-        }
-
-    }
-
 
     async function editUser(e) {
         e.preventDefault();
@@ -90,50 +71,58 @@ function UsersList({ user }) {
     return (
         <div className="user_table_section">
 
-            <div className="search_var">
-                <input type="text" placeholder="Buscar..." onInput={e => searchName(e.target.value)} />
-                <button><Search size={25} /></button>
-            </div>
+            <div className="table_section">
 
+                <div className="section_var">
+                    <div className="new_user_button">
+                        <Link className="button_new_user" to={'/admin/users/new'}>Nuevo usuario</Link>
+                    </div>
 
+                    <div className="search_var">
+                        <input type="text" placeholder="Buscar..." onInput={e => callUsers(1, e.target.value)} />
+                        <button><Search size={20} /></button>
+                    </div>
+                </div>
 
-            <div className="users_table">
-                {loading ? (<LoadingCircle />) :
-                    (
-                        users.length > 0 ? (<table>
-                            <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Correo</th>
-                                    <th>Rol</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {users.map(u => (
-                                    <tr key={u.user_id}>
-                                        <td> {u.user_name} {u.user_last_name}  </td>
-                                        <td> {u.user_email} </td>
-                                        <td> {u.user_role == 'patient' ? ('Paciente') : ('Psicólogo')}</td>
-                                        <td><button onClick={() => setSelectedUser(u)}>Editar <Pencil size={15} /></button></td>
+                <div className="users_table">
+                    {loading ? (<LoadingCircle />) :
+                        (
+                            users.length > 0 ? (<table>
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Correo</th>
+                                        <th>Numero</th>
+                                        <th>Rol</th>
+                                        <th>Acciones</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>) : (<p>Sin resultados...</p>)
-                    )
-                }
+                                </thead>
+                                <tbody>
+                                    {users.map(u => (
+                                        <tr key={u.user_id}>
+                                            <td> {u.user_name} {u.user_last_name}  </td>
+                                            <td> {u.user_email} </td>
+                                            <td>{u.user_phone}</td>
+                                            <td> {u.user_role == 'patient' ? ('Paciente') : ('Psicólogo')}</td>
+                                            <td><button onClick={() => setSelectedUser(u)}>Editar <Pencil size={15} /></button></td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>) : (<NotResult />)
+                        )
+                    }
+                </div>
             </div>
 
             <div className="paginator">
-                <button onClick={() => isSearching ? setSearchPage(p => Math.max(p - 1, 1)) : setPage(p => Math.max(p - 1, 1))}
-                    disabled={(isSearching ? searchPage : page) === 1}>
+                <button onClick={() => setPage(p => Math.max(p - 1, 1))} disabled={page === 1 || users.length == 0}>
                     <ChevronLeft />
                 </button>
 
-                <span>{isSearching ? searchPage : page}/{totalPages}</span>
+                <span> {page} /{totalPages}</span>
 
-                <button onClick={() => isSearching ? setSearchPage(p => Math.min(p + 1, totalPages)) : setPage(p => Math.min(p + 1, totalPages))}
-                    disabled={(isSearching ? searchPage : page) === totalPages}>
+                <button onClick={() => setPage(p => Math.min(p + 1, totalPages))}
+                    disabled={page === totalPages || users.length == 0}>
                     <ChevronRight />
                 </button>
             </div>

@@ -1,0 +1,12 @@
+.not_result{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100px;
+}
+
+.not_result > span{
+    font-size: 1.6rem;
+    color: #A6464E;
+}

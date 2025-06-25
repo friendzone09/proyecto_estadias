@@ -9,9 +9,9 @@ import Body from './globalComponents/body';
 import AppointAgend from './pages/AppointAgend/AppointAgend'
 import EditProfile from './pages/profile/edit/EditProfile';
 import Schedule from './pages/profile/schedules/Schedules';
-import EditPassword from './pages/profile/editPassword/EditPassword';
 import NotFound from './pages/Errors/NotFound/NotFound';
 import UsersList from './pages/users/UsersList';
+import NewUser from './pages/users/newUser/NewUser';
 
 import Screen from './TEST/Screen';
 
@@ -27,13 +27,14 @@ function AppRoutes() {
       <Route path="/profile" element={isLayoutVisible ? <Body><Profile /></Body> : <Home />} />
       <Route path="/profile/edit" element={isLayoutVisible ? <Body><EditProfile /></Body> : <Home />} />
       <Route path="/profile/schedules" element={isLayoutVisible ? <Body><Schedule /></Body> : <Home />} />
-      <Route path="/profile/edit/password" element={isLayoutVisible ? <Body><EditPassword /></Body> : <Home />} />
 
       <Route path='/test' element={isLayoutVisible ? <Body><Screen /></Body> : <Home />} />
 
       <Route path="/appointAgend/:id_psycho" element={isLayoutVisible ? <Body><AppointAgend /></Body> : <Home />} />
 
       <Route path="/admin/users" element={isLayoutVisible ? <Body><UsersList /></Body> : <Home />}/>
+
+      <Route path="/admin/users/new" element={isLayoutVisible ? <Body><NewUser /></Body> : <Home />}/>
 
       <Route path="/login" element={<LoginScreen />} />
       <Route path="/register" element={<RegisterScreen />} />

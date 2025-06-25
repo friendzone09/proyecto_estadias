@@ -4,10 +4,7 @@ import './index.css'
 
 function RegisterScreen(){
 
-    const[name, setName] = useState('');
-    const[lastName, setLastName] = useState('');
-    const[email, setEmail] = useState('');
-    const[password, setPassword] = useState('');
+    const [newUser, setNewUser] = useState({name: '', lastName: '', email: '', phone: '', password:'',})
 
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -24,10 +21,11 @@ function RegisterScreen(){
         e.preventDefault();
         
         const formData = new FormData();
-        formData.append('name', name) 
-        formData.append('last_name', lastName) 
-        formData.append('email', email) 
-        formData.append('password', password)
+        formData.append('name', newUser.name) 
+        formData.append('last_name', newUser.lastName) 
+        formData.append('email', newUser.email) 
+        formData.append('phone', newUser.phone) 
+        formData.append('password', newUser.password)
     
         const response = await fetch('http://127.0.0.1:5000/api/register',{
             method : 'POST',
@@ -43,8 +41,6 @@ function RegisterScreen(){
         }
 
     }
-
-
     return(
         <>
 
@@ -54,16 +50,29 @@ function RegisterScreen(){
                 <h1>Registrate</h1>
 
                 <label>Nombre</label>
-                <input placeholder="Escribe tu correo..." value={name} onChange={(e) => setName(e.target.value)} required/>
+                <input placeholder="Escribe tu correo..." value={newUser.name} 
+                onChange={(e) => setNewUser({...newUser, name: e.target.value})} 
+                required/>
 
                 <label>Apellidos</label>
-                <input placeholder="Escribe tu correo..." value={lastName} onChange={(e) => setLastName(e.target.value)} required />
+                <input placeholder="Escribe tu correo..." value={newUser.lastName} 
+                onChange={(e) => setNewUser({...newUser, lastName: e.target.value})} 
+                required />
 
                 <label>Correo electrónico</label>
-                <input placeholder="Escribe tu correo..." value={email} onChange={(e) => setEmail(e.target.value)} type="email" required />
+                <input placeholder="Escribe tu correo..." value={newUser.email} 
+                onChange={(e) => setNewUser({...newUser, email: e.target.value})} 
+                type="email" required />
+
+                <label>Número de celular</label>
+                <input type="number" placeholder="Escribe tú número" value={newUser.phone} 
+                onChange={(e) => setNewUser({...newUser, phone: e.target.value})}
+                required/>
 
                 <label>Contraseña</label>
-                <input placeholder="Escribe tu contraseña..." value={password} onChange={(e) => setPassword(e.target.value)} type="password" required/>
+                <input placeholder="Escribe tu contraseña..." value={newUser.password} 
+                onChange={(e) => setNewUser({...newUser, password: e.target.value})} 
+                type="password" required/>
 
                 {errorMessage && (
                     <small>{errorMessage}</small>
@@ -74,9 +83,6 @@ function RegisterScreen(){
                 <a href="/login">Inica sesión</a>
             </form>
         </>
-        
-            
-       
     )
 }
 
