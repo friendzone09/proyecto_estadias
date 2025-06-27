@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import './index.css'
 
 function RegisterScreen(){
-
     const [newUser, setNewUser] = useState({name: '', lastName: '', email: '', phone: '', password:'',})
 
     const [errorMessage, setErrorMessage] = useState('');
@@ -17,9 +16,7 @@ function RegisterScreen(){
     }, [])
 
     async function registerUser(e){
-
-        e.preventDefault();
-        
+        e.preventDefault();  
         const formData = new FormData();
         formData.append('name', newUser.name) 
         formData.append('last_name', newUser.lastName) 
@@ -33,13 +30,10 @@ function RegisterScreen(){
         });
 
         const data = await response.json();
-
         if(data.type == 'success') navigate('/login');
-
         else{
             setErrorMessage(data.message);
         }
-
     }
     return(
         <>

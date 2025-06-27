@@ -113,7 +113,7 @@ def register():
     row = cur.fetchone()
 
     if row:
-        return jsonify({'message': 'El usuario ya existe',
+        return jsonify({'message': 'El correo electronico ya existe',
                         'type' : 'error'}), 401
     
     password = generate_password_hash(password)

@@ -2,6 +2,7 @@ import Header from "./header";
 import Main from "./main";
 import Footer from "./footer";
 import '../static/styles/global.css'
+import '../static/styles/responsive.css'
 import { fetchWithAuth } from "../utils/fetchWithAuth";
 import React from "react";
 import { useState, useEffect } from "react";

@@ -19,20 +19,22 @@ function UsersList({ user }) {
     const [totalPages, setTotalPages] = useState(1);
     const [selectedUser, setSelectedUser] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [searchText, setSearchText] = useState('');
     const perPage = 5;
 
-    async function callUsers(currentPage = 1, text) {
-        setLoading(true)
+    async function callUsers(currentPage = 1, text = searchText) {
+        setLoading(true);
 
-        if (text == undefined || text == '') text = 'none'
+        const query = text.trim() === '' ? 'none' : text.trim();
 
-        const res = await fetchWithAuth(`http://localhost:5000/api/get_all_users?page=${currentPage}&per_page=${perPage}&search=${text}`);
+        console.log(`http://localhost:5000/api/get_all_users?page=${currentPage}&per_page=${perPage}&search=${query}`);
+
+        const res = await fetchWithAuth(`http://localhost:5000/api/get_all_users?page=${currentPage}&per_page=${perPage}&search=${query}`);
         const data = await res.json();
 
         setUsers(data.users);
         setTotalPages(Math.ceil(data.total / perPage));
-
-        setLoading(false)
+        setLoading(false);
     }
 
     async function editUser(e) {
@@ -45,7 +47,7 @@ function UsersList({ user }) {
         const data = await res.json();
 
         addAlert(data.message, data.type);
-        await callUsers()
+        if (data.type == 'success') { await callUsers() }
     }
 
     useEffect(() => {
@@ -56,7 +58,11 @@ function UsersList({ user }) {
 
     useEffect(() => {
         if (user) callUsers(page);
-    }, [page, user]);
+    }, [page, user, searchText]);
+
+    useEffect(() => {
+        callUsers(1)
+    }, [searchText])
 
     useEffect(() => {
         if (selectedUser && dialogRef.current) {
@@ -79,7 +85,10 @@ function UsersList({ user }) {
                     </div>
 
                     <div className="search_var">
-                        <input type="text" placeholder="Buscar..." onInput={e => callUsers(1, e.target.value)} />
+                        <input type="text" placeholder="Buscar..." onInput={e => {
+                            setSearchText(e.target.value);
+                            setPage(1);
+                        }} />
                         <button><Search size={20} /></button>
                     </div>
                 </div>

@@ -84,8 +84,8 @@ def get_all_users(user_info):
         '''SELECT * FROM public.users_show_all_info
         WHERE user_role !=%s AND (user_name ILIKE %s
         OR user_last_name ILIKE %s OR user_email ILIKE %s)
-        ORDER BY user_name''',
-        ('admin', f'{search}%', f'%{search}%', f'{search}%'))
+        ORDER BY user_name LIMIT %s OFFSET %s''',
+        ('admin', f'{search}%', f'%{search}%', f'{search}%', per_page, offset))
 
         rows = cur.fetchall()
         users = [{'user_id': r[0], 'user_name': r[1], 'user_last_name': r[2], 'user_email': r[3], 'user_role': r[4], 'user_phone': r[5]} for r in rows]
@@ -113,10 +113,13 @@ def edit_user(user_data):
     raw_user = request.form.get('user')
     user = json.loads(raw_user)
 
+    if not user['user_name'] or not user['user_last_name'] or not user['user_email'] or not user['user_phone']:
+        return jsonify({'message' : 'Error: faltan credenciales', 'type' : 'error'})
+
     print(user['user_id'])
 
     cur.execute('UPDATE public.users '
-	'SET user_name=%s, user_last_name=%s, user_email=%s, user_role=%s, user_phone=%s'
+	'SET user_name=%s, user_last_name=%s, user_email=%s, user_role=%s, user_phone=%s '
 	'WHERE id_user=%s;', (user['user_name'], user['user_last_name'], user['user_email'], user['user_role'],  user['user_phone'], user['user_id']))
 
     conn.commit()
