@@ -1,6 +1,6 @@
 import { logOut } from "../../utils/logOut";
 
-function LogOutButton(){
+function LogOutButton({ icon }){
 
     function callLogOut(e){
         e.preventDefault();
@@ -8,7 +8,7 @@ function LogOutButton(){
     }
 
     return(
-        <a href="#" onClick={callLogOut}>Salir de la sesión</a>
+        <a href="#" onClick={callLogOut}>Salir de la sesión {icon}</a>
     )
 }
 

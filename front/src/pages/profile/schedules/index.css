@@ -106,3 +106,13 @@
     top: 0;
     left: 4px;
 }
+
+@media (max-width:900px) {
+    .select_day select{
+        width: 100%;
+    }
+    
+    .schedules{
+        width: 90%;
+    }
+}

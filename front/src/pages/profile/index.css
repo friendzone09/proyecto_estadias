@@ -137,7 +137,8 @@
     border: 1px solid black;
     border-radius: 5px;
     cursor: pointer;
-    width: 20%;
+    min-width: 20%;
+    max-width: min-content;
 }
 
 .button_info_submit button:hover{

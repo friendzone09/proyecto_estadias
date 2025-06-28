@@ -16,10 +16,8 @@
 
 .users_table {
   margin: 2rem auto;
-  width: 100%;
-  max-width: 1000px;
+  width: 90%;
   border-radius: 8px;
-  overflow: hidden;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
   background-color: #ffffff;
 }
@@ -75,8 +73,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
-  max-width: 1000px;
+  width: 90%;
   margin: 1rem auto 0 auto;
   gap: 1rem;
   flex-wrap: wrap;
@@ -256,4 +253,10 @@ dialog.modal_edit_user[open] {
 
 .button_register_new_user > button:hover{
   background-color: #9e2e37;
+}
+
+@media (max-width: 700px) {
+  dialog.modal_edit_user[open] {
+        width: 90%;
+    }
 }

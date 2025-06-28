@@ -81,6 +81,10 @@ header{
     width: 100%;
 }
 
+.header_menu{
+    display: none;
+}
+
 .pyscho_profile{
     border-radius: 50%;
     overflow: hidden;
@@ -118,4 +122,9 @@ footer > a{
 
 footer > a:hover{
     background-color: #d3d3d3;
+}
+
+.burguer_menu{
+    width: 0;
+    overflow: hidden;
 }
