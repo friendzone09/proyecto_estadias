@@ -74,8 +74,8 @@ def login():
         'ghamaris_token',
         access_token,
         httponly=True,
-        secure=False,  # True en producción (HTTPS)
-        samesite='Lax',
+        secure=True,
+        samesite='None',
         max_age=3600
     )
 
@@ -83,8 +83,8 @@ def login():
         'ghamaris_refresh', 
         refresh_token, 
         httponly=True, 
-        secure=False, 
-        samesite='Lax', 
+        secure=True, 
+        samesite='None', 
         max_age=14*24*3600
     )
         

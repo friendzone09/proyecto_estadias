@@ -149,7 +149,7 @@ def refresh_token():
         }, current_app.config['SECRET_KEY'], algorithm='HS256')
 
         response = make_response(jsonify({'message': 'Token renovado', 'type': 'success'}))
-        response.set_cookie('ghamaris_token', new_access_token, httponly=True, secure=False, samesite='Lax', max_age=3600)
+        response.set_cookie('ghamaris_token', new_access_token, httponly=True, secure=True, samesite='None', max_age=3600)
         return response
 
     except jwt.ExpiredSignatureError:
