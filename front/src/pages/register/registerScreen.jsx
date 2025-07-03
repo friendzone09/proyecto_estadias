@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
-import './index.css'
 
 function RegisterScreen(){
+    const API_URL = import.meta.env.VITE_API_URL
+
     const [newUser, setNewUser] = useState({name: '', lastName: '', email: '', phone: '', password:'',})
 
     const [errorMessage, setErrorMessage] = useState('');
@@ -24,7 +25,7 @@ function RegisterScreen(){
         formData.append('phone', newUser.phone) 
         formData.append('password', newUser.password)
     
-        const response = await fetch('http://127.0.0.1:5000/api/register',{
+        const response = await fetch(`${API_URL}/register`,{
             method : 'POST',
             body : formData
         });

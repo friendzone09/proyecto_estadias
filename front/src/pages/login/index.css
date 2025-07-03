@@ -1,11 +1,11 @@
-*{
+* {
     padding: 0;
     margin: 0;
     font-family: sans-serif;
     box-sizing: border-box;
 }
 
-.login_squere{
+.login_squere {
     background-color: #C8C8C8;
     display: flex;
     flex-direction: column;
@@ -15,42 +15,42 @@
     width: 30%;
 }
 
-.login_squere h1{
+.login_squere h1 {
     font-size: 3rem;
 }
 
-.login_squere label{
+.login_squere label {
     font-size: 1rem;
     font-weight: bold;
 }
 
-.login_squere input{
+.login_squere input {
     padding: 10px;
     border-radius: 10px;
     border: 1px solid black;
     font-size: 1rem;
 }
 
-.login_squere button{
+.login_squere button {
     padding: 10px;
     border-radius: 10px;
     border: none;
     background-color: #0a40db;
     font-size: 1.5rem;
-    color:  white;
+    color: white;
     cursor: pointer;
 }
 
-.login_squere button:hover{
+.login_squere button:hover {
     background-color: #0832a7;
 }
 
-.login_squere a{
+.login_squere a {
     color: #4267B3;
     font-size: 1.3rem;
 }
 
-canvas{
+canvas {
     display: block;
     position: absolute;
     width: 100vw;
@@ -58,6 +58,18 @@ canvas{
     z-index: -1;
 }
 
-.login_squere small{
+.login_squere small {
     color: red;
+}
+
+@media (max-width: 1000px) {
+    .login_squere {
+        width: 70%;
+        max-height: 80dvh;
+        overflow-y: scroll;
+    }
+
+    .login_squere>h1 {
+        font-size: 2rem;
+    }
 }

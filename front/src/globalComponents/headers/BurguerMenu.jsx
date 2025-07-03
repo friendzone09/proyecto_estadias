@@ -1,30 +1,49 @@
 import LogOutButton from "../components/LogOutButton"
 import { Link } from "react-router-dom"
-import { House, LogOut, User, NotepadText, LogIn } from "lucide-react"
+import { House, LogOut, User, NotepadText, LogIn, X } from "lucide-react"
 
-function BurguerMenu( { user } ) {
+function BurguerMenu({ user, isOpen, setMenuOpen }) {
+
+    const handleClick = () => {
+        setMenuOpen(false); // cierra el menú
+    }
+
     return (
-        <div className="burguer_menu">
+        <div className={`burguer_menu ${isOpen ? 'open' : ''}`}>
 
-            <div className="burguer_menu_links">
-                {user.role === 'psycho' || user.role === 'admin' ? 
-                <Link to={'/'}>Citas <NotepadText/> </Link> : user.role == 'patient' ? 
-                 <Link to={'/'}>Inicio <House/></Link> : 
-                 <>
-                 <Link to={'/'}>Incio <House/> </Link>
-                 <Link to={'/login'}>Inicia sesión <LogIn/> </Link>
-                 </>
-                   }
+            <X className="close_menu" onClick={handleClick}/>
 
-                {user.role === 'admin' &&(<Link to={'/admin/users'}>Usuarios <User/></Link>)}
-                {user.role === 'psycho' && <Link to={'/profile'}>Perfil <User/></Link>}
+            <div className="burguer_menu_links" onClick={handleClick}>
 
+                {(user.role === 'psycho' || user.role === 'admin') &&
+                    <Link to={'/'}>Citas <NotepadText /></Link>
+                }
 
-                {user.role !== null && (<LogOutButton icon={<LogOut/>} ></LogOutButton>)}
+                {user.role === 'patient' &&
+                    <Link to={'/'}>Inicio <House /></Link>
+                }
+
+                {!user.role &&
+                    <>
+                        <Link to={'/'}>Inicio <House /></Link>
+                        <Link to={'/login'}>Inicia sesión <LogIn /></Link>
+                    </>
+                }
+
+                {user.role === 'admin' &&
+                    <Link to={'/admin/users'}>Usuarios <User /></Link>
+                }
+
+                {user.role === 'psycho' &&
+                    <Link to={'/profile'}>Perfil <User /></Link>
+                }
+
+                {user.role &&
+                    <LogOutButton icon={<LogOut />} />
+                }
             </div>
-
         </div>
     )
 }
 
-export default BurguerMenu
+export default BurguerMenu;

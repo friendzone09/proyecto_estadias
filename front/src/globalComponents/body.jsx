@@ -13,13 +13,15 @@ import ConnectionError from "../pages/Errors/ConecctionError/ConnectionError";
 
 function Body({ children }) {
 
+    const API_URL = import.meta.env.VITE_API_URL
+
     const [user, setUser] = useState(null);
     const [error, setError] = useState(false)
     const { setLoading } = useLoading();
     const { addAlert } = useToast();
 
     async function fetchUser() {
-        const response = await fetchWithAuth('http://localhost:5000/api/get_all_user_info');
+        const response = await fetchWithAuth(`${API_URL}/get_all_user_info`);
         const data = await response.json();
         if (data.type=='warning' || data.type=='info') {addAlert(data.message, data.type)}
         return data.user;

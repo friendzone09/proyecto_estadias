@@ -13,7 +13,6 @@ import NotFound from './pages/Errors/NotFound/NotFound';
 import UsersList from './pages/users/UsersList';
 import NewUser from './pages/users/newUser/NewUser';
 
-import Screen from './TEST/Screen';
 
 function AppRoutes() {
   const location = useLocation();

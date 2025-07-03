@@ -1,6 +1,6 @@
-.schedules{
+.schedules {
     padding: 2rem;
-    display:flex;
+    display: flex;
     flex-direction: column;
     background-color: #fff;
     width: 60%;
@@ -9,45 +9,46 @@
     border-radius: 10px;
 }
 
-.show_hours{
+.show_hours {
     font-size: 1.2rem;
 }
 
-.select_day select{
+.select_day select {
     padding: 0.5rem;
     font-size: 1.2rem;
     width: 50%;
 }
 
-.day_and_hours{
+.day_and_hours {
     display: flex;
     flex-direction: column;
     gap: 2rem;
 }
 
-.day_and_hours button{
+.day_and_hours button {
     min-width: min-content;
     width: 20%;
     padding: 0.7rem;
     font-size: 1.2rem;
-    background-color: rgb(0, 174, 255);
+    background-color: #A6464E;
     border: 1px solid black;
     border-radius: 5px;
     cursor: pointer;
+    color: white;
 }
 
-.day_and_hours button:hover{
-    background-color: rgb(2, 139, 202);
+.day_and_hours button:hover {
+    background-color: #9e2e37;
 }
 
-.day{
+.day {
     display: flex;
     align-items: center;
     justify-content: start;
     gap: 4rem;
 }
 
-.day input{
+.day input {
     appearance: none;
     padding: 0.7rem;
     border: 2px solid #555;
@@ -57,33 +58,37 @@
     position: relative;
 }
 
-.day input:checked{
-    background-color: #4caf50;
+.day input:checked {
+    background-color: #A6464E;
 }
 
-.day input:checked::after{
-    content: 'x';
-    color: white;
-    font-size: 16px;
+.day input:checked::after {
+    content: '';
     position: absolute;
-    top: 0;
+    top: 4px;
     left: 4px;
+    width: 14px;
+    height: 14px;
+    background-image: url('/src/static/svg/check.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
-.hours_in_day{
+.hours_in_day {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
 }
 
-.hour_in_day{
+.hour_in_day {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
     width: 23%;
 }
 
-.hour_in_day input{
+.hour_in_day input {
     appearance: none;
     padding: 0.7rem;
     border: 2px solid #555;
@@ -94,25 +99,29 @@
 }
 
 
-.hour_in_day input:checked{
-    background-color: #4caf50;
+.hour_in_day input:checked {
+    background-color: #A6464E;
 }
 
-.hour_in_day input:checked::after{
-    content: 'x';
-    color: white;
-    font-size: 16px;
+.hour_in_day input:checked::after {
+    content: '';
     position: absolute;
-    top: 0;
+    top: 4px;
     left: 4px;
+    width: 14px;
+    height: 14px;
+    background-image: url('/src/static/svg/check.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 @media (max-width:900px) {
-    .select_day select{
+    .select_day select {
         width: 100%;
     }
-    
-    .schedules{
+
+    .schedules {
         width: 90%;
     }
 }

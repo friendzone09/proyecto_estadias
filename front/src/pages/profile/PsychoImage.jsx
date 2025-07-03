@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom"
 
 function PsychoImage({user}){
-    const imgurl = `http://127.0.0.1:5000/uploads/${user.image}`
+    const API_URL = import.meta.env.VITE_API_URL
+
+    const imgurl = `${API_URL}/uploads/${user.image}`
 
     return(
 

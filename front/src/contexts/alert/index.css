@@ -1,4 +1,4 @@
-.alert_container{
+.alert_container {
     position: fixed;
     z-index: 10;
     display: flex;
@@ -8,62 +8,84 @@
     top: 6rem;
 }
 
-.alert{
-    display: flex;  
+.alert {
+    display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 1rem;
     padding: 1rem;
-    border: 1px solid black;
-    width: 350px;
-    min-width: min-content;
+    max-width: max-content;
+    min-width: 350px;
     background-color: #fff;
+    height: 150px;
 }
 
-.alert_text_area{
+.alert_text_area {
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
-.alert_loading{
+.alert_loading {
     width: 100%;
-    height: 3px; 
+    height: 3px;
     animation: shrinkBar 2.5s linear forwards;
 }
 
-.icon-success{
+.icon-success {
     color: green;
 }
 
-.icon-warning{
+.icon-warning {
     color: rgb(253, 170, 14);
 }
 
-.icon-error{
+.icon-error {
     color: red;
 }
 
-.icon-info{
+.icon-info {
     color: #0958e9;
 }
 
-.loading-success{
+.loading-success {
     background-color: green;
 }
 
-.loading-warning{
+.loading-warning {
     background-color: rgb(253, 170, 14);
 }
 
-.loading-error{
+.loading-error {
     background-color: red;
 }
 
-.loading-info{
+.loading-info {
     background-color: #0958e9;
 }
 
+.toast-success {
+    background-color: #c2ffe0;
+}
+
+.toast-error {
+    background-color: #ffc2c2;
+}
+
+.toast-warning{
+    background-color: #ffe7c2;
+}
+
+.toast-info{
+    background-color: #b2beff;
+}
+
 @keyframes shrinkBar {
-    from {width: 100%;}
-    to {width: 0%;}
+    from {
+        width: 100%;
+    }
+
+    to {
+        width: 0%;
+    }
 }

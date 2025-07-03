@@ -1,12 +1,23 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../../contexts/alert/ToastContext";
+import { getAllPsychos } from "../../../utils/get_user";
 
 function NewUser({ user }) {
+    const API_URL = import.meta.env.VITE_API_URL
 
     const navigate = useNavigate();
     const { addAlert } = useToast();
-    const [newUser, setNewUser] = useState({ name: '', lastName: '', email: '', phone: '', password: '' });
+    const [newUser, setNewUser] = useState({ name: '', lastName: '', email: '', phone: '', password: '', psychoId: null });
+    const [psychos, setPsychos] = useState([]);
+
+    useEffect(()=>{
+        async function callPsychos() {
+            const data = await getAllPsychos();
+            setPsychos(data);
+        }
+        callPsychos();
+    }, [])
 
     async function registerUser(e) {
         e.preventDefault();
@@ -17,8 +28,9 @@ function NewUser({ user }) {
         formData.append('email', newUser.email)
         formData.append('phone', newUser.phone)
         formData.append('password', newUser.password)
+        formData.append('psycho_id', newUser.psychoId)
 
-        const response = await fetch('http://127.0.0.1:5000/api/register', {
+        const response = await fetch(`${API_URL}/register`, {
             method: 'POST',
             body: formData
         });
@@ -32,7 +44,7 @@ function NewUser({ user }) {
         }
     }
 
-    if (!user) return null
+    if (!user || !psychos) return null
 
     return (
         <form className="register_new_user" onSubmit={registerUser}>
@@ -72,6 +84,18 @@ function NewUser({ user }) {
                             setNewUser({ ...newUser, phone: onlyNums });
                         }}
                     />
+                </div>
+            </div>
+
+            <div className="new_user_section">
+                <div className="input_section">
+                    <label>Psicólogo</label>
+                    <select  onChange={(e) => { setNewUser({...newUser, psychoId: e.target.value || null})}}>
+                        <option value={null}>Selecciona un psicólogo</option>
+                        {psychos.map(p=>(
+                            <option value={p.id} key={p.id}> {p.name} {p.last_name} </option>
+                        ))}
+                    </select>
                 </div>
             </div>
 

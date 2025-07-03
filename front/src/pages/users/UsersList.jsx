@@ -4,6 +4,7 @@ import { fetchWithAuth } from '../../utils/fetchWithAuth'
 import { Pencil, Search, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useRef } from "react";
 import { useToast } from "../../contexts/alert/ToastContext";
+import { getAllPsychos } from "../../utils/get_user";
 
 import LoadingCircle from "../../components/LoadingCircle/LoadingCircle";
 import NotResult from "../../components/NotResult/NotResul";
@@ -11,6 +12,9 @@ import NotResult from "../../components/NotResult/NotResul";
 import './index.css'
 
 function UsersList({ user }) {
+
+    const API_URL = import.meta.env.VITE_API_URL
+
     const navigate = useNavigate();
     const { addAlert } = useToast();
     const dialogRef = useRef();
@@ -20,16 +24,16 @@ function UsersList({ user }) {
     const [selectedUser, setSelectedUser] = useState(null);
     const [loading, setLoading] = useState(false);
     const [searchText, setSearchText] = useState('');
+    const [psychos, setPsychos] = useState([]);
     const perPage = 5;
 
     async function callUsers(currentPage = 1, text = searchText) {
+
         setLoading(true);
 
         const query = text.trim() === '' ? 'none' : text.trim();
 
-        console.log(`http://localhost:5000/api/get_all_users?page=${currentPage}&per_page=${perPage}&search=${query}`);
-
-        const res = await fetchWithAuth(`http://localhost:5000/api/get_all_users?page=${currentPage}&per_page=${perPage}&search=${query}`);
+        const res = await fetchWithAuth(`${API_URL}/get_all_users?page=${currentPage}&per_page=${perPage}&search=${query}`);
         const data = await res.json();
 
         setUsers(data.users);
@@ -43,12 +47,24 @@ function UsersList({ user }) {
         const formData = new FormData();
         formData.append('user', JSON.stringify(selectedUser));
         setSelectedUser(null);
-        const res = await fetchWithAuth('http://localhost:5000/api/edit_user', { method: 'PUT', body: formData });
+        const res = await fetchWithAuth(`${API_URL}/edit_user`, { method: 'PUT', body: formData });
         const data = await res.json();
 
         addAlert(data.message, data.type);
-        if (data.type == 'success') { await callUsers() }
+        if (data.type == 'success') {
+            setPage(1) 
+            setSearchText('')
+            await callUsers(); 
+        }
     }
+
+    useEffect(()=>{
+        async function callPsychos() {
+            const data = await getAllPsychos();
+            setPsychos(data);
+        }
+        callPsychos();
+    }, [])
 
     useEffect(() => {
         if (user && (user.role !== 'admin')) {
@@ -85,7 +101,7 @@ function UsersList({ user }) {
                     </div>
 
                     <div className="search_var">
-                        <input type="text" placeholder="Buscar..." onInput={e => {
+                        <input type="text" placeholder="Buscar..." value={searchText} onInput={e => {
                             setSearchText(e.target.value);
                             setPage(1);
                         }} />
@@ -147,7 +163,7 @@ function UsersList({ user }) {
                         <span onClick={() => setSelectedUser(null)}><X /></span>
                     </div>
 
-                    <form className="modal_edit_user--form" onSubmit={(e) => editUser(e)}>
+                    <form className="modal_edit_user--form" onSubmit={(e) => { editUser(e) }}>
                         <label>Nombre</label>
                         <input type="text" value={selectedUser ? selectedUser.user_name : ''}
                             onInput={e => { selectedUser ? setSelectedUser({ ...selectedUser, user_name: e.target.value }) : null }}
@@ -168,6 +184,24 @@ function UsersList({ user }) {
                         <input type="text" value={selectedUser ? selectedUser.user_phone : ''}
                             onInput={e => { selectedUser ? setSelectedUser({ ...selectedUser, user_phone: e.target.value }) : null }}
                         />
+
+                        {selectedUser && 
+                        selectedUser.user_role === 'patient' && 
+                        <>
+                            <label>Psicólogo asignado</label>
+                            <select
+                                value={selectedUser.assig_psycho || ''}
+                                onChange={(e) => setSelectedUser({ ...selectedUser, assig_psycho: e.target.value })}
+                            >
+                                <option value="">Sin psicólogo asignado</option>
+                                {psychos.map(p => (
+                                <option value={p.id} key={p.id}>
+                                    {p.name} {p.last_name}
+                                </option>
+                                ))}
+                            </select>
+                        </>
+                        }
 
                         <label>Tipo</label>
                         <select

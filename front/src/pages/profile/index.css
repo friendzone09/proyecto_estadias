@@ -8,8 +8,8 @@
 .pyscho_profile_section{
     display: flex;
     gap: 2rem;
-    width: 100%;
-    justify-content:center;
+    width: 90%;
+    margin: auto;
 }
 
 .profile_psycho_image{
@@ -28,6 +28,7 @@
 }
 
 .profile_psycho_image img{
+    min-width: 110px;
     width: 100%;
     height: auto;
     object-fit: cover;
@@ -132,6 +133,7 @@
 
 .button_info_submit button{
     padding: 1rem;
+    color: white;
     font-size: 1rem;
     background-color: #A6464E;
     border: 1px solid black;

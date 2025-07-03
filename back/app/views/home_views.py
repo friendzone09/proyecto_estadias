@@ -101,6 +101,10 @@ def register():
     email = request.form.get('email')
     phone = request.form.get('phone')
     password = request.form.get('password')
+    psycho_id = request.form.get('psycho_id')
+
+    if psycho_id in ('', 'null', None):
+        psycho_id = None
 
     if not name or not last_name or not email or not phone or not password:
         return jsonify({'message' : 'Faltan credenciales',
@@ -122,6 +126,11 @@ def register():
 	 'user_name, user_last_name, user_email, user_password, user_phone) '
 	'VALUES (%s, %s, %s, %s, %s) RETURNING id_user ', (name, last_name, email, password, phone,))
 
+    new_user_id = cur.fetchone()[0]
+
+    if psycho_id:
+        print(psycho_id)
+        cur.execute('UPDATE public.patient SET fk_psycho=%s WHERE fk_user=%s', (psycho_id, new_user_id,))
 
     conn.commit()
     cur.close()

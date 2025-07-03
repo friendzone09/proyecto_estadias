@@ -1,5 +1,7 @@
+const API_URL = import.meta.env.VITE_API_URL
+
 export async function getSchedule(id_psycho,date) {
-    const response = await fetch(`http://127.0.0.1:5000/api/get_appoint_for_patient/${id_psycho}/${date}`,{
+    const response = await fetch(`${API_URL}/get_appoint_for_patient/${id_psycho}/${date}`,{
         method : 'GET',
     });
 
@@ -13,7 +15,7 @@ export async function getSchedule(id_psycho,date) {
 }
 
 export async function getHours(psychoId, selectedDay){
-    const response = await fetch(`http://127.0.0.1:5000/api/get_laboral_day/${psychoId}/${selectedDay}`, {
+    const response = await fetch(`${API_URL}/get_laboral_day/${psychoId}/${selectedDay}`, {
         method : 'GET',
     });
 

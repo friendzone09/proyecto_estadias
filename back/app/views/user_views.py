@@ -64,7 +64,7 @@ def get_all_users(user_info):
         ''', ('admin', per_page, offset))
 
         rows = cur.fetchall()
-        users = [{'user_id': r[0], 'user_name': r[1], 'user_last_name': r[2], 'user_email': r[3], 'user_role': r[4], 'user_phone': r[5]} for r in rows]
+        users = [{'user_id': r[0], 'user_name': r[1], 'user_last_name': r[2], 'user_email': r[3], 'user_role': r[4], 'user_phone': r[5], 'assig_psycho' : r[6]} for r in rows]
 
         return jsonify({
             'users': users,
@@ -72,6 +72,7 @@ def get_all_users(user_info):
             'page': page,
             'per_page': per_page
         })
+    
     else:
         #Consulta de total de paginas en la busqueda
         cur.execute('SELECT COUNT(*) FROM public.users_show_all_info WHERE user_role != %s AND(user_name ILIKE %s OR user_last_name ILIKE %s '
@@ -88,7 +89,7 @@ def get_all_users(user_info):
         ('admin', f'{search}%', f'%{search}%', f'{search}%', per_page, offset))
 
         rows = cur.fetchall()
-        users = [{'user_id': r[0], 'user_name': r[1], 'user_last_name': r[2], 'user_email': r[3], 'user_role': r[4], 'user_phone': r[5]} for r in rows]
+        users = [{'user_id': r[0], 'user_name': r[1], 'user_last_name': r[2], 'user_email': r[3], 'user_role': r[4], 'user_phone': r[5], 'assig_psycho' : r[6]} for r in rows]
         return jsonify({
             'users': users,
             'total' : total_users,
@@ -116,11 +117,16 @@ def edit_user(user_data):
     if not user['user_name'] or not user['user_last_name'] or not user['user_email'] or not user['user_phone']:
         return jsonify({'message' : 'Error: faltan credenciales', 'type' : 'error'})
 
-    print(user['user_id'])
-
     cur.execute('UPDATE public.users '
 	'SET user_name=%s, user_last_name=%s, user_email=%s, user_role=%s, user_phone=%s '
 	'WHERE id_user=%s;', (user['user_name'], user['user_last_name'], user['user_email'], user['user_role'],  user['user_phone'], user['user_id']))
+
+    if user['user_role'] == 'patient':
+        
+        if user['assig_psycho'] in ('', 'null', None):
+            user['assig_psycho'] = None
+
+        cur.execute('UPDATE public.patient SET fk_psycho=%s WHERE fk_user=%s', (user['assig_psycho'], user['user_id']))
 
     conn.commit()
 
@@ -151,6 +157,6 @@ def refresh_token():
     except jwt.InvalidTokenError:
         return jsonify({'message': 'Token invalido. Por favor inicia sesión', 'type': 'warning', 'user' : {'role' : None}}), 401
     
-@user_views.route('/uploads/<filename>')
+@user_views.route('/api/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(current_app.config['UPLOAD_FOLDER'], filename)

@@ -50,8 +50,8 @@ def update_psycho_profile(user_info):
                         'type' : 'error'}), 400
     
     if not name or not last_name:
-        return jsonify({'message': 'No llenaste todas las credenciales',
-                        'type' : 'error'}), 400
+        return jsonify({'message': 'Faltan credenciales',
+                        'type' : 'warning'}), 400
     
     if not description:
         description = 'Sin descripción'

@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 function CardImage({ image, psychoId, user }) {
 
-    const imageUrl = `http://127.0.0.1:5000/uploads/${image}`
+    const API_URL = import.meta.env.VITE_API_URL
+
+    const imageUrl = `${API_URL}/uploads/${image}`
     const psychoLink = `/appointAgend/${psychoId}`;
 
     return (

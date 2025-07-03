@@ -1,3 +1,5 @@
+const API_URL = import.meta.env.VITE_API_URL
+
 export async function fetchWithAuth(url, options = {}) {
   const baseOptions = {
     ...options,
@@ -10,7 +12,7 @@ export async function fetchWithAuth(url, options = {}) {
   if (response.status === 401) {
     console.warn('Access token expirado, intentando renovar...');
 
-    const refreshResponse = await fetch('http://localhost:5000/api/refresh_token', {
+    const refreshResponse = await fetch(`${API_URL}/refresh_token`, {
       credentials: 'include'
     });
 

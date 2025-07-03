@@ -20,6 +20,8 @@ import './index.css'
 
 function GlobalAppoints({ date, id_psycho }) {
 
+    const API_URL = import.meta.env.VITE_API_URL
+
     const { addAlert } = useToast();
     const {user} = useUser();
     const navigate = useNavigate();
@@ -87,7 +89,7 @@ function GlobalAppoints({ date, id_psycho }) {
 
         closeModal();
 
-        const res = await fetchWithAuth('http://localhost:5000/api/cancel_appoint', {method: 'POST', body: formData}); 
+        const res = await fetchWithAuth(`${API_URL}/cancel_appoint`, {method: 'POST', body: formData}); 
         const data = await res.json();
         addAlert(data.message, data.type);
         await callGetSchedule();
@@ -106,7 +108,7 @@ function GlobalAppoints({ date, id_psycho }) {
 
         closeModal();
 
-        const res = await fetchWithAuth('http://localhost:5000/api/activate_appoint', {method: 'POST', body: formData});
+        const res = await fetchWithAuth(`${API_URL}/activate_appoint`, {method: 'POST', body: formData});
         const data = await res.json();
         addAlert(data.message, data.type);
         await callGetSchedule();
@@ -132,7 +134,7 @@ function GlobalAppoints({ date, id_psycho }) {
 
         closeModal();
 
-        const res = await fetchWithAuth('http://localhost:5000/api/insert_appoint', {method : 'POST', body: formData});
+        const res = await fetchWithAuth(`${API_URL}/insert_appoint`, {method : 'POST', body: formData});
         const data = await res.json();
         addAlert(data.message, data.type);
         

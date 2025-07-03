@@ -16,11 +16,11 @@
     border: 1px solid black;
     text-decoration: none;
     background-color: #A6464E;
-    color: black;
+    color: white;
     font-size: 1.4rem;
+    border-radius: 8px;
 }
 
 .reset_button:hover{
     background-color: #7a3036;
 }
-

@@ -4,9 +4,11 @@ import { Link } from "react-router-dom";
 
 function HeaderPsycho(){
 
+    const API_URL = import.meta.env.VITE_API_URL
+
     const {user} = useUser();
 
-    const psychoImage = `http://127.0.0.1:5000/uploads/${user.image}`
+    const psychoImage = `${API_URL}/uploads/${user.image}`
 
     return(
         <>

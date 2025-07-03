@@ -6,6 +6,12 @@
         gap: 1rem;
     }
 
+    .psycho_decription > p{
+        max-height: 450px;
+        width: 100%;
+        overflow-y: scroll;
+    }
+
     .psycho_decription>h1 {
         text-align: center;
     }
@@ -29,42 +35,6 @@
 
     .header_menu {
         display: inline;
-    }
-
-    .burguer_menu{
-        display: flex;
-        flex-direction: column;
-        position: absolute;
-        width: 50%;
-        height: 100vh;
-        background-color: white;
-        background-color: white;
-        overflow: hidden;
-        top: 0;
-        left: 0;
-        align-items: center;
-        justify-content: center;
-        z-index: 10;
-    }
-
-    .burguer_menu_links {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        width: 80%;
-    }
-
-    .burguer_menu_links>a {
-        display: flex;
-        padding: 1rem;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .burguer_menu_links a {
-        text-decoration: none;
-        color: #A6464E;
-        font-size: .9rem;
     }
 
     .pyscho_profile {
@@ -99,6 +69,10 @@
         justify-content: start;
     }
 
+    .section_psycho_image{
+        align-items: center;
+    }
+
     .psycho_decription>h1 {
         font-size: 2rem;
     }
@@ -123,7 +97,7 @@
         width: 200px;
     }
 
-    .burguer_menu {
+    .burguer_menu.open {
         width: 80%;
     }
 

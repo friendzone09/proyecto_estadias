@@ -7,10 +7,10 @@ function PsychoDescription({ user, onChange, onSubmit }){
 
                 <div className="edit_inputs">
                     <label>Nombre(s)</label>
-                    <input type="text"  name="name" value={user.name || ''} onChange={onChange} />
+                    <input type="text"  name="name" value={user.name || ''} onChange={onChange} required />
 
                     <label>Apellidos</label>
-                    <input type="text"  name='last_name' value={user.last_name || ''} onChange={onChange}/>
+                    <input type="text"  name='last_name' value={user.last_name || ''} onChange={onChange} required />
 
                     <label>Descripción</label>
                     <textarea type="text" name="description" value={user.description || ''} onChange={onChange} required />

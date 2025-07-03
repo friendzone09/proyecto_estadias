@@ -1,4 +1,4 @@
-*{
+* {
     padding: 0;
     margin: 0;
     font-family: sans-serif;
@@ -6,10 +6,10 @@
 }
 
 .main-root {
-  display: grid;
-  min-height: 100dvh;
-  grid-template-rows: auto 1fr auto;
-  background-color: #EAEAEA;
+    display: grid;
+    min-height: 100dvh;
+    grid-template-rows: auto 1fr auto;
+    background-color: #EAEAEA;
 }
 
 .auth-root {
@@ -19,11 +19,11 @@
     align-items: center;
 }
 
-main{
+main {
     margin-top: 4rem;
 }
 
-header{
+header {
     display: flex;
     padding: 2rem;
     background-color: #FFF;
@@ -32,7 +32,7 @@ header{
     justify-content: space-between;
 }
 
-.logo_container > a{
+.logo_container>a {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -42,31 +42,31 @@ header{
     color: #000;
 }
 
-.logo_container img{
+.logo_container img {
     height: 70px;
 }
 
-.header_sections{
+.header_sections {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
 }
 
-.header_pages{
+.header_pages {
     font-size: 1.5rem;
     display: flex;
     gap: 5rem;
     margin: auto;
 }
 
-.header_pages a{
+.header_pages a {
     text-decoration: none;
     color: #A6464E;
     position: relative;
     padding: 0 10px;
 }
 
- .header_pages a::after{
+.header_pages a::after {
     content: '';
     position: absolute;
     background-color: #A6464E;
@@ -77,30 +77,30 @@ header{
     transition: 0.3s;
 }
 
- .header_pages a:hover::after{
+.header_pages a:hover::after {
     width: 100%;
 }
 
-.header_menu{
+.header_menu {
     display: none;
 }
 
-.pyscho_profile{
+.pyscho_profile {
     border-radius: 50%;
     overflow: hidden;
     border: 2px solid transparent;
     transition: .5s border;
 }
 
-.pyscho_profile a img{
+.pyscho_profile a img {
     height: 70px;
 }
 
-.pyscho_profile:hover{
+.pyscho_profile:hover {
     border: 2px solid #A6464E;
 }
 
-footer{
+footer {
     margin-top: 2rem;
     padding: 2rem;
     background-color: #fff;
@@ -109,7 +109,7 @@ footer{
     justify-content: space-evenly;
 }
 
-footer > a{
+footer>a {
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -120,11 +120,93 @@ footer > a{
     transition: .5s background-color;
 }
 
-footer > a:hover{
+footer>a:hover {
     background-color: #d3d3d3;
 }
 
-.burguer_menu{
-    width: 0;
+.no-scroll {
     overflow: hidden;
+}
+
+.burguer_menu {
+    z-index: 1000;
+    width: 0;
+    height: 100%;
+    display: flex;
+    overflow: hidden;
+    transition: width 0.3s ease-in-out;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+}
+
+.burguer_menu>a {
+    opacity: 0;
+}
+
+.burguer_menu.open {
+    width: 60%;
+    pointer-events: auto;
+}
+
+.burguer_menu.open>a {
+    opacity: 1;
+}
+
+
+.burguer_menu_links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    height: 100%;
+}
+
+.burguer_menu_links>a {
+    width: 80%;
+    display: flex;
+    padding: 1rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.burguer_menu_links a {
+    text-decoration: none;
+    color: #A6464E;
+    font-size: .9rem;
+}
+
+.burguer_menu_links {
+    display: flex;
+}
+
+.burguer_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* oscurece */
+    z-index: 999;
+    /* menor que el menú (que está en 1000) */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.burguer_overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.close_menu {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
 }

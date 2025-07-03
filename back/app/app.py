@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
+from dotenv import load_dotenv
 
 import os
 #views
@@ -11,7 +12,7 @@ from app.views.user_views import user_views
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'super_secret_password'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 CORS(app, supports_credentials=True, origins=["http://localhost:5173"])

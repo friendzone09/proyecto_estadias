@@ -1,6 +1,7 @@
 function PsychoImage({imageName, onImageChange}){
 
-    const imgurl = `http://127.0.0.1:5000/uploads/${imageName}`
+    const API_URL = import.meta.env.VITE_API_URL
+    const imgurl = `${API_URL}/uploads/${imageName}`
 
     return(
         <div className="section_psycho_image">

@@ -1,5 +1,7 @@
+const API_URL = import.meta.env.VITE_API_URL
+
 export async function updatePsycho(formData) {
-    const response = await fetch('http://localhost:5000/api/update_psycho_profile',{
+    const response = await fetch(`${API_URL}/update_psycho_profile`,{
         method : 'PUT',
         body: formData,
         credentials: 'include'

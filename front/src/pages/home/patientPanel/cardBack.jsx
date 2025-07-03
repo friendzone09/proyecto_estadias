@@ -3,8 +3,6 @@ import { getAllPsychos } from '../../../utils/get_user';
 
 import CardImage from './cardImage';
 import CardDescription from './cardDescription';
-
-import { useLoading } from '../../../contexts/loading/LoadingContext';
 import './index.css'
 
 function CardBack({ user }) {
