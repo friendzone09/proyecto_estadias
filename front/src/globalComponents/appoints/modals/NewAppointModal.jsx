@@ -4,8 +4,10 @@ function NewAppointModal({ date, onClick, selectedAppoint, closeModal, PsychoId 
     const [patients, setPatienst] = useState([]);
     const [selectedPatientId, setSelectedPatientId] = useState(null);
 
+    const API_URL = import.meta.env.VITE_API_URL
+
     async function getPatients(){
-        const response = await fetch(`http://127.0.0.1:5000/api/get_patients/${PsychoId}`,{
+        const response = await fetch(`${API_URL}/get_patients/${PsychoId}`,{
             method: 'GET'
         });
 

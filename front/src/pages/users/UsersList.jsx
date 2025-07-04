@@ -1,7 +1,7 @@
 import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchWithAuth } from '../../utils/fetchWithAuth'
-import { Pencil, Search, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { Pencil, Search, ChevronLeft, ChevronRight, X, Trash2 } from "lucide-react";
 import { useRef } from "react";
 import { useToast } from "../../contexts/alert/ToastContext";
 import { getAllPsychos } from "../../utils/get_user";
@@ -18,10 +18,12 @@ function UsersList({ user }) {
     const navigate = useNavigate();
     const { addAlert } = useToast();
     const dialogRef = useRef();
+    const deleteDialogRef = useRef();
     const [users, setUsers] = useState([]);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [selectedUser, setSelectedUser] = useState(null);
+    const [deleteUser, setDeleteUser] = useState(null);
     const [loading, setLoading] = useState(false);
     const [searchText, setSearchText] = useState('');
     const [psychos, setPsychos] = useState([]);
@@ -52,13 +54,13 @@ function UsersList({ user }) {
 
         addAlert(data.message, data.type);
         if (data.type == 'success') {
-            setPage(1) 
+            setPage(1)
             setSearchText('')
-            await callUsers(); 
+            await callUsers();
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         async function callPsychos() {
             const data = await getAllPsychos();
             setPsychos(data);
@@ -87,6 +89,14 @@ function UsersList({ user }) {
             dialogRef.current.close();
         }
     }, [selectedUser]);
+
+    useEffect(() => {
+        if (deleteUser && deleteDialogRef.current) {
+            deleteDialogRef.current.showModal();
+        } else if (deleteDialogRef.current && deleteDialogRef.current.open) {
+            deleteDialogRef.current.close();
+        }
+    }, [deleteUser]);
 
     if (!user) return null;
 
@@ -119,7 +129,8 @@ function UsersList({ user }) {
                                         <th>Correo</th>
                                         <th>Numero</th>
                                         <th>Rol</th>
-                                        <th>Acciones</th>
+                                        <th>Editar</th>
+                                        <th>Eliminar</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -130,6 +141,7 @@ function UsersList({ user }) {
                                             <td>{u.user_phone}</td>
                                             <td> {u.user_role == 'patient' ? ('Paciente') : ('Psicólogo')}</td>
                                             <td><button onClick={() => setSelectedUser(u)}>Editar <Pencil size={15} /></button></td>
+                                            <td><button onClick={() => setDeleteUser(u)} >Eliminar <Trash2 size={15} /></button></td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -144,7 +156,7 @@ function UsersList({ user }) {
                     <ChevronLeft />
                 </button>
 
-                <span> {page} /{totalPages}</span>
+                <span> {page} / {totalPages}</span>
 
                 <button onClick={() => setPage(p => Math.min(p + 1, totalPages))}
                     disabled={page === totalPages || users.length == 0}>
@@ -185,22 +197,22 @@ function UsersList({ user }) {
                             onInput={e => { selectedUser ? setSelectedUser({ ...selectedUser, user_phone: e.target.value }) : null }}
                         />
 
-                        {selectedUser && 
-                        selectedUser.user_role === 'patient' && 
-                        <>
-                            <label>Psicólogo asignado</label>
-                            <select
-                                value={selectedUser.assig_psycho || ''}
-                                onChange={(e) => setSelectedUser({ ...selectedUser, assig_psycho: e.target.value })}
-                            >
-                                <option value="">Sin psicólogo asignado</option>
-                                {psychos.map(p => (
-                                <option value={p.id} key={p.id}>
-                                    {p.name} {p.last_name}
-                                </option>
-                                ))}
-                            </select>
-                        </>
+                        {selectedUser &&
+                            selectedUser.user_role === 'patient' &&
+                            <>
+                                <label>Psicólogo asignado</label>
+                                <select
+                                    value={selectedUser.assig_psycho || ''}
+                                    onChange={(e) => setSelectedUser({ ...selectedUser, assig_psycho: e.target.value })}
+                                >
+                                    <option value="">Sin psicólogo asignado</option>
+                                    {psychos.map(p => (
+                                        <option value={p.id} key={p.id}>
+                                            {p.name} {p.last_name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </>
                         }
 
                         <label>Tipo</label>
@@ -215,6 +227,25 @@ function UsersList({ user }) {
                         <button type="submit">Guardar</button>
                     </form>
 
+                </div>
+            </dialog>
+
+            <dialog
+                ref={deleteDialogRef}
+                className="modal_edit_user"
+                onClick={() => setDeleteUser(null)}
+            >
+                <div className="modal_edit_user--content" onClick={(e) => e.stopPropagation()}>
+                    <div className="modal_edit_user--close">
+                        <h1>Eliminar usuario</h1>
+                        <span onClick={() => setDeleteUser(null)}><X /></span>
+                    </div>
+
+                    <p>¿Estás seguro de que deseas eliminar al {deleteUser&& deleteUser.user_role == 'patient'? ('paciente') : ('psicólogo')}  <strong>{deleteUser?.user_name} {deleteUser?.user_last_name}</strong>?</p>
+
+                    <div className="modal_edit_user--actions">
+                        <button onClick={() => setDeleteUser(null)}>Cancelar</button>
+                    </div>
                 </div>
             </dialog>
 

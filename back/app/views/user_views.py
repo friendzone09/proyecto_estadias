@@ -135,6 +135,26 @@ def edit_user(user_data):
 
     return jsonify({'message' : 'Usuario editado correctamente', 'type' : 'success'})
 
+@user_views.route('/api/delete_user/<int:user_id>', methods = ['DELETE'])
+@token_required
+def delete_user(user_data, user_id):
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    role = user_role(id_user=user_data['id'], cur=cur)
+
+    if role != 'admin':
+        cur.close()
+        conn.close()
+        return jsonify({'message' : 'Acceso denegado', 'type': 'error'})
+    
+    cur.execute('DELETE FROM public.users WHERE id_user = %s', (user_id,))
+    conn.commit()
+
+    return jsonify({'message' : 'Usuario eliminado correctamente', 'type':'success'})
+
+
 @user_views.route('/api/refresh_token')
 def refresh_token():
     refresh_token = request.cookies.get('ghamaris_refresh')
