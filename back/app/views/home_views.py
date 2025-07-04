@@ -175,8 +175,8 @@ def get_all_user_info(user_data):
             max_age=0,         # Expira inmediatamente
             expires=0,         # También establece la fecha de expiración en 0
             httponly=True,     # Seguridad: no accesible desde JS
-            secure=False,      # Pon True en producción (HTTPS)
-            samesite='Lax'
+            secure=True,      # Pon True en producción (HTTPS)
+            samesite='None'
         )  # Borra la cookie
         return response
     
@@ -185,9 +185,9 @@ def logout():
     response = make_response(jsonify({'message': 'Logout exitoso', 'type': 'success'}))
 
     # Borrar el access token
-    response.set_cookie('ghamaris_token', '', expires=0, httponly=True, secure=False, samesite='Lax')
+    response.set_cookie('ghamaris_token', '', expires=0, httponly=True, secure=True, samesite='None')
 
     # Borrar también el refresh token
-    response.set_cookie('ghamaris_refresh', '', expires=0, httponly=True, secure=False, samesite='Lax')
+    response.set_cookie('ghamaris_refresh', '', expires=0, httponly=True, secure=True, samesite='None')
 
     return response

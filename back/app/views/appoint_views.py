@@ -98,6 +98,7 @@ def activate_appoint(user_info):
 
     return jsonify({'message' : 'Hora reactivada correctamente',
                     'type' : 'success'})
+
 @appoint_viwes.route('/api/get_patients/<int:id_psycho>')
 def get_patients(id_psycho):
 
