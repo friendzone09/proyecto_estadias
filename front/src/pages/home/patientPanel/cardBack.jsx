@@ -25,12 +25,16 @@ function CardBack({ user }) {
 
     return (
 
-        psychos.map(p => (
+        psychos.length == 0 ? ( 
+        <span className='no_psycho'>Sin psicólogos</span> 
+        ) : (
+             psychos.map(p => (
             <section className="psycho_card" key={p.id}>
                 <CardImage image={p.image} psychoId={p.id} user={user} />
                 <CardDescription description={p.description} name={p.name} lastName={p.last_name} />
             </section>
         ))
+        )
 
     )
 }

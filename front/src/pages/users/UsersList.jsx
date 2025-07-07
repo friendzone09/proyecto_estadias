@@ -43,6 +43,16 @@ function UsersList({ user }) {
         setLoading(false);
     }
 
+    async function deleteUserForId(userId) {
+        setDeleteUser(null);
+
+        const res = await fetchWithAuth(`${API_URL}/delete_user/${userId}`, {method: 'DELETE'});
+        const data = await res.json();
+
+        addAlert(data.message, data.type);
+        await callUsers();
+    }
+
     async function editUser(e) {
         e.preventDefault();
 
@@ -244,7 +254,8 @@ function UsersList({ user }) {
                     <p>¿Estás seguro de que deseas eliminar al {deleteUser&& deleteUser.user_role == 'patient'? ('paciente') : ('psicólogo')}  <strong>{deleteUser?.user_name} {deleteUser?.user_last_name}</strong>?</p>
 
                     <div className="modal_edit_user--actions">
-                        <button onClick={() => setDeleteUser(null)}>Cancelar</button>
+                        <span onClick={() => setDeleteUser(null)}>Cancelar</span>
+                        <button onClick={()=> deleteUserForId(deleteUser.user_id)}>Eliminar</button>
                     </div>
                 </div>
             </dialog>

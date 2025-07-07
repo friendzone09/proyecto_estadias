@@ -5,7 +5,7 @@ import { House, LogOut, User, NotepadText, LogIn, X } from "lucide-react"
 function BurguerMenu({ user, isOpen, setMenuOpen }) {
 
     const handleClick = () => {
-        setMenuOpen(false); // cierra el menú
+        setMenuOpen(false);
     }
 
     return (

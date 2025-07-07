@@ -192,9 +192,7 @@ footer>a:hover {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    /* oscurece */
-    z-index: 999;
-    /* menor que el menú (que está en 1000) */
+    z-index: 10;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease-in-out;
