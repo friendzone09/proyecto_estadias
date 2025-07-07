@@ -42,7 +42,7 @@ def get_all_users(user_info):
     if role != 'admin':
         cur.close()
         conn.close()
-        return jsonify({'message' : 'Acceso denegado', 'type' : 'error'})
+        return jsonify({'message' : 'Acceso denegado', 'type' : 'error'}, 403)
 
     # Obtener parámetros de paginación
     page = int(request.args.get('page', 1))  # Página actual (default 1)
