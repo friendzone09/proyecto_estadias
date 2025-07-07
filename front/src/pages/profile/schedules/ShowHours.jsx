@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react"
-import { getHours } from "../../../utils/getSchedule"
-import { updateHours } from "../../../utils/updateHours"
-import { useToast } from "../../../contexts/alert/ToastContext"
+import { useState, useEffect } from "react";
+import { getHours } from "../../../utils/getSchedule";
+import { updateHours } from "../../../utils/updateHours";
+import { useToast } from "../../../contexts/alert/ToastContext";
+import loadingCircle from "../../../components/LoadingCircle/LoadingCircle";
 
-import { useUser } from "../../../contexts/userContext/UserContext"
+import { useUser } from "../../../contexts/userContext/UserContext";
 
-import HoursInDay from "./HoursInDay"
-import DayInSchedule from "./DayInSchedule"
+import HoursInDay from "./HoursInDay";
+import DayInSchedule from "./DayInSchedule";
 
 function ShowHours({ selectedDay }) {
 
@@ -17,6 +18,7 @@ function ShowHours({ selectedDay }) {
     const [day, setDay] = useState({});
     const [modifiedHours, setModifiedHours] = useState([]);
     const [originalLaboralDay, setOriginalLaboralDay] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     function handleToggleHour(id_hour) {
         const updatedHours = hours.map(h =>
@@ -78,12 +80,16 @@ function ShowHours({ selectedDay }) {
 
         if (selectedDay !== null && selectedDay !== 0) {
             async function fetchHours() {
+                setLoading(true);
+
                 const schedule = await getHours(user.id, selectedDay)
 
                 setHours(schedule.hours);
                 setDay(schedule.day);
                 setOriginalLaboralDay(schedule.day.laboral_day);
                 setModifiedHours([]);
+
+                setLoading(false)
 
             };
             fetchHours();
@@ -95,7 +101,9 @@ function ShowHours({ selectedDay }) {
 
     return (
         <div className="show_hours">
-            {selectedDay ? (
+
+            {loading ?(<loadingCircle/> ) : (
+                selectedDay ? (
                 <div className="day_and_hours">
                     <div className="day">
                         <DayInSchedule
@@ -122,7 +130,9 @@ function ShowHours({ selectedDay }) {
                 </div>
             ) : (
                 <p>Selecciona un día para ver las horas</p>
+            )
             )}
+
         </div>
     )
 }

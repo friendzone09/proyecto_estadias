@@ -1,4 +1,4 @@
-from functools import wraps
+from functools import wraps, abort
 from flask import request, jsonify, current_app
 import jwt
 
@@ -8,7 +8,7 @@ def token_required(f):
         token = request.cookies.get('ghamaris_token')
 
         if not token:
-            return jsonify({'message': 'Token no encontrado', 'type': 'error'}), 403
+            return jsonify({'message': 'Token no encontrado', 'type': 'error'}), abort(403)
 
         try:
             decoded = jwt.decode(

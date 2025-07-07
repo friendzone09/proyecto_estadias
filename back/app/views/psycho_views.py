@@ -14,6 +14,31 @@ from app.functions.user_role import user_role
 
 psycho_views = Blueprint('psycho', __name__)
 
+@psycho_views.route('/api/get_psycho_info/<int:id_psycho>', methods= ['GET'])
+@token_required 
+def get_psychgo_info(user_data,id_psycho):
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute('SELECT * FROM public.psychos_info '
+	    'WHERE fk_user = %s' , (id_psycho,))
+    
+    response = cur.fetchone()
+
+    if not response:
+        return jsonify({'type' : 'error', 'message' : 'Error, el usuario no es un psicólogo o no existe'})
+    
+    body = {'name' : response[1],
+            'last_name': response[2],
+            'image' : response[4],
+            'description' : response[5] 
+            }
+
+    cur.close()
+    conn.close()
+
+    return jsonify({ 'psycho' : body, 'type' : 'success', 'message' : 'Exito'})
+
 @psycho_views.route('/api/update_psycho_profile', methods=['PUT'])
 @token_required
 def update_psycho_profile(user_data):
