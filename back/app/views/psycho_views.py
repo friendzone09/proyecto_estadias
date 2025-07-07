@@ -15,8 +15,7 @@ from app.functions.user_role import user_role
 psycho_views = Blueprint('psycho', __name__)
 
 @psycho_views.route('/api/get_psycho_info/<int:id_psycho>', methods= ['GET'])
-@token_required 
-def get_psychgo_info(user_data,id_psycho):
+def get_psychgo_info(id_psycho):
     conn = get_db_connection()
     cur = conn.cursor()
 
