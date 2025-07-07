@@ -34,6 +34,20 @@ def handle_exception(e):
         'type': 'error'
     }), 500
 
+@app.errorhandler(404)
+def not_found_error(error):
+    return jsonify({
+        'message': 'La ruta que intentas acceder no existe',
+        'type': f'{error}'
+    }), 404
+
+@app.errorhandler(403)
+def forbidden_error(error):
+    return jsonify({
+        'message': 'No tienes permiso para acceder a este recurso',
+        'type': f'{error}'
+    }), 403
+
 if __name__ == '__main__':
     from dotenv import load_dotenv
     import os

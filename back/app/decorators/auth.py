@@ -8,7 +8,7 @@ def token_required(f):
         token = request.cookies.get('ghamaris_token')
 
         if not token:
-            return jsonify({'message': 'Token no encontrado', 'type': 'error',}), 401
+            return jsonify({'message': 'Token no encontrado', 'type': 'error',}), 403
 
         try:
             decoded = jwt.decode(
@@ -18,8 +18,8 @@ def token_required(f):
             )
             return f(decoded, *args, **kwargs)
         except jwt.ExpiredSignatureError:
-            return jsonify({'message': 'Token expirado', 'type': 'error'}), 401
+            return jsonify({'message': 'Token expirado', 'type': 'error'}), 403
         except jwt.InvalidTokenError:
-            return jsonify({'message': 'Token inválido', 'type': 'error'}), 401
+            return jsonify({'message': 'Token inválido', 'type': 'error'}), 403
 
     return decorated
