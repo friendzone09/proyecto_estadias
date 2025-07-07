@@ -9,7 +9,7 @@ export async function fetchWithAuth(url, options = {}) {
   let response = await fetch(url, baseOptions);
 
   // Si el token expiró, se intenta renovar
-  if (response.status === 401) {
+  if (response.status === 403) {
     console.warn('Access token expirado, intentando renovar...');
 
     const refreshResponse = await fetch(`${API_URL}/refresh_token`, {
