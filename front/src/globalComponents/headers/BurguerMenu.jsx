@@ -1,6 +1,6 @@
 import LogOutButton from "../components/LogOutButton"
 import { Link } from "react-router-dom"
-import { House, LogOut, User, NotepadText, LogIn, X } from "lucide-react"
+import { House, LogOut, User, NotepadText, LogIn, X, Brain } from "lucide-react"
 
 function BurguerMenu({ user, isOpen, setMenuOpen }) {
 
@@ -20,7 +20,12 @@ function BurguerMenu({ user, isOpen, setMenuOpen }) {
                 }
 
                 {user.role === 'patient' &&
-                    <Link to={'/'}>Inicio <House /></Link>
+                    user.asig_psycho != null && (
+                        <>
+                        <Link to={'/'}>Inicio <House /></Link>
+                        <Link to={'/patient/psycho'}>Mi psicólogo <Brain/></Link>
+                        </>
+                    ) 
                 }
 
                 {!user.role &&

@@ -1,6 +1,6 @@
 import './index.css'
 
-function loadingCircle() {
+function LoadingCircle() {
     return (
         <div id="circle_box">
             <div className="container-loader">
@@ -11,4 +11,4 @@ function loadingCircle() {
     )
 }
 
-export default loadingCircle
+export default LoadingCircle

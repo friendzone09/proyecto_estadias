@@ -1,0 +1,4 @@
+.calendar--patient{
+    display: flex;
+    flex-direction: column;
+}

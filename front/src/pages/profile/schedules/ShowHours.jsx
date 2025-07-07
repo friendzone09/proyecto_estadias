@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getHours } from "../../../utils/getSchedule";
 import { updateHours } from "../../../utils/updateHours";
 import { useToast } from "../../../contexts/alert/ToastContext";
-import loadingCircle from "../../../components/LoadingCircle/LoadingCircle";
+import LoadingCircle from '../../../components/LoadingCircle/LoadingCircle'
 
 import { useUser } from "../../../contexts/userContext/UserContext";
 
@@ -53,6 +53,7 @@ function ShowHours({ selectedDay }) {
     };
 
     async function changeHour() {
+        setLoading(true)
 
         const dayChanged = day.laboral_day !== originalLaboralDay;
         const hoursChanged = modifiedHours.length > 0;
@@ -62,7 +63,6 @@ function ShowHours({ selectedDay }) {
 
             formData.append('id_day', day.id_day);
             formData.append('laboral_day', day.laboral_day);
-            console.log(day.laboral_day)
             formData.append('psycho_id', user.id);
             formData.append('modified_hours', JSON.stringify(modifiedHours));
 
@@ -71,8 +71,10 @@ function ShowHours({ selectedDay }) {
             addAlert(data.message, data.type)
             setModifiedHours([]);
         } else {
-            console.log('Sin modificaciones')
+            alert('Sin modificaciones')
         }
+
+        setLoading(false)
 
     };
 
@@ -80,7 +82,7 @@ function ShowHours({ selectedDay }) {
 
         if (selectedDay !== null && selectedDay !== 0) {
             async function fetchHours() {
-                setLoading(true);
+                setLoading(true)
 
                 const schedule = await getHours(user.id, selectedDay)
 
@@ -90,7 +92,6 @@ function ShowHours({ selectedDay }) {
                 setModifiedHours([]);
 
                 setLoading(false)
-
             };
             fetchHours();
         } else {
@@ -102,7 +103,7 @@ function ShowHours({ selectedDay }) {
     return (
         <div className="show_hours">
 
-            {loading ?(<loadingCircle/> ) : (
+            {loading ? (<LoadingCircle/>) : (
                 selectedDay ? (
                 <div className="day_and_hours">
                     <div className="day">

@@ -20,19 +20,24 @@
 }
 
 main {
-    margin-top: 4rem;
+    margin-top: 2rem;
 }
 
 header {
     display: flex;
     padding: 2rem;
     background-color: #FFF;
-    height: 100px;
+    height: 10dvh;
     align-items: center;
     justify-content: space-between;
 }
 
-.logo_container>a {
+.logo_container{
+    display: flex;
+    align-items: center;
+}
+
+.logo_container a {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -43,7 +48,7 @@ header {
 }
 
 .logo_container img {
-    height: 70px;
+height: 50px;
 }
 
 .header_sections {
@@ -57,6 +62,7 @@ header {
     display: flex;
     gap: 5rem;
     margin: auto;
+    align-items: center;
 }
 
 .header_pages a {
@@ -92,8 +98,8 @@ header {
     transition: .5s border;
 }
 
-.pyscho_profile a img {
-    height: 70px;
+.pyscho_profile > a > img {
+    height: 50px;
 }
 
 .pyscho_profile:hover {

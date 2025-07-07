@@ -17,6 +17,7 @@ export async function getSchedule(id_psycho,date) {
 export async function getHours(psychoId, selectedDay){
     const response = await fetch(`${API_URL}/get_laboral_day/${psychoId}/${selectedDay}`, {
         method : 'GET',
+        credentials: 'include'
     });
 
     const data = await response.json();

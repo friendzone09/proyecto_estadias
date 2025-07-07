@@ -140,6 +140,22 @@ def get_laboral_day(user_data,id_psycho,id_day):
 
     return jsonify({'day' : day, 'hours' : hours})
 
+@psycho_views.route('/api/psycho_phone/<int:id_psycho>')
+@token_required
+def psycho_phone(user_data, id_psycho):
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    role = user_role(cur=cur, id_user=user_data['id'])
+    if role != 'patient':
+        return jsonify({'message': 'Acceso denegado', 'type': 'error'})
+
+    cur.execute('SELECT user_phone FROM public.users_show_all_info WHERE id_user = %s', (id_psycho,))
+
+    number = cur.fetchone()
+
+    return jsonify({'phone': number})
+
 @psycho_views.route('/api/update_hours', methods = ['PUT'])
 @token_required
 def update_hours(user_data):

@@ -1,11 +1,17 @@
 import LogOutButton from "../components/LogOutButton"
 import { Link } from "react-router-dom"
-function HeaderPatient({userType}){
+function HeaderPatient({user}){
     return(
         <>
             <div className="header_pages">
                 <Link to={'/'}>Inicio</Link>
-                { userType == null? <a href="/login">Inicia sesión</a> :  <LogOutButton/> }
+                { user.role == null? <a href="/login">Inicia sesión</a> :  user.asig_psycho == null? (
+                    <LogOutButton/>) : (
+                        <>
+                        <Link to={'/patient/psycho'}>Mi psicólogo</Link>
+                        <LogOutButton/>
+                        </>
+                ) }
             </div>
 
         </>

@@ -1,4 +1,4 @@
-function AppointModal({ date, onClick, selectedAppoint, closeModal }){
+function AppointModal({ date, onClick, selectedAppoint, closeModal, user }){
     return(
         <>
 
@@ -7,7 +7,7 @@ function AppointModal({ date, onClick, selectedAppoint, closeModal }){
         <h2>Hora:{selectedAppoint.hour}</h2>
         <div className="dialog_options">
             <span onClick={closeModal} className="close_button" >Cerrar</span>
-            <button className="acept_button" onClick={onClick} >Agendar</button>
+            {user.asig_psycho == null &&(<button className="acept_button" onClick={onClick} >Agendar</button>)}
         </div>
         </>
     )

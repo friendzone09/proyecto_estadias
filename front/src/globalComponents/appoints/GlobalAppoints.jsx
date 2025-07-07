@@ -224,6 +224,7 @@ function GlobalAppoints({ date, id_psycho }) {
                                 onClick={() => agendAppoint(selectedAppoint.id)}
                                 selectedAppoint={selectedAppoint}
                                 closeModal={closeModal}
+                                user={user}
                             />
                         ) : user.role !== 'patient' ? (
                             selectedAppoint.status == null || selectedAppoint.status === true ? (

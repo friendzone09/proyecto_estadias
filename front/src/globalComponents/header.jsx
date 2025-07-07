@@ -38,7 +38,7 @@ function Header() {
 
             </div>
 
-            {user.role === 'psycho' ? (<HeaderPsycho user={user} />) : user.role == 'admin' ? (<HeaderAdmin />) : (<HeaderPatient userType={user.role} />)}
+            {user.role === 'psycho' ? (<HeaderPsycho user={user} />) : user.role == 'admin' ? (<HeaderAdmin />) : (<HeaderPatient user={user} />)}
 
             <i className='header_menu'>
                 <Menu size={30} onClick={() => setMenuOpen(true)} />

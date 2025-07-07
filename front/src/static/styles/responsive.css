@@ -1,3 +1,10 @@
+@media (max-width: 1000px) {
+    .header_pages{
+        font-size: 1rem;
+    }
+    
+}
+
 @media (max-width: 900px) {
     .psycho_card {
         flex-direction: column;

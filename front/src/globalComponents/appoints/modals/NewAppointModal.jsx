@@ -8,7 +8,8 @@ function NewAppointModal({ date, onClick, selectedAppoint, closeModal, PsychoId 
 
     async function getPatients(){
         const response = await fetch(`${API_URL}/get_patients/${PsychoId}`,{
-            method: 'GET'
+            method: 'GET',
+            credentials: 'include'
         });
 
         const data = await response.json();

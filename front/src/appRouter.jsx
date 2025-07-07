@@ -12,6 +12,7 @@ import Schedule from './pages/profile/schedules/Schedules';
 import NotFound from './pages/Errors/NotFound/NotFound';
 import UsersList from './pages/users/UsersList';
 import NewUser from './pages/users/newUser/NewUser';
+import MyPsycho from './pages/MyPsycho/MyPsycho';
 
 
 function AppRoutes() {
@@ -37,6 +38,8 @@ function AppRoutes() {
 
       <Route path="/login" element={<LoginScreen />} />
       <Route path="/register" element={<RegisterScreen />} />
+
+      <Route path="/patient/psycho" element={isLayoutVisible ? <Body><MyPsycho /></Body> : <Home />}/>
 
       <Route path="*" element={<NotFound />} />
     </Routes>
