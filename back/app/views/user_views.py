@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, make_response, current_app, send_from_directory
+from flask import Blueprint, request, jsonify, make_response, current_app, send_from_directory, abort
 from datetime import datetime, timedelta
 
 from app.models.db import get_db_connection
@@ -12,17 +12,17 @@ user_views = Blueprint('user', __name__)
 
 @user_views.route('/api/get_all_users')
 @token_required
-def get_all_users(user_info):
+def get_all_users(user_data):
 
     conn = get_db_connection()
     cur = conn.cursor()
 
-    role = user_role(cur=cur, id_user=user_info['id'])
+    role = user_role(cur=cur, id_user=user_data['id'])
 
     if role != 'admin':
         cur.close()
         conn.close()
-        return jsonify({'message' : 'Acceso denegado', 'type' : 'error'}, 403)
+        abort(403)
 
     # Obtener parámetros de paginación
     page = int(request.args.get('page', 1))  # Página actual (default 1)
@@ -89,7 +89,7 @@ def edit_user(user_data):
     if role != 'admin':
         cur.close()
         conn.close()
-        return jsonify({'message' : 'Acceso denegado', 'type': 'error'})
+        abort(403)
 
     raw_user = request.form.get('user')
     user = json.loads(raw_user)
@@ -127,7 +127,7 @@ def delete_user(user_data, user_id):
     if role != 'admin':
         cur.close()
         conn.close()
-        return jsonify({'message' : 'Acceso denegado', 'type': 'error'})
+        abort(403)
     
     cur.execute('DELETE FROM public.users WHERE id_user = %s', (user_id,))
     conn.commit()

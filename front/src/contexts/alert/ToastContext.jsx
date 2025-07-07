@@ -14,7 +14,7 @@ export function ToastProvider({ children }) {
 
         setTimeout(() => {
             setAlerts((prev) => prev.filter((a) => a.id !== id));
-        }, 2500);
+        }, 3500);
     };
 
     return (

@@ -45,7 +45,7 @@ def not_found_error(error):
 def forbidden_error(error):
     return jsonify({
         'message': 'No tienes permiso para acceder a este recurso',
-        'type': f'{error}'
+        'type': 'error'
     }), 403
 
 if __name__ == '__main__':

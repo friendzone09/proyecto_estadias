@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, abort
 from datetime import datetime
 
 from app.functions.get_schedule import get_schedule
@@ -8,6 +8,7 @@ from app.functions.insert_appoint import insert_appoint
 from app.functions.cancel_appoint import cancel_appoint
 from app.models.db import get_db_connection
 from app.decorators.auth import token_required
+from app.functions.user_role import user_role
 
 appoint_viwes = Blueprint('appints', __name__)
 
@@ -43,7 +44,7 @@ def obtain_appoint(psycho_id, date_str):
 
 @appoint_viwes.route('/api/insert_appoint', methods = ['POST'])
 @token_required
-def post_appoint(user_info):
+def post_appoint(user_data):
 
     type = request.form.get('user_type')
 
@@ -57,15 +58,14 @@ def post_appoint(user_info):
     result = insert_appoint(id_psycho, patient_id, date, hour_id, type)
 
     if result == False :
-        return jsonify({'message' : 'Error al registrar la cita',
-                        'type' : 'error'}), 400 
+        abort(403)
 
     return jsonify({'message' : 'Cita agendada',
                     'type' : 'success'}), 200
 
 @appoint_viwes.route('/api/cancel_appoint', methods = ['POST'])
 @token_required
-def call_cancel_appoint(user_info):
+def call_cancel_appoint(user_data):
 
     id_psycho = request.form.get('psycho_id')
     date_str = request.form.get('date')
@@ -79,7 +79,7 @@ def call_cancel_appoint(user_info):
 
 @appoint_viwes.route('/api/activate_appoint', methods = ['POST'])
 @token_required
-def activate_appoint(user_info):
+def activate_appoint(user_data):
 
     id_psycho = request.form.get('psycho_id')
     date_str = request.form.get('date')
@@ -100,10 +100,14 @@ def activate_appoint(user_info):
                     'type' : 'success'})
 
 @appoint_viwes.route('/api/get_patients/<int:id_psycho>')
-def get_patients(id_psycho):
+@token_required
+def get_patients(user_data, id_psycho):
 
     conn = get_db_connection()
     cur = conn.cursor()
+
+    role = user_role(cur=cur, id_user=user_data['id'])
+
     cur.execute('SELECT fk_user, user_name, user_last_name FROM public.patient JOIN users ON fk_user = id_user WHERE fk_psycho = %s '
     'ORDER BY user_name, user_last_name' , (id_psycho,))
     row = cur.fetchall()
