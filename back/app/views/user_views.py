@@ -10,26 +10,6 @@ import json
 
 user_views = Blueprint('user', __name__)
 
-@user_views.route('/api/user_info')
-@token_required
-def get_user_info(user_data):
-
-    id_user= int(request.args.get('user_id'))  # id del usuario
-
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute('SELECT id_user, user_name, user_last_name, user_role, user_email FROM public.users_show_all_info WHERE id_user = %s', (id_user,))
-    row = cur.fetchone()
-    user = {
-        'id_user' : row[0],
-        'user_name' : row[1],
-        'user_last_name' : row[2],
-        'user_role' : row[3],
-        'user_email' : row[4]
-    }
-
-    return jsonify({'user' : user, 'message' : 'Exito', 'type' : 'success'})
-
 @user_views.route('/api/get_all_users')
 @token_required
 def get_all_users(user_info):

@@ -168,7 +168,7 @@ def get_all_user_info(user_data):
         return jsonify({'user' : user, 'message' : 'Exito', 'type' : 'success'})
 
     except jwt.ExpiredSignatureError:
-        response = make_response(jsonify({'message': 'Token exipirado', 'user' : {'role' : None}, 'type' : 'success' }))
+        response = make_response(jsonify({'message': 'Token exipirado', 'user' : {'role' : None}, 'type' : 'warning' }))
         response.set_cookie(
             'ghamaris_token',
             '',                # Borra el valor
