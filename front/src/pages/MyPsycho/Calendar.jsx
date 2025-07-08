@@ -11,7 +11,7 @@ function Calendar({ onDateChange, user }){
     const API_URL = import.meta.env.VITE_API_URL
 
     const[selectedDate, setSelectedDate] = useState(null);
-    const[psychoPhone, setPsychoPhone] = useState('')
+    const[psychoInfo, setPsychoInfo] = useState({phone : '', name: 'Nombre de ejemplo'})
 
     function handleChange(date){
         setSelectedDate(date);
@@ -26,10 +26,12 @@ function Calendar({ onDateChange, user }){
 
     useEffect(()=>{
         async function getNumber() {
-            const res = await fetchWithAuth(`${API_URL}/psycho_phone/${user.asig_psycho}`) 
+            const res = await fetchWithAuth(`${API_URL}/my_psycho_info/${user.asig_psycho}`) 
             const data = await res.json();
-            setPsychoPhone(data.phone)
+            setPsychoInfo(data)
         }
+
+        getNumber();
 
     }, [])
 
@@ -45,13 +47,16 @@ function Calendar({ onDateChange, user }){
                 Agendar una cita:
             </span>
             <span>Recepción:</span>
-            <span>
-                241 223 1708
-            </span>
+            <a className='phone_number' 
+            href=
+            "https://wa.me/+522412231708?text=Hola%20quiero%20más%20información"
+            >
+                2412231708
+            </a>
             <span>Su psicólogo</span>
-            <span>
-                {psychoPhone}
-            </span>
+            <a className='phone_number' href='/hola'>
+                {psychoInfo.phone}
+            </a>
         </div>
     )
 }

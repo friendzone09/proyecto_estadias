@@ -2,3 +2,7 @@
     display: flex;
     flex-direction: column;
 }
+
+.phone_number{
+    color: #A6464E;
+}
