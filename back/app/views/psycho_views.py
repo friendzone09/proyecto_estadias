@@ -155,8 +155,6 @@ def my_psycho_info(user_data, id_psycho):
 
     info = cur.fetchone()
 
-    info = cur.fetchone()
-
     if info is None:
         return jsonify({'message': 'Psicólogo no encontrado', 'type': 'error'}), 404
 
