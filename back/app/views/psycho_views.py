@@ -1,4 +1,6 @@
 from flask import Blueprint, jsonify, request, current_app, abort
+from datetime import datetime
+from babel.dates import format_date
 
 import json
 import uuid
@@ -140,9 +142,15 @@ def get_laboral_day(user_data,id_psycho,id_day):
 
     return jsonify({'day' : day, 'hours' : hours})
 
-@psycho_views.route('/api/my_psycho_info/<int:id_psycho>')
+@psycho_views.route('/api/my_psycho_info/<int:id_psycho>/<string:date>')
 @token_required
-def my_psycho_info(user_data, id_psycho):
+def my_psycho_info(user_data, id_psycho, date):
+
+    try:
+        today = datetime.strptime(date, '%Y-%m-%d').date()
+    except ValueError:
+        return jsonify({'message': 'Formato de fecha inválido. Usa YYYY-MM-DD.', 'type': 'error'}), 400
+
     conn = get_db_connection()
     cur = conn.cursor()
 
@@ -152,22 +160,41 @@ def my_psycho_info(user_data, id_psycho):
         return jsonify({'message': 'Acceso denegado', 'type': 'error'})
 
     cur.execute('SELECT user_phone, user_name, user_last_name FROM public.users_show_all_info WHERE id_user = %s', (id_psycho,))
-
     psycho_info = cur.fetchone()
 
     if psycho_info is None:
         return jsonify({'message': 'Psicólogo no encontrado', 'type': 'error'}), 404
     
     cur.execute('SELECT user_name, user_last_name FROM public.users_show_all_info WHERE id_user = %s', (user_data['id'],))
-
     patient_info = cur.fetchone()
 
     if patient_info is None:
         return({'message' : 'El paciente no existe', 'type' : 'error'}), 404
+    
+    cur.execute('SELECT * FROM public.last_appoint  WHERE fk_patient = %s AND fk_psycho = %s AND appoint_date >= %s LIMIT %s', (user_data['id'], id_psycho, today, 1,))
+    row = cur.fetchone()
+
+    if row:
+        normal_date = row[2]
+        formated_date = format_date(normal_date, format="long", locale='es') 
+        last_hour = row[3].strftime('%H:%M')
+    else:
+        formated_date = None
+        last_hour = None
+
+    normal_date = row[2]
+
+    formated_date = format_date(normal_date, format="long", locale='es') 
+
+    cur.close()
+    conn.close()
+
 
     return jsonify({'psychoPhone': psycho_info[0], 
                     'psychoName' : f'{psycho_info[1]} {psycho_info[2]}', 
-                    'patientName' : f'{patient_info[0]} {patient_info[1]}' 
+                    'patientName' : f'{patient_info[0]} {patient_info[1]}',
+                    'lastDate' : formated_date,
+                    'lastHour' : last_hour
                     })
 
 @psycho_views.route('/api/update_hours', methods = ['PUT'])

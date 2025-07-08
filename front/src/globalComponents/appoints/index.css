@@ -131,7 +131,23 @@ dialog::backdrop {
     font-size: 1.5rem;
 }
 
-@media (max-width : 800px) {
+.message_button{
+    text-decoration: none;
+    background-color: #4ecd5c;
+    color: white;
+    padding: 1rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: .51rem;
+}
+
+.message_button:hover{
+    background-color: #3aa847;
+}
+
+@media (max-width : 900px) {
     dialog.modal[open] {
         width: 90%;
     }

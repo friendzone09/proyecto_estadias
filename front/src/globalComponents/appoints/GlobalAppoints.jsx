@@ -18,7 +18,7 @@ import PsychoSchedule from "./MapSchedule/PsychoSchedule";
 
 import './index.css'
 
-function GlobalAppoints({ date, id_psycho }) {
+function GlobalAppoints({ date, id_psycho, info = null }) {
 
     const API_URL = import.meta.env.VITE_API_URL
 
@@ -225,6 +225,7 @@ function GlobalAppoints({ date, id_psycho }) {
                                 selectedAppoint={selectedAppoint}
                                 closeModal={closeModal}
                                 user={user}
+                                info={info}
                             />
                         ) : user.role !== 'patient' ? (
                             selectedAppoint.status == null || selectedAppoint.status === true ? (
