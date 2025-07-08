@@ -11,7 +11,7 @@ function Calendar({ onDateChange, user }){
     const API_URL = import.meta.env.VITE_API_URL
 
     const[selectedDate, setSelectedDate] = useState(null);
-    const[psychoInfo, setPsychoInfo] = useState({phone : '', name: 'Nombre de ejemplo'})
+    const[psychoInfo, setPsychoInfo] = useState({psychoPhone : '', psychoName: '', patientName: ''})
 
     function handleChange(date){
         setSelectedDate(date);
@@ -26,13 +26,12 @@ function Calendar({ onDateChange, user }){
 
     useEffect(()=>{
         async function getNumber() {
-            const res = await fetchWithAuth(`${API_URL}/my_psycho_info/${user.asig_psycho}`) 
+            const res = await fetchWithAuth(`${API_URL}/my_psycho_info/${user.asig_psycho}`);
             const data = await res.json();
-            setPsychoInfo(data)
+            console.log(data);
+            setPsychoInfo(data);
         }
-
         getNumber();
-
     }, [])
 
     return(
@@ -55,7 +54,7 @@ function Calendar({ onDateChange, user }){
             </a>
             <span>Su psicólogo</span>
             <a className='phone_number' href='/hola'>
-                {psychoInfo.phone}
+                {psychoInfo.psychoPhone}
             </a>
         </div>
     )

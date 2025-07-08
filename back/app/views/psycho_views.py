@@ -167,7 +167,7 @@ def my_psycho_info(user_data, id_psycho):
 
     return jsonify({'psychoPhone': psycho_info[0], 
                     'psychoName' : f'{psycho_info[1]} {psycho_info[2]}', 
-                    'patietnName' : f'{patient_info[0]} {patient_info[1]}' 
+                    'patientName' : f'{patient_info[0]} {patient_info[1]}' 
                     })
 
 @psycho_views.route('/api/update_hours', methods = ['PUT'])
