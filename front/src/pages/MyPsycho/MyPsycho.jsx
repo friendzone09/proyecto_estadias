@@ -11,7 +11,7 @@ import './index.css'
 function MyPsycho({ user }) {
     const navigate = useNavigate();
     const [dateParse, setDateParse] = useState({ day: '', month: '', year: '', monthNum: '' });
-    const [info, setInfo] = useState({ psychoPhone: '', psychoName: '', patientName: '' })
+    const [info, setInfo] = useState({ psychoPhone: '', psychoName: '', patientName: '', lastDate: '', lastHour: '' })
 
     const API_URL = import.meta.env.VITE_API_URL
 
@@ -40,7 +40,7 @@ function MyPsycho({ user }) {
     return (
         <div className="momo">
             <section className="next_appoint">
-                Su siguiente cita es:
+                Su siguiente cita es el {info.lastDate} a las {info.lastHour} horas
             </section>
 
             <section className="appointments_section">

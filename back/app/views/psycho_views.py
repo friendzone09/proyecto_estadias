@@ -171,7 +171,7 @@ def my_psycho_info(user_data, id_psycho, date):
     if patient_info is None:
         return({'message' : 'El paciente no existe', 'type' : 'error'}), 404
     
-    cur.execute('SELECT * FROM public.last_appoint  WHERE fk_patient = %s AND fk_psycho = %s AND appoint_date >= %s LIMIT %s', (user_data['id'], id_psycho, today, 1,))
+    cur.execute('SELECT * FROM public.last_appoint  WHERE fk_patient = %s AND fk_psycho = %s AND appoint_date >= %s ORDER BY appoint_date LIMIT %s', (user_data['id'], id_psycho, today, 1,))
     row = cur.fetchone()
 
     if row:
