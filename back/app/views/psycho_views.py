@@ -153,12 +153,22 @@ def my_psycho_info(user_data, id_psycho):
 
     cur.execute('SELECT user_phone, user_name, user_last_name FROM public.users_show_all_info WHERE id_user = %s', (id_psycho,))
 
-    info = cur.fetchone()
+    psycho_info = cur.fetchone()
 
-    if info is None:
+    if psycho_info is None:
         return jsonify({'message': 'Psicólogo no encontrado', 'type': 'error'}), 404
+    
+    cur.execute('SELECT user_name, user_last_name FROM public.users_show_all_info WHERE id_user = %s', (user_data['id'],))
 
-    return jsonify({'phone': info[0], 'name' : f'{info[1]} {info[2]}' })
+    patient_info = cur.fetchone()
+
+    if patient_info is None:
+        return({'message' : 'El paciente no existe', 'type' : 'error'}), 404
+
+    return jsonify({'psychoPhone': psycho_info[0], 
+                    'psychoName' : f'{psycho_info[1]} {psycho_info[2]}', 
+                    'patietnName' : f'{patient_info[0]} {patient_info[1]}' 
+                    })
 
 @psycho_views.route('/api/update_hours', methods = ['PUT'])
 @token_required
