@@ -182,11 +182,8 @@ def my_psycho_info(user_data, id_psycho, date):
         formated_date = None
         last_hour = None
 
-    formated_date = format_date(normal_date, format="long", locale='es') 
-
     cur.close()
     conn.close()
-
 
     return jsonify({'psychoPhone': psycho_info[0], 
                     'psychoName' : f'{psycho_info[1]} {psycho_info[2]}', 
