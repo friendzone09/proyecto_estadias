@@ -26,8 +26,6 @@ function MyPsycho({ user }) {
         const today = getTodayString()
         const res = await fetchWithAuth(`${API_URL}/my_psycho_info/${user.asig_psycho}/${today}`);
         const data = await res.json();
-
-        console.log(data);
         setInfo(data);
     }
 
@@ -38,9 +36,9 @@ function MyPsycho({ user }) {
     if (!user) return null;
 
     return (
-        <div className="momo">
+        <div className="my_psycho">
             <section className="next_appoint">
-                Su siguiente cita es el {info.lastDate} a las {info.lastHour} horas
+                {info.lastDate == null ? ('Ninguna cita agendada, solicita una') : (`Su siguiente cita es el ${info.lastDate} a las ${info.lastHour} horas`)}
             </section>
 
             <section className="appointments_section">

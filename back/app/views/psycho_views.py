@@ -182,8 +182,6 @@ def my_psycho_info(user_data, id_psycho, date):
         formated_date = None
         last_hour = None
 
-    normal_date = row[2]
-
     formated_date = format_date(normal_date, format="long", locale='es') 
 
     cur.close()
