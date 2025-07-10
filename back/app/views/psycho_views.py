@@ -13,6 +13,7 @@ from app.decorators.auth import token_required
 from app.functions.set_all_false_hours import set_false_hours
 from app.functions.update_hour import update_hour
 from app.functions.user_role import user_role
+from app.models.images_supabase import upload_image_to_supabase
 
 psycho_views = Blueprint('psycho', __name__)
 
@@ -77,13 +78,13 @@ def update_psycho_profile(user_data):
     cur.execute('UPDATE public.psycho SET psycho_description = %s WHERE fk_user = %s', (description, psycho_id,))
 
     if image_file and allowed_file(image_file.filename):
-        random_prefix = str(uuid.uuid4())
-        filename = f"{random_prefix}_{secure_filename(image_file.filename)}"
-        filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)\
-        
-        image_file.save(filepath)
+        image_url = upload_image_to_supabase(image_file)
 
-        cur.execute('UPDATE public.psycho SET psycho_image = %s WHERE fk_user = %s', (filename, psycho_id,))
+        if image_url:
+            cur.execute('UPDATE public.psycho SET psycho_image = %s WHERE fk_user = %s', (image_url, psycho_id,))
+    
+    else:
+        return jsonify({'message': 'Formato de imagen no permitido', 'type': 'warning'}), 400
 
     conn.commit()
 

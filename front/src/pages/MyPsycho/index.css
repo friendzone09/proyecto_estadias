@@ -6,3 +6,18 @@
 .phone_number{
     color: #A6464E;
 }
+
+.my_psycho{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.next_appoint{
+    padding: 1rem;
+    background-color: white;
+    border-radius: 5px;
+    color: #A6464E;
+}
