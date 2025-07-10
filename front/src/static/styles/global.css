@@ -114,13 +114,13 @@ footer {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+    flex-wrap: wrap;
 }
 
 footer>a {
     display: flex;
     align-items: center;
     gap: 1rem;
-    text-decoration: none;
     color: #A6464E;
     padding: .5rem;
     border-radius: 20px;

@@ -10,6 +10,7 @@ function CardBack({ user }) {
 
     useEffect(() => {
         const fetchData = async () => {
+            
             try {
                 const data = await getAllPsychos();
                 setPshychos(data);

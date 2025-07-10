@@ -9,7 +9,6 @@ SUPABASE_URL= os.getenv('SUPABASE_URL')
 SUPABASE_SERVICE_KEY = os.getenv('SUPABASE_SERVICE_KEY')
 BUCKET_NAME = 'profile-images'
 
-
 def convert_to_webp(file):
     img = Image.open(file)
     img = img.convert("RGB")
@@ -20,7 +19,7 @@ def convert_to_webp(file):
     return buffer
 
 def upload_image_to_supabase(file):
-    filename = f"{uuid.uuid4()}_{file.filename}"
+    filename = f"{uuid.uuid4()}"
     upload_url = f"{SUPABASE_URL}/storage/v1/object/{BUCKET_NAME}/{filename}"
 
     optimezed_image = convert_to_webp(file)

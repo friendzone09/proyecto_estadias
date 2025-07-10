@@ -1,5 +1,6 @@
 import { useUser } from "../contexts/userContext/UserContext"
-import { Mail, MapPinned, MessageSquareText } from "lucide-react"
+import { Link } from "react-router-dom"
+import { Mail, MapPinned, MessageSquareText, BookOpen } from "lucide-react"
 
 function Footer(){
 
@@ -16,10 +17,11 @@ function Footer(){
             > <Mail/> Enviar un correo </a>
             <a href="https://maps.app.goo.gl/dkJabJMrfmq7S8588"
             target="_blank"
-            > <MapPinned/> Av Hidalgo 303-Primer piso interior 107, Centro, 90300 Cdad. de Apizaco, Tlax.</a>
+            > <MapPinned/>¿Dónde nos encuentras?</a>
             <a href="https://wa.me/+522412231708"
             target="_blank"
             > <MessageSquareText /> Whatsapp</a>
+            <Link to={'/how-use'}><BookOpen/> ¿Cómo se usa?</Link>
         </footer>
     )
 }
