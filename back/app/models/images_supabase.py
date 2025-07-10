@@ -6,7 +6,7 @@ from flask import current_app
 
 SUPABASE_URL= os.getenv('SUPABASE_URL')
 SUPABASE_KEY = os.getenv('SUPABASE_KEY')
-BUCKET_NAME = 'profile_images'
+BUCKET_NAME = 'profile-images'
 
 def upload_image_to_supabase(file):
     filename = f"{uuid.uuid4()}_{file.filename}"
