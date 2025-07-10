@@ -5,7 +5,7 @@ import os
 from flask import current_app
 
 SUPABASE_URL= os.getenv('SUPABASE_URL')
-SUPABASE_KEY = os.getenv('SUPABASE_KEY')
+SUPABASE_SERVICE_KEY = os.getenv('SUPABASE_SERVICE_KEY')
 BUCKET_NAME = 'profile-images'
 
 def upload_image_to_supabase(file):
@@ -13,8 +13,8 @@ def upload_image_to_supabase(file):
     upload_url = f"{SUPABASE_URL}/storage/v1/object/{BUCKET_NAME}/{filename}"
 
     headers = {
-        'apikey' : SUPABASE_KEY,
-        'Authorization' : f"Bearer {SUPABASE_KEY}",
+        'apikey' : SUPABASE_SERVICE_KEY,
+        'Authorization' : f"Bearer {SUPABASE_SERVICE_KEY}",
         'Content-Type' : file.content_type,
     }
 
