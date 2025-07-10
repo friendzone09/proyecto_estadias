@@ -14,7 +14,6 @@ UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 CORS(app, supports_credentials=True, origins=[os.getenv('CORS_ORIGINS')])
 

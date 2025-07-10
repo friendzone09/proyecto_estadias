@@ -3,12 +3,7 @@ import { useUser } from "../../contexts/userContext/UserContext";
 import { Link } from "react-router-dom";
 
 function HeaderPsycho(){
-
-    const API_URL = import.meta.env.VITE_API_URL
-
     const {user} = useUser();
-
-    const psychoImage = `${API_URL}/uploads/${user.image}`
 
     return(
         <>
@@ -18,7 +13,7 @@ function HeaderPsycho(){
             </div>
 
             <div className="pyscho_profile">
-               <Link to={'/profile'}><img src={psychoImage} alt="" /> </Link>
+               <Link to={'/profile'}><img src={user.image} alt="" /> </Link>
             </div>
         </>
     )

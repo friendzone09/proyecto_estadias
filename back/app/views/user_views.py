@@ -156,7 +156,3 @@ def refresh_token():
         return jsonify({'message': 'Sesión expirada. Por favor inicia sesión de nuevo', 'type': 'warning', 'user' : {'role' : None}}), 401
     except jwt.InvalidTokenError:
         return jsonify({'message': 'Token invalido. Por favor inicia sesión', 'type': 'warning', 'user' : {'role' : None}}), 401
-    
-@user_views.route('/api/uploads/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(current_app.config['UPLOAD_FOLDER'], filename)
