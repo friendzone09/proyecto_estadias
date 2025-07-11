@@ -204,7 +204,12 @@ function UsersList({ user }) {
 
                         <label>Numero</label>
                         <input type="text" value={selectedUser ? selectedUser.user_phone : ''}
-                            onInput={e => { selectedUser ? setSelectedUser({ ...selectedUser, user_phone: e.target.value }) : null }}
+                            maxLength={15}
+                            onInput={(e) => {
+                            // Solo permite dígitos
+                            const onlyNums = e.target.value.replace(/\D/, '');
+                            selectedUser ? (setSelectedUser({...selectedUser, user_phone: onlyNums})) : null;
+                        }}
                         />
 
                         {selectedUser &&

@@ -183,3 +183,13 @@
 .section_psycho_image label:hover{
     background-color: #9e2e37;
 }
+
+.preview_image{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
+    color: #9e2e37;
+    padding: 1rem;
+    background-color: #fff;
+}

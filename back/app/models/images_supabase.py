@@ -19,7 +19,7 @@ def convert_to_webp(file):
     return buffer
 
 def upload_image_to_supabase(file):
-    filename = f"{uuid.uuid4()}"
+    filename = f"{uuid.uuid4()}.webp"
     upload_url = f"{SUPABASE_URL}/storage/v1/object/{BUCKET_NAME}/{filename}"
 
     optimezed_image = convert_to_webp(file)

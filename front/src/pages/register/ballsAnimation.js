@@ -2,7 +2,7 @@ export default function startAnimation() {
   const canvas = document.querySelector('canvas');
   const ctx = canvas.getContext('2d');
 
-  const colors = ['#f31010', '#0a40db'];
+  const colors = ['#A6464E', '#D9AA1E'];
 
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
