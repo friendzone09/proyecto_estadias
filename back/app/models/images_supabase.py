@@ -27,7 +27,7 @@ def upload_image_to_supabase(file):
     headers = {
         'apikey' : SUPABASE_SERVICE_KEY,
         'Authorization' : f"Bearer {SUPABASE_SERVICE_KEY}",
-        'Content-Type' : file.content_type,
+        'Content-Type' : 'mage/webp',
     }
 
     response = requests.put(upload_url, data=optimezed_image, headers=headers)
