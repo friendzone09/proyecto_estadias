@@ -240,7 +240,7 @@ def update_hours(user_data):
     return jsonify ({'message' : 'Horario cambiado con exito',
                      'type' : 'success'}), 200
 
-@psycho_views('/api/my-patients')
+@psycho_views.route('/api/my-patients')
 @token_required
 def my_patients(user_data):
     conn = get_db_connection()
