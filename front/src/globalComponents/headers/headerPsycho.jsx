@@ -9,6 +9,7 @@ function HeaderPsycho(){
         <>
             <div className="header_pages">
                 <Link to={'/'}>Citas</Link>
+                <Link to={'/my-patients'}>Mis pacientes</Link>
                 <LogOutButton/>
             </div>
 

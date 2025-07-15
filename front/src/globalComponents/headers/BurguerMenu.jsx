@@ -1,6 +1,6 @@
 import LogOutButton from "../components/LogOutButton"
 import { Link } from "react-router-dom"
-import { House, LogOut, User, NotepadText, LogIn, X, Brain } from "lucide-react"
+import { House, LogOut, User, NotepadText, LogIn, X, Brain, UserSearch } from "lucide-react"
 
 function BurguerMenu({ user, isOpen, setMenuOpen }) {
 
@@ -14,7 +14,6 @@ function BurguerMenu({ user, isOpen, setMenuOpen }) {
             <X className="close_menu" onClick={handleClick}/>
 
             <div className="burguer_menu_links" onClick={handleClick}>
-                <Link to={'/'}>Inicio <House /></Link>
 
                 {(user.role === 'psycho' || user.role === 'admin') &&
                     <Link to={'/'}>Citas <NotepadText /></Link>
@@ -23,6 +22,7 @@ function BurguerMenu({ user, isOpen, setMenuOpen }) {
                 {user.role === 'patient' &&
                     user.asig_psycho != null && (
                         <>
+                        <Link to={'/'}>Inicio <House /></Link>
                         <Link to={'/patient/psycho'}>Mi psicólogo <Brain/></Link>
                         </>
                     ) 
@@ -30,7 +30,8 @@ function BurguerMenu({ user, isOpen, setMenuOpen }) {
 
                 {!user.role &&
                     <>
-                        <Link to={'/login'}>Inicia sesión <LogIn /></Link>
+                    <Link to={'/'}>Inicio <House /></Link>
+                    <Link to={'/login'}>Inicia sesión <LogIn /></Link>
                     </>
                 }
 
@@ -39,7 +40,10 @@ function BurguerMenu({ user, isOpen, setMenuOpen }) {
                 }
 
                 {user.role === 'psycho' &&
+                    <>
+                    <Link to={'/my-patients'}>Mis pacientes <UserSearch/> </Link>
                     <Link to={'/profile'}>Perfil <User /></Link>
+                    </>
                 }
 
                 {user.role &&

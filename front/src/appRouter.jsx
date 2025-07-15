@@ -14,6 +14,7 @@ import UsersList from './pages/users/UsersList';
 import NewUser from './pages/users/newUser/NewUser';
 import MyPsycho from './pages/MyPsycho/MyPsycho';
 import HowUse from './pages/HowUse/HowUse';
+import MyPatients from './pages/MyPatients/MyPatiens';
 
 
 function AppRoutes() {
@@ -41,6 +42,8 @@ function AppRoutes() {
       <Route path="/register" element={<RegisterScreen />} />
 
       <Route path="/patient/psycho" element={isLayoutVisible ? <Body><MyPsycho /></Body> : <Home />}/>
+
+      <Route path="/my-patients" element={isLayoutVisible ? <Body><MyPatients /></Body> : <Home />}/>
 
       <Route path='/how-use' element={isLayoutVisible ? <Body><HowUse /></Body> : <Home />}/>
 

@@ -1,6 +1,9 @@
-function PatientManual( {width} ){
+import PhonePatient from "./PatientManuals/PhonePatient"
+import DeskPatient from "./PatientManuals/DeskPatient"
+
+function PatientManual( { width } ){
     return(
-        width <= 800 ? ( <p>Es movil</p> ):( <p>Es desto</p> )
+        width > 800? (<DeskPatient/>) : (<PhonePatient/>)
     )
 }
 
