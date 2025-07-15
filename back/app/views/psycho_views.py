@@ -48,7 +48,7 @@ def update_psycho_profile(user_data):
     conn = get_db_connection()
     cur = conn.cursor()
 
-    role= user_role(cur=cur,id_user=user_data['id'])
+    role = user_role(cur=cur,id_user=user_data['id'])
 
     if role != 'psycho':
         cur.close()
@@ -77,14 +77,14 @@ def update_psycho_profile(user_data):
     
     cur.execute('UPDATE public.psycho SET psycho_description = %s WHERE fk_user = %s', (description, psycho_id,))
 
-    if image_file and allowed_file(image_file.filename):
-        image_url = upload_image_to_supabase(image_file)
+    if image_file:
+        if allowed_file(image_file.filename):
+            image_url = upload_image_to_supabase(image_file)
 
-        if image_url:
-            cur.execute('UPDATE public.psycho SET psycho_image = %s WHERE fk_user = %s', (image_url, psycho_id,))
-    
-    else:
-        return jsonify({'message': 'Formato de imagen no permitido', 'type': 'warning'}), 400
+            if image_url:
+                cur.execute('UPDATE public.psycho SET psycho_image = %s WHERE fk_user = %s', (image_url, psycho_id,))
+        else:
+            return jsonify({'message': 'Formato de imagen no permitido', 'type': 'warning'}), 400
 
     conn.commit()
 

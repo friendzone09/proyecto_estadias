@@ -20,12 +20,14 @@ function BurguerMenu({ user, isOpen, setMenuOpen }) {
                 }
 
                 {user.role === 'patient' &&
-                    user.asig_psycho != null && (
+                    <>
+                    <Link to={'/'}>Inicio <House /></Link>
+                    {user.asig_psycho != null && (
                         <>
-                        <Link to={'/'}>Inicio <House /></Link>
                         <Link to={'/patient/psycho'}>Mi psicólogo <Brain/></Link>
                         </>
-                    ) 
+                    ) }
+                    </>
                 }
 
                 {!user.role &&

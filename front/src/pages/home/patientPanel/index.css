@@ -51,6 +51,10 @@
 
 .psycho_button{
     padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .psycho_button a, .psycho_button p{

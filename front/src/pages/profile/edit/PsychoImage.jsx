@@ -26,7 +26,7 @@ function PsychoImage({ imageName, onImageChange }) {
 
             {previewImage && (
                 <div className="preview_image">
-                    <span>Vista previa:</span>
+                    <span>Vista previa</span>
                     <img alt="Vista previa" src={previewImage} width='100' />
                 </div>
             )}

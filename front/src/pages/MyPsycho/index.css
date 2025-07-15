@@ -21,3 +21,10 @@
     border-radius: 5px;
     color: #A6464E;
 }
+
+@media (max-width: 500px) {
+    .next_appoint{
+        font-size: .8rem;
+        padding: .5rem;
+    }
+}

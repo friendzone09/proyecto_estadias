@@ -29,6 +29,8 @@ function MyPatients({ user }) {
         const res = await fetchWithAuth(`${API_URL}/my-patients?page=${currentPage}&per_page=${perPage}&search=${query}`);
         const data = await res.json();
 
+        console.log(data)
+
         setUsers(data.users);
         setTotalPages(Math.ceil(data.total / perPage));
         setLoading(false);
@@ -57,40 +59,49 @@ function MyPatients({ user }) {
                 <div className="section_var">
 
                     <div className="search_var">
-                        <input type="text" placeholder="Buscar..." />
+                        <input type="text" placeholder="Buscar..." value={searchText} onInput={e => {
+                            setSearchText(e.target.value);
+                            setPage(1);
+                        }} />
                         <button><Search size={20} /></button>
                     </div>
                 </div>
 
                 <div className="users_table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Correo</th>
-                                <th>Numero</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr key={1}>
-                                <td> ejemplo </td>
-                                <td> ejemplo </td>
-                                <td> ejemplo</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    {loading ? (<LoadingCircle />) :
+                        (
 
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Correo</th>
+                                        <th>Numero</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {users.map(u => (
+                                        <tr key={u.user_id}>
+                                            <td> {u.user_name} {u.user_last_name} </td>
+                                            <td> {u.user_email} </td>
+                                            <td> {u.user_phone} </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+
+                        )}
                 </div>
             </div>
 
             <div className="paginator">
-                <button>
+                <button onClick={() => setPage(p => Math.max(p - 1, 1))} disabled={page === 1 || users.length == 0}>
                     <ChevronLeft />
                 </button>
 
-                <span></span>
+                <span> {page} / {totalPages} </span>
 
-                <button>
+                <button onClick={() => setPage(p => Math.min(p + 1, totalPages))} disabled={page === totalPages || users.length == 0}>
                     <ChevronRight />
                 </button>
             </div>

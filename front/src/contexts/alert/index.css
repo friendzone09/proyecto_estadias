@@ -72,11 +72,11 @@
     background-color: #ffc2c2;
 }
 
-.toast-warning{
+.toast-warning {
     background-color: #ffe7c2;
 }
 
-.toast-info{
+.toast-info {
     background-color: #b2beff;
 }
 
@@ -87,5 +87,13 @@
 
     to {
         width: 0%;
+    }
+}
+
+@media (max-width: 500px) {
+    .alert {
+        height: 90px;
+        min-width: unset;
+        max-width: 90dvw;
     }
 }

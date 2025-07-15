@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import ScrollToTop from './components/ScrollTop/ScrollTop';
 
 import AppRoutes from './appRouter';
 import AppWrapper from './utils/AppWrapper';
@@ -14,6 +15,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <LoadingProvider>
       <ToastProvider>
         <AppWrapper>
+          <ScrollToTop/>
           <AppRoutes />
         </AppWrapper>
       </ToastProvider>
