@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "obfuscate" : "javascript-obfuscator dist --output dist --compact true --self-defending true"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
@@ -27,6 +28,7 @@
     "eslint": "^9.25.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "globals": "^16.0.0",
+    "javascript-obfuscator": "^4.1.1",
     "vite": "^6.3.5"
   }
 }

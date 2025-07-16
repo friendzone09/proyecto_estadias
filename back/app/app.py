@@ -10,7 +10,7 @@ from app.views.appoint_views import appoint_viwes
 from app.views.psycho_views import psycho_views
 from app.views.user_views import user_views
 
-UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
+load_dotenv()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
@@ -50,8 +50,6 @@ def forbidden_error(error):
 if __name__ == '__main__':
     from dotenv import load_dotenv
     import os
-
-    load_dotenv()
 
     debug_mode = os.getenv('FLASK_DEBUG', 'false').lower() == 'true'
     app.run(host='127.0.0.1', port=5000, debug=debug_mode)
