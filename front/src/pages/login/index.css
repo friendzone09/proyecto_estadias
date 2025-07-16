@@ -33,7 +33,7 @@
     font-size: 1rem;
 }
 
-.submit_register {
+.submit {
     padding: 10px;
     border-radius: 10px;
     border: none;
@@ -43,7 +43,7 @@
     cursor: pointer;
 }
 
-.submit_register:hover {
+.submit:hover {
     background-color: #c79b18;
 }
 

@@ -54,7 +54,7 @@ function LoginScreen(){
                         <small>{errorMessage}</small>
                     )}
 
-                    <button>Iniciar sesión</button>
+                    <button className="submit">Iniciar sesión</button>
 
                     <a href="/register">Registrarse</a>
                 </>

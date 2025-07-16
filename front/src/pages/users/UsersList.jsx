@@ -38,6 +38,7 @@ function UsersList({ user }) {
         const res = await fetchWithAuth(`${API_URL}/get_all_users?page=${currentPage}&per_page=${perPage}&search=${query}`);
         const data = await res.json();
 
+        console.log(data.users)
         setUsers(data.users);
         setTotalPages(Math.ceil(data.total / perPage));
         setLoading(false);

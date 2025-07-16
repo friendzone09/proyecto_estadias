@@ -127,7 +127,7 @@ function RegisterScreen() {
 
                                 <button className="change_form" onClick={prevStep}> <ArrowLeft size={18}/> Anterior</button>
 
-                                <button className="submit_register">Registrarse</button>
+                                <button className="submit">Registrarse</button>
                             </>
                         )}
 
