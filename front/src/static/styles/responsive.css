@@ -14,9 +14,7 @@
     }
 
     .psycho_decription > p{
-        max-height: 450px;
-        width: 100%;
-        overflow-y: scroll;
+        width: 110%;
     }
 
     .psycho_decription>h1 {

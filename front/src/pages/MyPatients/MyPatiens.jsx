@@ -29,8 +29,6 @@ function MyPatients({ user }) {
         const res = await fetchWithAuth(`${API_URL}/my-patients?page=${currentPage}&per_page=${perPage}&search=${query}`);
         const data = await res.json();
 
-        console.log(data)
-
         setUsers(data.users);
         setTotalPages(Math.ceil(data.total / perPage));
         setLoading(false);
@@ -69,8 +67,9 @@ function MyPatients({ user }) {
 
                 <div className="users_table">
                     {loading ? (<LoadingCircle />) :
-                        (
+                      (
 
+                        users.length > 0 ? (
                             <table>
                                 <thead>
                                     <tr>
@@ -89,6 +88,7 @@ function MyPatients({ user }) {
                                     ))}
                                 </tbody>
                             </table>
+                        ): ( <NotResult/> )
 
                         )}
                 </div>

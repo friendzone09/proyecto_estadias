@@ -33,7 +33,7 @@
     font-size: 1rem;
 }
 
-.login_squere button {
+.submit_register {
     padding: 10px;
     border-radius: 10px;
     border: none;
@@ -43,7 +43,7 @@
     cursor: pointer;
 }
 
-.login_squere button:hover {
+.submit_register:hover {
     background-color: #c79b18;
 }
 
@@ -62,6 +62,23 @@ canvas {
 
 .login_squere small {
     color: red;
+}
+
+.changes_buttons{
+    display: flex;
+    justify-content: end;
+}
+
+.change_form{
+    display: flex;
+    color: white;
+    align-items: center;
+    padding: .5rem;
+    width: min-content;
+    background-color: #D9AA1E;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
 }
 
 @media (max-width: 1000px) {

@@ -260,7 +260,7 @@ def my_patients(user_data):
     offset = (page - 1) * per_page
 
     if search == 'none':
-        # Contar total de usuarios (para frontend si quieres mostrar número total de páginas)
+        # Contar total de usuarios
         cur.execute("SELECT COUNT(*) FROM public.users_show_all_info WHERE assigned_psychologist_id = %s", (user_data['id'],))
         total_users = cur.fetchone()[0]
 
@@ -273,7 +273,8 @@ def my_patients(user_data):
         ''', (user_data['id'], per_page, offset))
 
         rows = cur.fetchall()
-        users = [{'user_id': r[0], 'user_name': r[1], 'user_last_name': r[2], 'user_email': r[3], 'user_phone': r[5]} for r in rows]
+        users = [{'user_id': r[0], 'user_name': r[1], 'user_last_name': r[2], 'user_email': r[3], 
+                  'user_phone': r[5], 'user_age' : r[6], 'appoint_type': r[8]} for r in rows]
 
         return jsonify({
             'users': users,
@@ -298,7 +299,8 @@ def my_patients(user_data):
         (user_data['id'], f'{search}%', f'%{search}%', f'{search}%', per_page, offset))
 
         rows = cur.fetchall()
-        users = [{'user_id': r[0], 'user_name': r[1], 'user_last_name': r[2], 'user_email': r[3], 'user_phone': r[5]} for r in rows]
+        users = [{'user_id': r[0], 'user_name': r[1], 'user_last_name': r[2], 'user_email': r[3], 
+                  'user_phone': r[5], 'user_age' : r[6], 'appoint_type': r[8]} for r in rows]
         return jsonify({
             'users': users,
             'total' : total_users,

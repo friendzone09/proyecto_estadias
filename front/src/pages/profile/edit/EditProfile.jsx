@@ -6,11 +6,12 @@ import { updatePsycho } from "../../../utils/updatePsycho"
 
 import { useToast } from "../../../contexts/alert/ToastContext"
 import { useUser } from "../../../contexts/userContext/UserContext"
+import { useLoading } from "../../../contexts/loading/LoadingContext"
 
 function EditProfile() {
 
     const { user, setUser } = useUser();
-
+    const { setLoading } = useLoading();
     const { addAlert } = useToast();
 
     const [selectedImage, setSelectedImage] = useState(null)
@@ -44,6 +45,9 @@ function EditProfile() {
     }
 
     async function handleSubmit(e) {
+        setInfo(null)
+        setLoading(true)
+
         e.preventDefault()
 
         const id = user.id;
@@ -65,13 +69,20 @@ function EditProfile() {
             if (data.user) {
                 setUser(data.user); // <-- actualizar el usuario global
             }
-
+            setLoading(false)
             navigate('/profile', {
                 state: { toast: { type: data.type, message: data.message } }
             })
             return
+        } else{
+            setLoading(false)
+            setInfo({
+                id: user.id,
+                name: user.name,
+                last_name: user.last_name,
+                description: user.description,
+            });
         }
-
         addAlert(data.message, data.type)
         return
     }

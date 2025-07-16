@@ -53,7 +53,6 @@ function Header() {
 
             <BurguerMenu user={user} isOpen={menuOpen} setMenuOpen={setMenuOpen} />
 
-
         </header>
     )
 }

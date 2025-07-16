@@ -44,7 +44,9 @@ def get_all_users(user_data):
         ''', ('admin', per_page, offset))
 
         rows = cur.fetchall()
-        users = [{'user_id': r[0], 'user_name': r[1], 'user_last_name': r[2], 'user_email': r[3], 'user_role': r[4], 'user_phone': r[5], 'assig_psycho' : r[6]} for r in rows]
+        users = [{'user_id': r[0], 'user_name': r[1], 'user_last_name': r[2], 'user_email': r[3], 
+                  'user_role': r[4], 'user_phone': r[5], 'assig_psycho' : r[7],
+                  'user_age' : r[6], 'appoint_tyoe' : r[8]} for r in rows]
 
         return jsonify({
             'users': users,

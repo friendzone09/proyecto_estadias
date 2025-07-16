@@ -100,15 +100,19 @@ def register():
     last_name = request.form.get('last_name')
     email = request.form.get('email')
     phone = request.form.get('phone')
+    raw_age = request.form.get('date_age')
+    appoint_type = request.form.get('appoint_type')
     password = request.form.get('password')
     psycho_id = request.form.get('psycho_id')
 
     if psycho_id in ('', 'null', None):
         psycho_id = None
 
-    if not name or not last_name or not email or not phone or not password:
+    if not name or not last_name or not email or not phone or not raw_age or not appoint_type or not password:
         return jsonify({'message' : 'Faltan credenciales',
                         'type' : 'error'}), 401
+    
+    age_date = datetime.strptime(raw_age, "%Y-%m-%d").date()
     
     conn = get_db_connection()
     cur = conn.cursor()
@@ -123,14 +127,13 @@ def register():
     password = generate_password_hash(password)
 
     cur.execute('INSERT INTO public.users( '
-	 'user_name, user_last_name, user_email, user_password, user_phone) '
-	'VALUES (%s, %s, %s, %s, %s) RETURNING id_user ', (name, last_name, email, password, phone,))
+	 'user_name, user_last_name, user_email, user_password, user_phone, user_age) '
+	'VALUES (%s, %s, %s, %s, %s, %s) RETURNING id_user ', (name, last_name, email, password, phone, age_date,))
 
     new_user_id = cur.fetchone()[0]
 
     if psycho_id:
-        print(psycho_id)
-        cur.execute('UPDATE public.patient SET fk_psycho=%s WHERE fk_user=%s', (psycho_id, new_user_id,))
+        cur.execute('UPDATE public.patient SET fk_psycho=%s, appoint_type=%s WHERE fk_user=%s', (psycho_id, new_user_id, appoint_type,))
 
     conn.commit()
     cur.close()
@@ -157,9 +160,11 @@ def get_all_user_info(user_data):
             'email' : row[3],
             'role' : row[4],
             'phone' : row[5],
-            'asig_psycho' : row[6],
-            'description' : row[7],
-            'image' : row[8],
+            'asig_psycho' : row[7],
+            'age' : row[6],
+            'appoint_type' : row[8],
+            'description' : row[9],
+            'image' : row[10],
         }
 
         cur.close()

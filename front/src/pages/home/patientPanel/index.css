@@ -1,4 +1,4 @@
-.psycho_card{
+.psycho_card {
     width: 80%;
     margin-inline: auto;
     padding: 2rem;
@@ -8,7 +8,7 @@
     background-color: #fff;
 }
 
-.psycho_image{
+.psycho_image {
     width: max-content;
     display: flex;
     flex-direction: column;
@@ -18,38 +18,53 @@
     max-height: min-content;
 }
 
-.psycho_image img{
+.psycho_image img {
     height: 250px;
     width: 250px;
     border-radius: 50%;
 }
 
-.card_description{
-    display:flex;
+.card_description {
+    display: flex;
     flex-direction: column;
     gap: 1rem;
     width: 70%;
     align-items: center;
 }
 
-.psycho_decription{
+.psycho_decription {
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 2rem;
 }
 
-.psycho_decription h1{
+.psycho_decription h1 {
     font-size: 3rem;
     color: #A6464E;
 }
 
-.psycho_decription p{
+.psycho_decription p {
     font-size: 1.5rem;
     white-space: pre-line;
+    max-height: 450px;
+    width: 100%;
+    overflow-y: scroll;
+    padding: .3rem;
+    box-sizing: border-box;
 }
 
-.psycho_button{
+.psycho_decription p::-webkit-scrollbar {
+    width: 8px; /* ancho del scroll */
+}
+
+.psycho_decription p::-webkit-scrollbar-thumb {
+    background-color: #a6464ea9; /* color de la "barra" */
+    border-radius: 4px;
+    border: 2px solid #f0f0f0;
+}
+
+.psycho_button {
     padding: 2rem;
     display: flex;
     align-items: center;
@@ -57,12 +72,13 @@
     text-align: center;
 }
 
-.psycho_button a, .psycho_button p{
+.psycho_button a,
+.psycho_button p {
     font-size: 1.5rem;
-    color:#D9AA1E;
+    color: #D9AA1E;
 }
 
-.no_psycho{
+.no_psycho {
     display: flex;
     align-items: center;
     justify-content: center;

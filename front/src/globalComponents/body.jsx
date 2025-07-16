@@ -36,6 +36,7 @@ function Body({ children }) {
             } catch (err) {
                 console.error('Error al obtener el usuario:', err);
                 setError(true);
+                setLoading(false);
             } finally {
                 setLoading(false);
             }
