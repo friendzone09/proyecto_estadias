@@ -77,7 +77,7 @@ function RegisterScreen() {
                                     onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })}
                                     required />
 
-                                <label>Edad</label>
+                                <label>Fecha de nacimiento</label>
                                 <DatePicker
                                 selected={newUser.dateAge}
                                 onChange={(date) => setNewUser({ ...newUser, dateAge: date.toISOString().split('T')[0] })}
