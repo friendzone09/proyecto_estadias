@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import { login } from "../../utils/loginUser.js";
 import LoadingCircle from '../../components/LoadingCircle/LoadingCircle.jsx'
+import { Link } from "react-router-dom";
 import './index.css'
 
 function LoginScreen(){
@@ -56,7 +57,7 @@ function LoginScreen(){
 
                     <button className="submit">Iniciar sesión</button>
 
-                    <a href="/register">Registrarse</a>
+                    <Link to={'/register'} >Registrarse</Link>
                 </>
                 )
                 }
