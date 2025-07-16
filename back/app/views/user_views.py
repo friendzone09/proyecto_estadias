@@ -45,8 +45,8 @@ def get_all_users(user_data):
 
         rows = cur.fetchall()
         users = [{'user_id': r[0], 'user_name': r[1], 'user_last_name': r[2], 'user_email': r[3], 
-                  'user_role': r[4], 'user_phone': r[5], 'assig_psycho' : r[7],
-                  'user_age' : r[6], 'appoint_type' : r[8]} for r in rows]
+                  'user_role': r[4], 'user_phone': r[5], 'assig_psycho': r[7],
+                  'user_age' : r[6].strftime('%Y-%m-%d') if r[6] else None, 'appoint_type': r[8]} for r in rows]
 
         return jsonify({
             'users': users,

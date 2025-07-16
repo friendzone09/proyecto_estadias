@@ -161,7 +161,6 @@ def get_all_user_info(user_data):
             'role' : row[4],
             'phone' : row[5],
             'asig_psycho' : row[7],
-            'age' : row[6],
             'appoint_type' : row[8],
             'description' : row[9],
             'image' : row[10],
