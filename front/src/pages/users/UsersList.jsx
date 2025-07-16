@@ -8,6 +8,7 @@ import { getAllPsychos } from "../../utils/get_user";
 
 import LoadingCircle from "../../components/LoadingCircle/LoadingCircle";
 import NotResult from "../../components/NotResult/NotResul";
+import { myAge } from "../../utils/myAge";
 
 import './index.css'
 
@@ -140,6 +141,7 @@ function UsersList({ user }) {
                                         <th>Correo</th>
                                         <th>Numero</th>
                                         <th>Rol</th>
+                                        <th>Edad</th>
                                         <th>Editar</th>
                                         <th>Eliminar</th>
                                     </tr>
@@ -151,6 +153,7 @@ function UsersList({ user }) {
                                             <td> {u.user_email} </td>
                                             <td>{u.user_phone}</td>
                                             <td> {u.user_role == 'patient' ? ('Paciente') : ('Psicólogo')}</td>
+                                            <td> {myAge(u.user_age)} años</td>
                                             <td><button onClick={() => setSelectedUser(u)}>Editar <Pencil size={15} /></button></td>
                                             <td><button onClick={() => setDeleteUser(u)} >Eliminar <Trash2 size={15} /></button></td>
                                         </tr>
@@ -228,6 +231,17 @@ function UsersList({ user }) {
                                         </option>
                                     ))}
                                 </select>
+
+                                <label>Tipo de consulta</label>
+                                <select
+                                value={selectedUser.appoint_type || 'single'}
+                                onChange={(e) => setSelectedUser({...selectedUser, appoint_type: e.target.value})}
+                                >
+                                    <option value={'single'}>Individual</option>
+                                    <option value={'couple'}>Pareja</option>
+                                    <option value={'family'}>Familiar</option>
+                                </select>
+
                             </>
                         }
 

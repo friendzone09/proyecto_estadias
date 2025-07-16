@@ -6,6 +6,7 @@ import { fetchWithAuth } from "../../utils/fetchWithAuth";
 
 import LoadingCircle from "../../components/LoadingCircle/LoadingCircle";
 import NotResult from "../../components/NotResult/NotResul";
+import { myAge } from "../../utils/myAge";
 
 function MyPatients({ user }) {
 
@@ -76,6 +77,7 @@ function MyPatients({ user }) {
                                         <th>Nombre</th>
                                         <th>Correo</th>
                                         <th>Numero</th>
+                                        <th>Edad</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -84,6 +86,7 @@ function MyPatients({ user }) {
                                             <td> {u.user_name} {u.user_last_name} </td>
                                             <td> {u.user_email} </td>
                                             <td> {u.user_phone} </td>
+                                            <td> {myAge(u.user_age)} años</td>
                                         </tr>
                                     ))}
                                 </tbody>

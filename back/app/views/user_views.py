@@ -100,7 +100,7 @@ def edit_user(user_data):
         return jsonify({'message' : 'Error: faltan credenciales', 'type' : 'error'})
 
     cur.execute('UPDATE public.users '
-	'SET user_name=%s, user_last_name=%s, user_email=%s, user_role=%s, user_phone=%s '
+	'SET user_name=%s, user_last_name=%s, user_email=%s, user_role=%s, user_phone=%s'
 	'WHERE id_user=%s;', (user['user_name'], user['user_last_name'], user['user_email'], user['user_role'],  user['user_phone'], user['user_id']))
 
     if user['user_role'] == 'patient':
@@ -108,7 +108,7 @@ def edit_user(user_data):
         if user['assig_psycho'] in ('', 'null', None):
             user['assig_psycho'] = None
 
-        cur.execute('UPDATE public.patient SET fk_psycho=%s WHERE fk_user=%s', (user['assig_psycho'], user['user_id']))
+        cur.execute('UPDATE public.patient SET fk_psycho=%s, appoint_type=%s WHERE fk_user=%s', (user['assig_psycho'], user['appoint_type'] ,user['user_id']))
 
     conn.commit()
 
