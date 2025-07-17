@@ -2,12 +2,14 @@ import Calendar from "./Calendar"
 import GlobalAppoints from '../../globalComponents/appoints/GlobalAppoints'
 import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom";
+import { useUser } from "../../contexts/userContext/UserContext";
 
-function AppointAgend ({ user }){
+function AppointAgend (){
 
     const navigate = useNavigate();
     const { id_psycho } = useParams();
     const [dateParse, setDateParse] = useState({ day: '', month: '', year: '', monthNum: '' });
+    const { user, setUser } = useUser();
 
     useEffect(()=>{
          if (user && (user.role == null || user.asig_psycho != null)){

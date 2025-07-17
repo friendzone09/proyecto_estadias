@@ -16,6 +16,8 @@ import { getPsychoInfo } from "../../utils/get_user";
 import PatientSchedule from "./MapSchedule/PatientSchedule";
 import PsychoSchedule from "./MapSchedule/PsychoSchedule";
 
+import { useUser } from "../../contexts/userContext/UserContext";
+
 import './index.css'
 
 function GlobalAppoints({ date, id_psycho, info = null }) {
@@ -23,7 +25,7 @@ function GlobalAppoints({ date, id_psycho, info = null }) {
     const API_URL = import.meta.env.VITE_API_URL
 
     const { addAlert } = useToast();
-    const {user} = useUser();
+    const {user, setUser} = useUser();
     const navigate = useNavigate();
 
     const [psycho, setPsycho] = useState({ name: '', last_name: '' })
@@ -137,6 +139,12 @@ function GlobalAppoints({ date, id_psycho, info = null }) {
         const res = await fetchWithAuth(`${API_URL}/insert_appoint`, {method : 'POST', body: formData});
         const data = await res.json();
         addAlert(data.message, data.type);
+
+        if(user.role == 'patient'){
+            const resUser = await fetchWithAuth(`${API_URL}/get_all_user_info`);
+            const dataUser = await resUser.json();
+            setUser(dataUser.user);
+        }
         
         await callGetSchedule();
 
