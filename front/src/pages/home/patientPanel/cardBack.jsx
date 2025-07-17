@@ -16,10 +16,17 @@ function CardBack({ user }) {
             setLoading(true)
             try {
                 const data = await getAllPsychos();
-                setPshychos(data);
+
+                const shuffled = [...data];
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                }
+
+                setPshychos(shuffled);
             } catch (err) {
                 console.error("Error al obtener psicólogos", err);
-            } 
+            }
             setLoading(false)
         };
         fetchData();
@@ -30,13 +37,13 @@ function CardBack({ user }) {
 
     return (
 
-             psychos.map(p => (
+        psychos.map(p => (
             <section className="psycho_card" key={p.id}>
                 <CardImage image={p.image} psychoId={p.id} user={user} />
                 <CardDescription description={p.description} name={p.name} lastName={p.last_name} />
             </section>
         ))
-        )
+    )
 
 }
 
