@@ -38,7 +38,7 @@ function MyPsycho({ user }) {
     return (
         <div className="my_psycho">
             <section className="next_appoint">
-                {info.lastDate == null ? ('Ninguna cita agendada, solicita una') : (`Su siguiente cita es el ${info.lastDate} a las ${info.lastHour} horas`)}
+                {info.lastDate ? ('Ninguna cita agendada, solicita una') : (`Su siguiente cita es el ${info.lastDate} a las ${info.lastHour} horas`)}
             </section>
 
             <section className="appointments_section">
