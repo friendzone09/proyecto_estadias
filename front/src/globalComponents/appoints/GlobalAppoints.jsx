@@ -16,8 +16,6 @@ import { getPsychoInfo } from "../../utils/get_user";
 import PatientSchedule from "./MapSchedule/PatientSchedule";
 import PsychoSchedule from "./MapSchedule/PsychoSchedule";
 
-import { useUser } from "../../contexts/userContext/UserContext";
-
 import './index.css'
 
 function GlobalAppoints({ date, id_psycho, info = null }) {
