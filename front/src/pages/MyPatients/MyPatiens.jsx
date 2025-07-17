@@ -68,30 +68,38 @@ function MyPatients({ user }) {
 
                 <div className="users_table">
                     {loading ? (<LoadingCircle />) :
-                      (
+                        (
 
-                        users.length > 0 ? (
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Nombre</th>
-                                        <th>Correo</th>
-                                        <th>Numero</th>
-                                        <th>Edad</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {users.map(u => (
-                                        <tr key={u.user_id}>
-                                            <td> {u.user_name} {u.user_last_name} </td>
-                                            <td> {u.user_email} </td>
-                                            <td> {u.user_phone} </td>
-                                            <td> {myAge(u.user_age)} años</td>
+                            users.length > 0 ? (
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Correo</th>
+                                            <th>Numero</th>
+                                            <th>Edad</th>
+                                            <th>Tipo de consulta</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        ): ( <NotResult/> )
+                                    </thead>
+                                    <tbody>
+                                        {users.map(u => (
+                                            <tr key={u.user_id}>
+                                                <td> {u.user_name} {u.user_last_name} </td>
+                                                <td> {u.user_email} </td>
+                                                <td> {u.user_phone} </td>
+                                                <td> {myAge(u.user_age)} años</td>
+                                                <td> {
+                                                    <>
+                                                    {u.appoint_type == 'single' && ('Individual')}
+                                                    {u.appoint_type == 'couple' && ('Pareja')}
+                                                    {u.appoint_type == 'family' && ('Familiar')}
+                                                    </>
+                                                } </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            ) : (<NotResult />)
 
                         )}
                 </div>
