@@ -128,7 +128,7 @@ footer > div {
 .footer--links{
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: .5rem;
 }
 
 .footer--links > a{
