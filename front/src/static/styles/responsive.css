@@ -35,6 +35,11 @@
         justify-content: center;
     }
 
+    .users_table {
+        overflow-x: scroll;
+        max-width: 70%;
+    }
+
 }
 
 @media (max-width: 800px) {
