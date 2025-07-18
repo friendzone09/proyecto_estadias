@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "../../contexts/alert/ToastContext.jsx";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import DatePicker from "react-datepicker";
+import { es } from "date-fns/locale";
 
 import LoadingCircle from '../../components/LoadingCircle/LoadingCircle.jsx'
 

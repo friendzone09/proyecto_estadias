@@ -2,16 +2,18 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../../contexts/alert/ToastContext";
 import { getAllPsychos } from "../../../utils/get_user";
+import DatePicker from "react-datepicker";
+import { es } from "date-fns/locale";
 
 function NewUser({ user }) {
     const API_URL = import.meta.env.VITE_API_URL
 
     const navigate = useNavigate();
     const { addAlert } = useToast();
-    const [newUser, setNewUser] = useState({ name: '', lastName: '', email: '', phone: '', password: '', psychoId: null });
+    const [newUser, setNewUser] = useState({ name: '', lastName: '', email: '', phone: '', password: '', psychoId: null, dateAge: null, appointType: 'single' });
     const [psychos, setPsychos] = useState([]);
 
-    useEffect(()=>{
+    useEffect(() => {
         async function callPsychos() {
             const data = await getAllPsychos();
             setPsychos(data);
@@ -23,12 +25,14 @@ function NewUser({ user }) {
         e.preventDefault();
 
         const formData = new FormData();
-        formData.append('name', newUser.name)
-        formData.append('last_name', newUser.lastName)
-        formData.append('email', newUser.email)
-        formData.append('phone', newUser.phone)
-        formData.append('password', newUser.password)
-        formData.append('psycho_id', newUser.psychoId)
+        formData.append('name', newUser.name);
+        formData.append('last_name', newUser.lastName);
+        formData.append('email', newUser.email);
+        formData.append('phone', newUser.phone);
+        formData.append('date_age', newUser.dateAge)
+        formData.append('appoint_type', newUser.appointType)
+        formData.append('password', newUser.password);
+        formData.append('psycho_id', newUser.psychoId);
 
         const response = await fetch(`${API_URL}/register`, {
             method: 'POST',
@@ -90,16 +94,38 @@ function NewUser({ user }) {
             <div className="new_user_section">
                 <div className="input_section">
                     <label>Psicólogo</label>
-                    <select  onChange={(e) => { setNewUser({...newUser, psychoId: e.target.value || null})}}>
+                    <select onChange={(e) => { setNewUser({ ...newUser, psychoId: e.target.value || null }) }}>
                         <option value={null}>Selecciona un psicólogo</option>
-                        {psychos.map(p=>(
+                        {psychos.map(p => (
                             <option value={p.id} key={p.id}> {p.name} {p.last_name} </option>
                         ))}
                     </select>
                 </div>
+                <div className="input_section">
+                    <label>Fecha de nacimiento</label>
+                    <DatePicker
+                        selected={newUser.dateAge}
+                        onChange={(date) => setNewUser({ ...newUser, dateAge: date.toISOString().split('T')[0] })}
+                        dateFormat="yyyy-MM-dd"
+                        placeholderText="Selecciona tu fecha de nacimiento"
+                        showYearDropdown
+                        scrollableYearDropdown
+                        yearDropdownItemNumber={100}
+                        maxDate={new Date()}
+                        locale="es"
+                    />
+                </div>
             </div>
 
             <div className="new_user_section">
+                <div className="input_section">
+                    <label>Tipo de consulta</label>
+                    <select   onChange={(e) => setNewUser({ ...newUser, appointType: e.target.value})}>
+                                    <option value="single">Individual</option>
+                                    <option value="couple">Pareja</option>
+                                    <option value="family">Familiar</option>
+                    </select>
+                </div>
                 <div className="input_section">
                     <label>Contraseña</label>
                     <input type="password" placeholder="Contraseña..." required value={newUser.password}
