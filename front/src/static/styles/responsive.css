@@ -37,7 +37,7 @@
 
     .users_table {
         overflow-x: scroll;
-        max-width: 550px;
+        max-width: 500px;
     }
 
 }
