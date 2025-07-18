@@ -2,6 +2,11 @@
     .header_pages{
         font-size: 1rem;
     }
+
+    .users_table {
+        overflow-x: scroll;
+        max-width: 450px;
+    }
     
 }
 
@@ -50,10 +55,6 @@
         width: 100%;
     }
 
-    .users_table {
-        overflow-x: scroll;
-        max-width: 450px;
-    }
 
     .appointments > h1{
         font-size: 2.2rem;
