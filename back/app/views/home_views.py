@@ -153,6 +153,23 @@ def get_all_user_info(user_data):
         cur.execute('SELECT * FROM public.users_show_all_info WHERE id_user = %s', (id_user,))
         row = cur.fetchone()
 
+        if row is None:
+            response = make_response(jsonify({
+                'message': 'Usuario no encontrado',
+                'user': {'role': None},
+                'type': 'warning'
+            }))
+            response.set_cookie(
+                'ghamaris_token',
+                '',
+                max_age=0,
+                expires=0,
+                httponly=True,
+                secure=True,
+                samesite='None'
+            )
+            return response
+
         user = {
             'id' : row[0],
             'name' : row[1],
