@@ -13,8 +13,7 @@ from app.functions.user_role import user_role
 appoint_viwes = Blueprint('appints', __name__)
 
 @appoint_viwes.route('/api/get_appoint_for_patient/<int:psycho_id>/<string:date_str>')
-@token_required
-def obtain_appoint(user_data, psycho_id, date_str):
+def obtain_appoint(psycho_id, date_str):
 
     if not psycho_id or not date_str:
         return jsonify({'message': 'Error, faltan credenciales',

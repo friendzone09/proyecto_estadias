@@ -1,6 +1,5 @@
 def sort_appoints(schedule, appoints):
     new_schedule = []
-
     appoint_map = {a['hour']: a for a in appoints}
 
     for sch in schedule:
@@ -22,5 +21,3 @@ def sort_appoints(schedule, appoints):
             })
 
     return new_schedule
-
-
