@@ -15,7 +15,9 @@ load_dotenv()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
-CORS(app, supports_credentials=True, origins=[os.getenv('CORS_ORIGINS')])
+origins = os.getenv('CORS_ORIGINS', '').split(',')
+
+CORS(app, supports_credentials=True, origins=origins)
 
 logging.basicConfig(level=logging.INFO)
 app.logger.setLevel(logging.INFO)
