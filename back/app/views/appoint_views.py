@@ -13,10 +13,11 @@ from app.functions.user_role import user_role
 appoint_viwes = Blueprint('appints', __name__)
 
 @appoint_viwes.route('/api/get_appoint_for_patient/<int:psycho_id>/<string:date_str>')
-def obtain_appoint(psycho_id, date_str):
+@token_required
+def obtain_appoint(user_data, psycho_id, date_str):
 
     if not psycho_id or not date_str:
-        return jsonify({'message': 'Error',
+        return jsonify({'message': 'Error, faltan credenciales',
                         'type': 'error'}), 401
 
     date = datetime.strptime(date_str, "%Y-%m-%d").date()
@@ -27,7 +28,7 @@ def obtain_appoint(psycho_id, date_str):
         return jsonify({'message' : 'El usuario no es un psicologo o no existe', 'type':'error'})
 
     if not result:
-        return jsonify({'schedule' : []})
+        return jsonify({'schedule' : []}), 200
 
     schedule = [{'id': r[0], 'hour': r[1].strftime('%H:%M')} for r in result]
 
