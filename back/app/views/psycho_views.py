@@ -99,10 +99,12 @@ def update_psycho_profile(user_data):
         'email' : row[3],
         'role' : row[4],
         'phone' : row[5],
-        'asig_psycho' : row[6],
-        'description' : row[7],
-        'image' : row[8],
+        'asig_psycho' : row[7],
+        'description' : row[9],
+        'image' : row[10],
     }
+
+    print(f'image {user["image"]}')
 
     cur.close()
     conn.close()
