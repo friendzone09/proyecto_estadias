@@ -1,5 +1,7 @@
 from app.models.db import get_db_connection
 
+#Está función devulve las horas que labora un psicólogo en un día
+
 def get_schedule(psycho_id, date):
 
     conn = get_db_connection()
@@ -14,12 +16,15 @@ def get_schedule(psycho_id, date):
 
     result = cur.fetchone()
 
+    #El psicólgo o el día no existe 
     if not result:
         return False
 
+    #Si el día no es laborable, regresa un array vacio
     if result[2] == False:
         return []
     
+    #Este JOIN regresa el id de la hora y la hora (Siempre y cuando el estado de la hora sea true, es decir, es una hora laborable)
     query = '''
         SELECT id_hour, hour
         FROM schedule s

@@ -2,7 +2,7 @@ function CancelModal({ date, onClick, selectedAppoint, closeModal, openAppointFr
 
     return(
         <>
-            <span className="appoint_date">¿Suspender? {date.day} de {date.month} del {date.year} </span>
+            <span className="appoint_date">{selectedAppoint.status == null ? ('Acciones para el día') : ('¿Suspender?')}  {date.day} de {date.month} del {date.year} </span>
             <span className="appoint_date">Hora: {selectedAppoint.hour}</span>
 
             {selectedAppoint.name && (<span> Paciente: {selectedAppoint.name} {selectedAppoint.last_name} </span>)}

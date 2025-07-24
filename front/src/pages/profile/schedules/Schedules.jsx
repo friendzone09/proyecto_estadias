@@ -23,9 +23,6 @@ function Schedule(){
 
     return(
         <div className="schedules">
-
-
-
             <SelectDay onDayChange={setSelectedDay}/>
             <ShowHours selectedDay={selectedDay} />
         </div>

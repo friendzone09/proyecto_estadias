@@ -32,6 +32,7 @@ function Calendar({ onDateChange, onSelectPsycho }){
                 onChange={handleChange}
                 inline 
                 locale={'es'}
+                minDate={new Date()}
             />
         </div>
     )

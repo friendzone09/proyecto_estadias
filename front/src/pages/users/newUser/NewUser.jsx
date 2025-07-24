@@ -51,7 +51,7 @@ function NewUser({ user }) {
     if (!user || !psychos) return null
 
     return (
-        <form className="register_new_user" onSubmit={registerUser}>
+        <form className="register_new_user" onSubmit={registerUser} autoComplete="off">
             <div className="new_user_section">
                 <div className="input_section">
                     <label>Nombre(s)</label>
@@ -130,6 +130,7 @@ function NewUser({ user }) {
                     <label>Contraseña</label>
                     <input type="password" placeholder="Contraseña..." required value={newUser.password}
                         onChange={(e) => { setNewUser({ ...newUser, password: e.target.value }) }}
+                        autocomplete="new-password"
                     />
                 </div>
             </div>

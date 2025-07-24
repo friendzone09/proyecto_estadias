@@ -61,7 +61,7 @@ function RegisterScreen() {
 
             <canvas></canvas>
 
-            <form className="login_squere" onSubmit={registerUser}>
+            <form className="login_squere" onSubmit={registerUser} autoComplete="off">
                 {loading ? (<LoadingCircle />) : (
                     <>
                         <h1>Registrate</h1>
@@ -99,7 +99,7 @@ function RegisterScreen() {
                                 </select>
 
                                 <div className="changes_buttons">
-                                    <button className="change_form" onClick={nextStep}>Siguiente <ArrowRight size={18}/> </button>
+                                    <button className="change_form" onClick={nextStep}>Siguiente <ArrowRight size={18} type="button" /> </button>
                                 </div>
                             </>
                         )}
@@ -124,7 +124,7 @@ function RegisterScreen() {
                                 <label>Contraseña</label>
                                 <input placeholder="Escribe tu contraseña..." value={newUser.password}
                                     onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
-                                    type="password" required />
+                                    type="password" required autoComplete="new-password"/>
 
                                 <button className="change_form" onClick={prevStep}> <ArrowLeft size={18}/> Anterior</button>
 

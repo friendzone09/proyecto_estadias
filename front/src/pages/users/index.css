@@ -220,6 +220,11 @@ dialog.modal_edit_user[open] {
   justify-content: space-between;
 }
 
+.input_section > select{
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+
 .input_section {
   display: flex;
   flex-direction: column;

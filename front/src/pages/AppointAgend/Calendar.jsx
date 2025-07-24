@@ -27,6 +27,7 @@ function Calendar({ onDateChange }){
                 selected={selectedDate}
                 onChange={handleChange}
                 inline 
+                minDate={new Date()}
                 locale={'es'}
             />
         </div>

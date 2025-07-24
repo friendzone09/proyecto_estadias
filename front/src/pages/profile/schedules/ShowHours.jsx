@@ -122,7 +122,7 @@ function ShowHours({ selectedDay }) {
                                 status={h.hour_status ?? false}
                                 onToggle={() => handleToggleHour(h.id_hour)} />))}
                         </div>) :
-                        (<p>Dia no laborable</p>)}
+                        (<p>Descanso</p>)}
 
                     <div className="acept_hour_changes">
                         <button onClick={changeHour} >Guardar</button>

@@ -28,6 +28,7 @@ function Calendar({ onDateChange, info }){
                 onChange={handleChange}
                 inline 
                 locale={'es'}
+                minDate={new Date()}
             />
             <span>
                 Llama para agendar una cita:

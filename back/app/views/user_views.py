@@ -16,9 +16,9 @@ def get_all_users(user_data):
 
     conn = get_db_connection()
     cur = conn.cursor()
-
+    #Obtenemos el role del usuario que hace la petició
     role = user_role(cur=cur, id_user=user_data['id'])
-
+    #Si el role es diferente de "admin" regresa un error de autorización
     if role != 'admin':
         cur.close()
         conn.close()
@@ -42,7 +42,7 @@ def get_all_users(user_data):
             ORDER BY user_name
             LIMIT %s OFFSET %s
         ''', ('admin', per_page, offset))
-
+        #Ordenamos los datos de todos los usuarios en un objeto
         rows = cur.fetchall()
         users = [{'user_id': r[0], 'user_name': r[1], 'user_last_name': r[2], 'user_email': r[3], 
                   'user_role': r[4], 'user_phone': r[5], 'assig_psycho': r[7],
@@ -69,9 +69,11 @@ def get_all_users(user_data):
         OR user_last_name ILIKE %s OR user_email ILIKE %s)
         ORDER BY user_name LIMIT %s OFFSET %s''',
         ('admin', f'{search}%', f'%{search}%', f'{search}%', per_page, offset))
-
+        #Ordenamos los datos de todos los usuarios en un objeto
         rows = cur.fetchall()
-        users = [{'user_id': r[0], 'user_name': r[1], 'user_last_name': r[2], 'user_email': r[3], 'user_role': r[4], 'user_phone': r[5], 'assig_psycho' : r[6]} for r in rows]
+        users = [{'user_id': r[0], 'user_name': r[1], 'user_last_name': r[2], 'user_email': r[3], 
+                  'user_role': r[4], 'user_phone': r[5], 'assig_psycho': r[7],
+                  'user_age' : r[6].strftime('%Y-%m-%d') if r[6] else None, 'appoint_type': r[8]} for r in rows]
         return jsonify({
             'users': users,
             'total' : total_users,

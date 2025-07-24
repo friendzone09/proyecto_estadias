@@ -1,5 +1,7 @@
 from app.models.db import get_db_connection
 
+#Regresa todas las citas agendadas del dia esepcificado, obtniendo datos de la cita y del paciente que agendo esa cita.
+
 def get_appoint(psycho_id, date):
     conn = get_db_connection()
     cur = conn.cursor()
