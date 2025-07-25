@@ -1,11 +1,11 @@
 import './index.css'
 import { X } from 'lucide-react'
 
-function CookiesAlert({ onClose }){
+function CookiesAlert({ onClose, open = 'close'}){
     return(
         <>
-        <div className="cookie_alert--back" onClick={onClose}></div>
-        <div className="cookie_alert--alert">
+        <div className={`cookie_alert--back ${open}--back`} onClick={onClose}></div>
+        <div className={`cookie_alert--alert  ${open}--alert`}>
             <div className="cookies_alert--message">
                 <div className="message--close_button">
                     <button onClick={onClose}><X size={25} color='white'/></button>

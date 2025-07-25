@@ -53,7 +53,7 @@ function Body({ children }) {
     return (
         <UserContext.Provider value={{ user, setUser }}>
             <Header user={user} />
-            {cookieAlert && (<CookiesAlert onClose={()=> setCookieAlert(false)}/>)}
+            <CookiesAlert onClose={()=> setCookieAlert(false)}  open={cookieAlert ? 'open': 'close'}  />
             <Main>{React.cloneElement(children, { user })}</Main>
             <Footer />
         </UserContext.Provider>
