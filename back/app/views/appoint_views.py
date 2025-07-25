@@ -41,7 +41,7 @@ def obtain_appoint(psycho_id, date_str):
 
     #Si hay citas en el día se ordena lo que obtuvimos en get_appoint
     if result:
-        appoints = [{'hour': h[0], 'status' : h[1], 'date': h[2], 'name' : h[3], 'last_name' : h[4]} for h in result]  
+        appoints = [{'hour': h[0], 'status' : h[1], 'date': h[2], 'name' : h[3], 'last_name' : h[4], 'appoint_type' : h[5]} for h in result]  
     
     #Se ordenan la citas y el horario del psicólogo
     new_schedule = sort_appoints(schedule, appoints)

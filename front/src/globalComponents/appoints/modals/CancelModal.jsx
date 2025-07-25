@@ -6,6 +6,11 @@ function CancelModal({ date, onClick, selectedAppoint, closeModal, openAppointFr
             <span className="appoint_date">Hora: {selectedAppoint.hour}</span>
 
             {selectedAppoint.name && (<span> Paciente: {selectedAppoint.name} {selectedAppoint.last_name} </span>)}
+            {selectedAppoint.appoint_type && (
+                <span>
+                Tipo de consulta: {selectedAppoint.appoint_type == 'single' && ('Individual')} {selectedAppoint.appoint_type == 'couple' && ('Pareja')} {selectedAppoint.appoint_type == 'family' && ('Familiar')}
+                </span>
+            )}
             
             <div className="dialog_options">
                 <span onClick={closeModal} className="close_button" >Cerrar</span>

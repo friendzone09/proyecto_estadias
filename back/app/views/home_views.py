@@ -133,7 +133,10 @@ def register():
     new_user_id = cur.fetchone()[0]
 
     if psycho_id:
-        cur.execute('UPDATE public.patient SET fk_psycho=%s, appoint_type=%s WHERE fk_user=%s', (psycho_id, new_user_id, appoint_type,))
+        cur.execute('UPDATE public.patient SET fk_psycho=%s WHERE fk_user=%s', (psycho_id, new_user_id,))
+    
+    if appoint_type != 'single':
+        cur.execute('UPDATE public.patient SET appoint_type=%s WHERE fk_user=%s', (appoint_type, new_user_id,))
 
     conn.commit()
     cur.close()

@@ -13,8 +13,9 @@ function CardBack({ user }) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await getAllPsychos();
 
+                const data = await getAllPsychos();
+                
                 const shuffled = [...data];
                 for (let i = shuffled.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
@@ -22,6 +23,7 @@ function CardBack({ user }) {
                 }
 
                 setPshychos(shuffled);
+                
             } catch (err) {
                 console.error("Error al obtener psicólogos", err);
             }

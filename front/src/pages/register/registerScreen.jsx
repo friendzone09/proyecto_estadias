@@ -30,6 +30,7 @@ function RegisterScreen() {
     async function registerUser(e) {
         e.preventDefault();
 
+
         setLoading(true)
         const formData = new FormData();
         formData.append('name', newUser.name)
@@ -92,10 +93,12 @@ function RegisterScreen() {
                                 />
 
                                 <label>Tipo de consulta</label>
-                                <select   onChange={(e) => setNewUser({ ...newUser, appointType: e.target.value})}>
-                                    <option value="single">Individual</option>
-                                    <option value="couple">Pareja</option>
-                                    <option value="family">Familiar</option>
+                                <select   onChange={(e) => setNewUser({ ...newUser, appointType: e.target.value})}
+                                     value={newUser.appointType || 'single'}
+                                     >
+                                    <option value={'single'}>Individual</option>
+                                    <option value={'couple'}>Pareja</option>
+                                    <option value={'family'}>Familiar</option>
                                 </select>
 
                                 <div className="changes_buttons">

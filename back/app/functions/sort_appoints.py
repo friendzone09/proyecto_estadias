@@ -14,7 +14,8 @@ def sort_appoints(schedule, appoints):
                 'hour': sch['hour'],
                 'status': match['status'],
                 'name': match['name'],
-                'last_name': match['last_name']
+                'last_name': match['last_name'],
+                'appoint_type': match['appoint_type']
             })
         #De lo contrario, este, con menos propiedades
         else:

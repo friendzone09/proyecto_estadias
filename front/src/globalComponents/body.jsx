@@ -1,6 +1,7 @@
 import Header from "./header";
 import Main from "./main";
 import Footer from "./footer";
+import CookiesAlert from "../components/CookiesAlert/CookiesAlert";
 import '../static/styles/global.css'
 import '../static/styles/responsive.css'
 import { fetchWithAuth } from "../utils/fetchWithAuth";
@@ -16,14 +17,15 @@ function Body({ children }) {
     const API_URL = import.meta.env.VITE_API_URL
 
     const [user, setUser] = useState(null);
-    const [error, setError] = useState(false)
+    const [error, setError] = useState(false);
+    const [cookieAlert, setCookieAlert] = useState(false);
     const { setLoading } = useLoading();
     const { addAlert } = useToast();
 
     async function fetchUser() {
         const response = await fetchWithAuth(`${API_URL}/get_all_user_info`);
         const data = await response.json();
-        if (data.type=='warning' || data.type=='info') {addAlert(data.message, data.type)}
+        if (data.type=='warning') {addAlert(data.message, data.type)}
         return data.user;
     }
 
@@ -33,6 +35,7 @@ function Body({ children }) {
             try {
                 const fetchedUser = await fetchUser();
                 setUser(fetchedUser);
+                if (fetchedUser.role == null){setCookieAlert(true)}
             } catch (err) {
                 console.error('Error al obtener el usuario:', err);
                 setError(true);
@@ -42,6 +45,7 @@ function Body({ children }) {
             }
         }
         fetch();
+        
     }, []);
 
     if (error) return <ConnectionError />
@@ -49,6 +53,7 @@ function Body({ children }) {
     return (
         <UserContext.Provider value={{ user, setUser }}>
             <Header user={user} />
+            {cookieAlert && (<CookiesAlert onClose={()=> setCookieAlert(false)}/>)}
             <Main>{React.cloneElement(children, { user })}</Main>
             <Footer />
         </UserContext.Provider>

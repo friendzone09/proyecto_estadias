@@ -1,6 +1,7 @@
 .psycho_card--loading_image{
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 1rem;
 }
 
@@ -13,7 +14,7 @@
 }
 
 .loading_image--text{
-    width: 100%;
+    width: 50%;
     background-color: #eee;
     height: 5%;
     animation: pulse_loading_psycho 1.5s infinite;
