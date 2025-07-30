@@ -4,11 +4,15 @@ from dotenv import load_dotenv
 
 import os
 import logging
+
+from app.models.db import get_db_connection
+
 #views
 from app.views.home_views import home_views
 from app.views.appoint_views import appoint_viwes
 from app.views.psycho_views import psycho_views
 from app.views.user_views import user_views
+
 
 load_dotenv()
 
@@ -48,6 +52,18 @@ def forbidden_error(error):
         'message': 'No tienes permiso para acceder a este recurso',
         'type': 'error'
     }), 403
+
+@app.route("/")
+def home():
+    return "<h1>¡App corriendo exitosamente!</h1>"
+
+@app.route('/api/testVPS')
+def test():
+    conn = get_db_connection()
+    if conn:
+        return "Conexión OK"
+    else:
+        return "Error de conexión"
 
 if __name__ == '__main__':
     from dotenv import load_dotenv
