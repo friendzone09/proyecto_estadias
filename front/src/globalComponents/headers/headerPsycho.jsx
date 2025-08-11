@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 function HeaderPsycho(){
     const {user} = useUser();
 
+    const defaultImage = 'https://pdynrtpvyegijbsstwai.supabase.co/storage/v1/object/public/profile-images//default.webp'
+
     return(
         <>
             <div className="header_pages">
@@ -14,7 +16,7 @@ function HeaderPsycho(){
             </div>
 
             <div className="pyscho_profile">
-               <Link to={'/profile'}><img src={user.image} alt="" /> </Link>
+                <Link to={'/profile'}><img src={user.image || defaultImage} alt="" onError={(e) => { e.target.src = defaultImage }}/> </Link>
             </div>
         </>
     )
