@@ -16,6 +16,8 @@ function Body({ children }) {
 
     const API_URL = import.meta.env.VITE_API_URL
 
+    console.log('URL: ', API_URL + '/login')
+
     const [user, setUser] = useState(null);
     const [error, setError] = useState(false);
     const [cookieAlert, setCookieAlert] = useState(false);
