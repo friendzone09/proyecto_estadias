@@ -189,12 +189,11 @@ function GlobalAppoints({ date, id_psycho, info = null }) {
                 (<small>Lic. {psycho.name} {psycho.last_name}</small>)
             }
 
-            {date.day === "" ? (<h1>Seleccione otra fecha</h1>) :
-                isPastDate() ? (<h1>Día ya no disponible</h1>) :
+            {date.day === "" ? (<h1>Seleccione una fecha</h1>) :
                     (<h1>{date.month} {date.day} - {date.year}</h1>)}
 
             {(schedule.length === 0 && psycho.name == '') ? (<p>Seleccione un psicologo</p>): 
-            (schedule.length === 0 && psycho !== '') && (<p>Seleccione una fecha</p>)}
+            (schedule.length === 0 && psycho !== '') && (<p>Descanso</p>)}
             
             <div className="schedule">
                 {loading ? (
