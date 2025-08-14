@@ -15,14 +15,7 @@ function CardBack({ user }) {
             try {
 
                 const data = await getAllPsychos();
-                
-                const shuffled = [...data];
-                for (let i = shuffled.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-                }
-
-                setPshychos(shuffled);
+                setPshychos(data);
                 
             } catch (err) {
                 console.error("Error al obtener psicólogos", err);
