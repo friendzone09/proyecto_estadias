@@ -29,20 +29,32 @@ function UsersList({ user }) {
     const [searchText, setSearchText] = useState('');
     const [psychos, setPsychos] = useState([]);
     const perPage = 5;
+    let controller = null;
 
-    async function callUsers(currentPage = 1, text = searchText) {
+    async function callUsers(currentPage = 1) {
+        // Si hay una petición en curso, la cancelamos
+        if (controller) controller.abort();
 
-        setLoading(true);
+        // Creamos un nuevo controlador para esta petición
+        controller = new AbortController();
 
-        const query = text.trim() === '' ? 'none' : text.trim();
+        const query = searchText.trim() === '' ? 'none' : searchText.trim();
 
-        const res = await fetchWithAuth(`${API_URL}/get_all_users?page=${currentPage}&per_page=${perPage}&search=${query}`);
-        const data = await res.json();
+        try {
+            const res = await fetchWithAuth(
+                `${API_URL}/get_all_users?page=${currentPage}&per_page=${perPage}&search=${query}`,
+                { signal: controller.signal }
+            );
 
-        console.log(data.users)
-        setUsers(data.users);
-        setTotalPages(Math.ceil(data.total / perPage));
-        setLoading(false);
+            const data = await res.json();
+
+            setUsers(data.users);
+            setTotalPages(Math.ceil(data.total / perPage));
+        } catch (err) {
+            if (err.name !== 'AbortError') {
+                console.error('Error en la petición:', err);
+            }
+        }
     }
 
     async function deleteUserForId(userId) {

@@ -31,7 +31,7 @@ def get_all_users(user_data):
     offset = (page - 1) * per_page
 
     if search == 'none':
-        # Contar total de usuarios (para frontend si quieres mostrar número total de páginas)
+        # Contar total de usuarios (para frontend)
         cur.execute("SELECT COUNT(*) FROM public.users_show_all_info WHERE user_role != %s", ('admin',))
         total_users = cur.fetchone()[0]
 
@@ -57,18 +57,29 @@ def get_all_users(user_data):
     
     else:
         #Consulta de total de paginas en la busqueda
-        cur.execute('SELECT COUNT(*) FROM public.users_show_all_info WHERE user_role != %s AND(user_name ILIKE %s OR user_last_name ILIKE %s '
-                    'OR user_email ILIKE %s)', 
-                    ('admin', f'{search}%', f'%{search}%', f'{search}%'))
+        cur.execute(''' SELECT COUNT(*)
+    FROM public.users_show_all_info
+    WHERE user_role != %s
+    AND (
+        user_name ILIKE %s
+        OR user_last_name ILIKE %s
+        OR (user_name || ' ' || user_last_name) ILIKE %s
+        OR user_email ILIKE %s
+    )''', 
+                    ('admin', f'{search}%', f'%{search}%', f'{search}%', f'{search}%'))
         total_users = cur.fetchone()[0]
 
         #Consulta de usuarios
         cur.execute(
         '''SELECT * FROM public.users_show_all_info
-        WHERE user_role !=%s AND (user_name ILIKE %s
-        OR user_last_name ILIKE %s OR user_email ILIKE %s)
+        WHERE user_role != %s AND (
+        user_name ILIKE %s
+        OR user_last_name ILIKE %s
+        OR (user_name || ' ' || user_last_name) ILIKE %s
+        OR user_email ILIKE %s
+    )
         ORDER BY user_name LIMIT %s OFFSET %s''',
-        ('admin', f'{search}%', f'%{search}%', f'{search}%', per_page, offset))
+        ('admin', f'{search}%', f'%{search}%', f'{search}%', f'{search}%', per_page, offset))
         #Ordenamos los datos de todos los usuarios en un objeto
         rows = cur.fetchall()
         users = [{'user_id': r[0], 'user_name': r[1], 'user_last_name': r[2], 'user_email': r[3], 
