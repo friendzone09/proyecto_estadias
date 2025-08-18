@@ -11,12 +11,6 @@ function AppointAgend (){
     const [dateParse, setDateParse] = useState({ day: '', month: '', year: '', monthNum: '' });
     const { user, setUser } = useUser();
 
-    useEffect(()=>{
-         if (user && (user.role == null || user.asig_psycho != null)){
-            navigate('/')
-        }
-    }, [user, navigate])
-
     if (!user) return null;
 
     return (

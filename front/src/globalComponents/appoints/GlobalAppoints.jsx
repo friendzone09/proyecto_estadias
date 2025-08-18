@@ -15,6 +15,7 @@ import { getPsychoInfo } from "../../utils/get_user";
 
 import PatientSchedule from "./MapSchedule/PatientSchedule";
 import PsychoSchedule from "./MapSchedule/PsychoSchedule";
+import NullSchedule from "./MapSchedule/NullSchedule";
 
 import './index.css'
 
@@ -199,13 +200,11 @@ function GlobalAppoints({ date, id_psycho, info = null }) {
                 {loading ? (
                     <LoadingCircle/>
                 ) : (
-                    user.role == 'patient' ? (
+                    user.role == 'patient'? (
                         <PatientSchedule schedule={schedule} openModal={openModal} />
                     ) : user.role == 'psycho' || user.role == 'admin' ? (
                         <PsychoSchedule schedule={schedule} openModal={openModal} />
-                    ) : (
-                        <p>No login</p>
-                    )
+                    ) : (<NullSchedule schedule={schedule}/>)
                 )}
             </div>
 
