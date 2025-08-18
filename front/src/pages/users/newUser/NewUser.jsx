@@ -24,7 +24,7 @@ function NewUser({ user }) {
     async function registerUser(e) {
         e.preventDefault();
 
-        newUser.psychoId = user.role == 'psycho'&& (user.id);
+        newUser.psychoId = user.role == 'psycho' ? (user.id): (newUser.psychoId);
 
         const formData = new FormData();
         formData.append('name', newUser.name.trim());
@@ -108,7 +108,7 @@ function NewUser({ user }) {
                     <label>Psicólogo</label>
                     <select onChange={(e) => {
                         const value = e.target.value;
-                        setNewUser({ ...newUser, psychoId: value === "" ? null : value });
+                        setNewUser({ ...newUser, psychoId: value == '' ? null : value });
                     }}>
                         <option value=''>Selecciona un psicólogo</option>
                         {psychos.map(p => (
