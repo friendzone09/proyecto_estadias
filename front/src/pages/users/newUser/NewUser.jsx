@@ -24,6 +24,8 @@ function NewUser({ user }) {
     async function registerUser(e) {
         e.preventDefault();
 
+        newUser.psychoId = user.role == 'psycho'&& (user.id);
+
         const formData = new FormData();
         formData.append('name', newUser.name.trim());
         formData.append('last_name', newUser.lastName.trim());
@@ -69,12 +71,6 @@ function NewUser({ user }) {
 
             <div className="new_user_section">
                 <div className="input_section">
-                    <label>Correo</label>
-                    <input type="email" placeholder="Correo..." required value={newUser.email}
-                        onChange={(e) => { setNewUser({ ...newUser, email: e.target.value }) }}
-                    />
-                </div>
-                <div className="input_section">
                     <label>Telefono</label>
                     <input
                         type="text"
@@ -89,18 +85,7 @@ function NewUser({ user }) {
                         }}
                     />
                 </div>
-            </div>
 
-            <div className="new_user_section">
-                <div className="input_section">
-                    <label>Psicólogo</label>
-                    <select onChange={(e) => { setNewUser({ ...newUser, psychoId: e.target.value || null }) }}>
-                        <option value={null}>Selecciona un psicólogo</option>
-                        {psychos.map(p => (
-                            <option value={p.id} key={p.id}> {p.name} {p.last_name} </option>
-                        ))}
-                    </select>
-                </div>
                 <div className="input_section">
                     <label>Fecha de nacimiento</label>
                     <DatePicker
@@ -118,6 +103,21 @@ function NewUser({ user }) {
             </div>
 
             <div className="new_user_section">
+                {user.role === 'admin' && (
+                    <div className="input_section">
+                    <label>Psicólogo</label>
+                    <select onChange={(e) => {
+                        const value = e.target.value;
+                        setNewUser({ ...newUser, psychoId: value === "" ? null : value });
+                    }}>
+                        <option value=''>Selecciona un psicólogo</option>
+                        {psychos.map(p => (
+                            <option value={p.id} key={p.id}> {p.name} {p.last_name} </option>
+                        ))}
+                    </select>
+                </div>
+                )}
+
                 <div className="input_section">
                     <label>Tipo de consulta</label>
                     <select   onChange={(e) => setNewUser({ ...newUser, appointType: e.target.value})}>
@@ -126,9 +126,20 @@ function NewUser({ user }) {
                                     <option value="family">Familiar</option>
                     </select>
                 </div>
+            </div>
+
+            <div className="new_user_section">
+
                 <div className="input_section">
-                    <label>Contraseña</label>
-                    <input type="password" placeholder="Contraseña..." required value={newUser.password}
+                    <label>Correo (opcional)</label>
+                    <input type="email" placeholder="Correo..." value={newUser.email}
+                        onChange={(e) => { setNewUser({ ...newUser, email: e.target.value }) }}
+                    />
+                </div>
+
+                <div className="input_section">
+                    <label>Contraseña (opcional)</label>
+                    <input type="password" placeholder="Contraseña..." value={newUser.password}
                         onChange={(e) => { setNewUser({ ...newUser, password: e.target.value }) }}
                         autocomplete="new-password"
                     />

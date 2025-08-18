@@ -108,7 +108,7 @@ def register():
     if psycho_id in ('', 'null', None):
         psycho_id = None
 
-    if not name or not last_name or not email or not phone or not raw_age or not appoint_type or not password:
+    if not name or not last_name or not phone or not raw_age or not appoint_type:
         return jsonify({'message' : 'Faltan credenciales',
                         'type' : 'error'}), 401
     
@@ -120,7 +120,7 @@ def register():
    
     row = cur.fetchone()
 
-    if row:
+    if row and row[0] !='':
         return jsonify({'message': 'El correo electronico ya existe',
                         'type' : 'error'}), 401
     

@@ -1,6 +1,6 @@
 import { Search, ChevronLeft, ChevronRight } from "lucide-react"
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import { fetchWithAuth } from "../../utils/fetchWithAuth";
 
@@ -56,6 +56,9 @@ function MyPatients({ user }) {
             <div className="table_section">
 
                 <div className="section_var">
+                    <div className="new_user_button">
+                        <Link className="button_new_user" to={'/admin/users/new'}>Nuevo paciente</Link>
+                    </div>
 
                     <div className="search_var">
                         <input type="text" placeholder="Buscar..." value={searchText} onInput={e => {
