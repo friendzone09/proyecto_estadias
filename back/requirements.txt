@@ -30,6 +30,7 @@ pydantic_core==2.33.2
 PyJWT==2.10.1
 python-dateutil==2.9.0.post0
 python-dotenv==1.1.0
+pytz==2025.2
 realtime==2.5.3
 requests==2.32.4
 six==1.17.0
