@@ -216,10 +216,6 @@ function UsersList({ user }) {
                             onInput={e => { selectedUser ? setSelectedUser({ ...selectedUser, user_last_name: e.target.value }) : null }}
                         />
 
-                        <label>Correo</label>
-                        <input type="email" value={selectedUser ? selectedUser.user_email : ''}
-                            onInput={e => { selectedUser ? setSelectedUser({ ...selectedUser, user_email: e.target.value }) : null }}
-                        />
 
                         <label>Numero</label>
                         <input type="text" value={selectedUser ? selectedUser.user_phone : ''}
@@ -229,6 +225,11 @@ function UsersList({ user }) {
                             const onlyNums = e.target.value.replace(/\D/, '');
                             selectedUser ? (setSelectedUser({...selectedUser, user_phone: onlyNums})) : null;
                         }}
+                        />
+
+                        <label>Correo (Opcional)</label>
+                        <input type="email" value={selectedUser ? selectedUser.user_email : ''}
+                            onInput={e => { selectedUser ? setSelectedUser({ ...selectedUser, user_email: e.target.value }) : null }}
                         />
 
                         {selectedUser &&

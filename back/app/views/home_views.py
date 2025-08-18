@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, current_app, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
+import pytz
 
 import jwt
 
@@ -8,12 +9,13 @@ from app.models.db import get_db_connection
 from app.decorators.auth import token_required
 
 home_views = Blueprint('home', __name__)
+mexico_central= pytz.timezone("America/Mexico_City")
 
 @home_views.route('/api/psychos')
 def get_psychos():
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute('SELECT * FROM public.psychos_info ORDER BY fk_user ASC')
+    cur.execute('SELECT * FROM public.patients_for_psycho')
     rows = cur.fetchall()
 
     psychos = []
@@ -24,8 +26,8 @@ def get_psychos():
             'name': row[1],
             'last_name' : row[2],
             'email' : row[3],
-            'image' : row[4],
-            'description' : row[5]
+            'image' : row[5],
+            'description' : row[4]
         })
 
     return jsonify(psychos)
@@ -133,7 +135,7 @@ def register():
     new_user_id = cur.fetchone()[0]
 
     if psycho_id:
-        cur.execute('UPDATE public.patient SET fk_psycho=%s WHERE fk_user=%s', (psycho_id, new_user_id,))
+        cur.execute('UPDATE public.patient SET fk_psycho=%s, assig_date = %s WHERE fk_user=%s', (psycho_id,  datetime.now(mexico_central),new_user_id,))
     
     if appoint_type != 'single':
         cur.execute('UPDATE public.patient SET appoint_type=%s WHERE fk_user=%s', (appoint_type, new_user_id,))

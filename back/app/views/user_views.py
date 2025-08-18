@@ -1,5 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response, current_app, send_from_directory, abort
 from datetime import datetime, timedelta
+from datetime import datetime
+import pytz
 
 from app.models.db import get_db_connection
 from app.decorators.auth import token_required
@@ -9,6 +11,7 @@ import jwt
 import json
 
 user_views = Blueprint('user', __name__)
+mexico_central= pytz.timezone("America/Mexico_City")
 
 @user_views.route('/api/get_all_users')
 @token_required
@@ -109,7 +112,7 @@ def edit_user(user_data):
     raw_user = request.form.get('user')
     user = json.loads(raw_user)
 
-    if not user['user_name'] or not user['user_last_name'] or not user['user_email'] or not user['user_phone']:
+    if not user['user_name'] or not user['user_last_name'] or not user['user_phone']:
         return jsonify({'message' : 'Error: faltan credenciales', 'type' : 'error'})
 
     cur.execute('UPDATE public.users '
@@ -117,11 +120,17 @@ def edit_user(user_data):
 	'WHERE id_user=%s;', (user['user_name'], user['user_last_name'], user['user_email'], user['user_role'],  user['user_phone'], user['user_id']))
 
     if user['user_role'] == 'patient':
-        
+
         if user['assig_psycho'] in ('', 'null', None):
             user['assig_psycho'] = None
 
-        cur.execute('UPDATE public.patient SET fk_psycho=%s, appoint_type=%s WHERE fk_user=%s', (user['assig_psycho'], user['appoint_type'] ,user['user_id']))
+        cur.execute('SELECT fk_psycho FROM public.patient WHERE fk_user = %s', (user['user_id'],))
+        assig_psycho = cur.fetchone()[0]
+
+        if assig_psycho == user['assig_psycho']:
+            cur.execute('UPDATE public.patient SET fk_psycho=%s, appoint_type=%s WHERE fk_user=%s', (user['assig_psycho'], user['appoint_type'] ,user['user_id']))
+        else:
+            cur.execute('UPDATE public.patient SET fk_psycho=%s, appoint_type=%s, assig_date=%s WHERE fk_user=%s', (user['assig_psycho'], user['appoint_type'], datetime.now(mexico_central) ,user['user_id']))
 
     conn.commit()
 
