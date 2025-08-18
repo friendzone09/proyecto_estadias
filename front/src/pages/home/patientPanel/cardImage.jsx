@@ -7,7 +7,7 @@ function CardImage({ image, psychoId, user }) {
             <img src={image} alt="psycho_image" />
 
             <div className="psycho_button">
-               <Link to={psychoLink}>Ver horarios</Link>
+               {user.role == null && <Link to={psychoLink}>Ver horarios</Link>}
                 {user.role == 'patient' && user.asig_psycho == null && (<Link to={psychoLink}>Agendar una cita</Link>)}
             </div>
         </section>
