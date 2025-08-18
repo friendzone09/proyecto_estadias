@@ -25,12 +25,12 @@ function NewUser({ user }) {
         e.preventDefault();
 
         const formData = new FormData();
-        formData.append('name', newUser.name);
-        formData.append('last_name', newUser.lastName);
+        formData.append('name', newUser.name.trim());
+        formData.append('last_name', newUser.lastName.trim());
         formData.append('email', newUser.email);
         formData.append('phone', newUser.phone);
-        formData.append('date_age', newUser.dateAge)
-        formData.append('appoint_type', newUser.appointType)
+        formData.append('date_age', newUser.dateAge);
+        formData.append('appoint_type', newUser.appointType);
         formData.append('password', newUser.password);
         formData.append('psycho_id', newUser.psychoId);
 
@@ -56,13 +56,13 @@ function NewUser({ user }) {
                 <div className="input_section">
                     <label>Nombre(s)</label>
                     <input type="text" placeholder="Nombre..." required value={newUser.name}
-                        onChange={(e) => { setNewUser({ ...newUser, name: e.target.value }) }}
+                        onChange={(e) => { setNewUser({ ...newUser, name: e.target.value.trimStart() }) }}
                     />
                 </div>
                 <div className="input_section">
                     <label>Apellidos</label>
                     <input type="text" placeholder="Apellidos..." required value={newUser.lastName}
-                        onChange={(e) => { setNewUser({ ...newUser, lastName: e.target.value }) }}
+                        onChange={(e) => { setNewUser({ ...newUser, lastName: e.target.value.trimStart() }) }}
                     />
                 </div>
             </div>

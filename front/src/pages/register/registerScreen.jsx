@@ -33,13 +33,13 @@ function RegisterScreen() {
 
         setLoading(true)
         const formData = new FormData();
-        formData.append('name', newUser.name)
-        formData.append('last_name', newUser.lastName)
-        formData.append('email', newUser.email)
-        formData.append('phone', newUser.phone)
-        formData.append('date_age', newUser.dateAge)
-        formData.append('appoint_type', newUser.appointType)
-        formData.append('password', newUser.password)
+        formData.append('name', newUser.name.trim());
+        formData.append('last_name', newUser.lastName.trim());
+        formData.append('email', newUser.email);
+        formData.append('phone', newUser.phone);
+        formData.append('date_age', newUser.dateAge);
+        formData.append('appoint_type', newUser.appointType);
+        formData.append('password', newUser.password);
 
         const response = await fetch(`${API_URL}/register`, {
             method: 'POST',
@@ -71,12 +71,12 @@ function RegisterScreen() {
                             <>
                                 <label>Nombre</label>
                                 <input placeholder="Escribe tu nombre..." value={newUser.name}
-                                    onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+                                    onChange={(e) => setNewUser({ ...newUser, name: e.target.value.trimStart() })}
                                     required />
 
                                 <label>Apellidos</label>
                                 <input placeholder="Escribe tus apellidos..." value={newUser.lastName}
-                                    onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })}
+                                    onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value.trimStart() })}
                                     required />
 
                                 <label>Fecha de nacimiento</label>

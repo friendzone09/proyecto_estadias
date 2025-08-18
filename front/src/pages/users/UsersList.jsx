@@ -70,6 +70,9 @@ function UsersList({ user }) {
     async function editUser(e) {
         e.preventDefault();
 
+        selectedUser.user_name = selectedUser.user_name.trim();
+        selectedUser.user_last_name = selectedUser.user_last_name.trim();
+
         const formData = new FormData();
         formData.append('user', JSON.stringify(selectedUser));
         setSelectedUser(null);
@@ -161,7 +164,7 @@ function UsersList({ user }) {
                                 <tbody>
                                     {users.map(u => (
                                         <tr key={u.user_id}>
-                                            <td> {u.user_name} {u.user_last_name}  </td>
+                                            <td> {u.user_name} {u.user_last_name} </td>
                                             <td> {u.user_email} </td>
                                             <td>{u.user_phone}</td>
                                             <td> {u.user_role == 'patient' ? ('Paciente') : ('Psicólogo')}</td>
