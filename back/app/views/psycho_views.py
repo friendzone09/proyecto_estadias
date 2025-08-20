@@ -287,18 +287,25 @@ def my_patients(user_data):
     
     else:
         #Consulta de total de paginas en la busqueda
-        cur.execute('SELECT COUNT(*) FROM public.users_show_all_info WHERE assigned_psychologist_id = %s AND(user_name ILIKE %s OR user_last_name ILIKE %s '
-                    'OR user_email ILIKE %s)', 
-                    (user_data['id'], f'{search}%', f'%{search}%', f'{search}%'))
+        cur.execute('''SELECT COUNT(*) 
+                    FROM public.users_show_all_info 
+                    WHERE assigned_psychologist_id = %s 
+                    AND(user_name ILIKE %s OR user_last_name ILIKE %s
+                    OR (user_name || ' ' || user_last_name) ILIKE %s
+                    OR user_email ILIKE %s)''', 
+                    (user_data['id'], f'{search}%', f'%{search}%', f'{search}%', f'{search}'))
         total_users = cur.fetchone()[0]
 
         #Consulta de usuarios
         cur.execute(
         '''SELECT * FROM public.users_show_all_info
-        WHERE assigned_psychologist_id = %s AND (user_name ILIKE %s
-        OR user_last_name ILIKE %s OR user_email ILIKE %s)
+        WHERE assigned_psychologist_id = %s 
+        AND (user_name ILIKE %s
+        OR user_last_name ILIKE %s 
+        OR (user_name || ' ' || user_last_name) ILIKE %s
+        OR user_email ILIKE %s)
         ORDER BY user_name LIMIT %s OFFSET %s''',
-        (user_data['id'], f'{search}%', f'%{search}%', f'{search}%', per_page, offset))
+        (user_data['id'], f'{search}%', f'%{search}%', f'{search}%', f'{search}%', per_page, offset))
 
         rows = cur.fetchall()
         users = [{'user_id': r[0], 'user_name': r[1], 'user_last_name': r[2], 'user_email': r[3], 

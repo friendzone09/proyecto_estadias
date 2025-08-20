@@ -79,8 +79,7 @@ def get_all_users(user_data):
         user_name ILIKE %s
         OR user_last_name ILIKE %s
         OR (user_name || ' ' || user_last_name) ILIKE %s
-        OR user_email ILIKE %s
-    )
+        OR user_email ILIKE %s)
         ORDER BY user_name LIMIT %s OFFSET %s''',
         ('admin', f'{search}%', f'%{search}%', f'{search}%', f'{search}%', per_page, offset))
         #Ordenamos los datos de todos los usuarios en un objeto
