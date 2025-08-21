@@ -290,9 +290,12 @@ def my_patients(user_data):
         cur.execute('''SELECT COUNT(*) 
                     FROM public.users_show_all_info 
                     WHERE assigned_psychologist_id = %s 
-                    AND(user_name ILIKE %s OR user_last_name ILIKE %s
-                    OR (user_name || ' ' || user_last_name) ILIKE %s
-                    OR user_email ILIKE %s)''', 
+                    AND (
+                    unaccent(user_name) ILIKE unaccent(%s)
+                    OR unaccent(user_last_name) ILIKE unaccent(%s)
+                    OR unaccent(user_name || ' ' || user_last_name) ILIKE unaccent(%s)
+                    OR unaccent(user_email) ILIKE unaccent(%s)
+                    )''', 
                     (user_data['id'], f'{search}%', f'%{search}%', f'{search}%', f'{search}'))
         total_users = cur.fetchone()[0]
 
@@ -300,10 +303,12 @@ def my_patients(user_data):
         cur.execute(
         '''SELECT * FROM public.users_show_all_info
         WHERE assigned_psychologist_id = %s 
-        AND (user_name ILIKE %s
-        OR user_last_name ILIKE %s 
-        OR (user_name || ' ' || user_last_name) ILIKE %s
-        OR user_email ILIKE %s)
+        AND (
+            unaccent(user_name) ILIKE unaccent(%s)
+            OR unaccent(user_last_name) ILIKE unaccent(%s)
+            OR unaccent(user_name || ' ' || user_last_name) ILIKE unaccent(%s)
+            OR unaccent(user_email) ILIKE unaccent(%s)
+        )
         ORDER BY user_name LIMIT %s OFFSET %s''',
         (user_data['id'], f'{search}%', f'%{search}%', f'{search}%', f'{search}%', per_page, offset))
 

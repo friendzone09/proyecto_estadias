@@ -64,23 +64,27 @@ def get_all_users(user_data):
     FROM public.users_show_all_info
     WHERE user_role != %s
     AND (
-        user_name ILIKE %s
-        OR user_last_name ILIKE %s
-        OR (user_name || ' ' || user_last_name) ILIKE %s
-        OR user_email ILIKE %s
+        unaccent(user_name) ILIKE unaccent(%s)
+        OR unaccent(user_last_name) ILIKE unaccent(%s)
+        OR unaccent(user_name || ' ' || user_last_name) ILIKE unaccent(%s)
+        OR unaccent(user_email) ILIKE unaccent(%s)
     )''', 
                     ('admin', f'{search}%', f'%{search}%', f'{search}%', f'{search}%'))
         total_users = cur.fetchone()[0]
 
         #Consulta de usuarios
         cur.execute(
-        '''SELECT * FROM public.users_show_all_info
-        WHERE user_role != %s AND (
-        user_name ILIKE %s
-        OR user_last_name ILIKE %s
-        OR (user_name || ' ' || user_last_name) ILIKE %s
-        OR user_email ILIKE %s)
-        ORDER BY user_name LIMIT %s OFFSET %s''',
+        '''SELECT * 
+            FROM public.users_show_all_info
+            WHERE user_role != %s 
+            AND (
+                    unaccent(user_name) ILIKE unaccent(%s)
+                    OR unaccent(user_last_name) ILIKE unaccent(%s)
+                    OR unaccent(user_name || ' ' || user_last_name) ILIKE unaccent(%s)
+                    OR unaccent(user_email) ILIKE unaccent(%s)
+                )
+            ORDER BY user_name 
+            LIMIT %s OFFSET %s;''',
         ('admin', f'{search}%', f'%{search}%', f'{search}%', f'{search}%', per_page, offset))
         #Ordenamos los datos de todos los usuarios en un objeto
         rows = cur.fetchall()
